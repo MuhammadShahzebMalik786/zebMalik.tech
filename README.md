@@ -24,19 +24,20 @@ sitemap.xml / robots.txt          Search
 
 ## Before deploying
 
-Three placeholders need replacing:
+One placeholder is left:
 
 | Placeholder | Where | Replace with |
 |---|---|---|
 | `YOUR_FORM_ID` | `contact.html`, `free-sample.html` | Formspree endpoint from formspree.io |
-| `YOUR_HANDLE` | footer of all pages | LinkedIn profile handle |
-| `hello@zebmalik.tech` | `contact.html` | The address you want public |
 
-Find them:
+Find it:
 
 ```bash
-grep -rn "YOUR_FORM_ID\|YOUR_HANDLE\|hello@zebmalik.tech" *.html
+grep -rn "YOUR_FORM_ID" *.html
 ```
+
+Contact details are already wired in: `malikshahzebabd@gmail.com`,
+`wa.me/923448970498`, and the LinkedIn profile in every footer.
 
 ## Deploying
 
