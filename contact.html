@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Start a project — zebMalik.tech</title>
+<meta name="description" content="Send a brief and get a fixed quote back within a few hours. No calls required.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <span class="label">Start a project</span>
+    <h1>Send the brief. Get a fixed number back.</h1>
+    <p class="lead">Fill this in and you'll have a price, a delivery date and a clear out-of-scope list within a few hours — usually the same working day.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap split" style="align-items:start">
+
+    <div>
+      <span class="label">Before you write</span>
+      <h3 style="margin-bottom:20px">Four details make the quote fast</h3>
+
+      <div class="numbered" style="border-top:1px solid var(--line)">
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">01</div>
+          <div><h4>The source</h4><p class="small muted" style="margin-top:4px">The URL, or a description of the task if there isn't one.</p></div>
+        </div>
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">02</div>
+          <div><h4>The fields</h4><p class="small muted" style="margin-top:4px">Exactly which columns you want out. Name, price, email, whatever it is.</p></div>
+        </div>
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">03</div>
+          <div><h4>The volume</h4><p class="small muted" style="margin-top:4px">Rough row count, and whether this runs once or on a schedule.</p></div>
+        </div>
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">04</div>
+          <div><h4>The deadline</h4><p class="small muted" style="margin-top:4px">A real date. It changes how we scope it.</p></div>
+        </div>
+      </div>
+
+      <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--line)">
+        <span class="label">Direct</span>
+        <!-- REPLACE the three values below with the addresses you want public -->
+        <p style="margin-bottom:8px"><a class="arrow-link" href="mailto:hello@zebmalik.tech">hello@zebmalik.tech</a></p>
+        <p style="margin-bottom:8px"><a class="arrow-link" href="https://wa.me/923448970498">WhatsApp</a></p>
+        <p><a class="arrow-link" href="https://github.com/MuhammadShahzebMalik786">GitHub</a></p>
+        <p class="small muted" style="margin-top:20px">Based in Pakistan (UTC+5). We work US, UK and EU hours — a brief sent overnight is usually answered before your morning.</p>
+      </div>
+    </div>
+
+    <div>
+      <!-- REPLACE YOUR_FORM_ID: create a free form at https://formspree.io and paste the endpoint here -->
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="two">
+          <div class="field">
+            <label for="name">Name <span class="req">*</span></label>
+            <input id="name" name="name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="email">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" required>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label for="company">Company</label>
+            <input id="company" name="company" type="text">
+          </div>
+          <div class="field">
+            <label for="service">What do you need?</label>
+            <select id="service" name="service">
+              <option>Data extraction / scraping</option>
+              <option>AI agent or workflow automation</option>
+              <option>Backend or API engineering</option>
+              <option>Data operations / recurring reporting</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="details">The brief <span class="req">*</span></label>
+          <textarea id="details" name="details" required placeholder="Example: Extract every product listing from catalogue.example.com — name, price, currency, SKU, stock status and image URL. Roughly 8,000 products, refreshed weekly. Delivered into a Google Sheet."></textarea>
+          <div class="hint">Specifics get a same-day quote. Vague briefs get questions first.</div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label for="volume">Rough volume</label>
+            <select id="volume" name="volume">
+              <option>Under 10,000 rows</option>
+              <option>10,000 – 100,000 rows</option>
+              <option>100,000 – 1M rows</option>
+              <option>Over 1M rows</option>
+              <option>Not a data job</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="frequency">How often</label>
+            <select id="frequency" name="frequency">
+              <option>Once</option>
+              <option>Weekly</option>
+              <option>Daily</option>
+              <option>Continuous / real-time</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label for="budget">Budget</label>
+            <select id="budget" name="budget">
+              <option>Under $150</option>
+              <option>$150 – $500</option>
+              <option>$500 – $2,000</option>
+              <option>$2,000+</option>
+              <option>Tell me what it should cost</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="deadline">Needed by</label>
+            <input id="deadline" name="deadline" type="text" placeholder="e.g. Friday 19 September">
+          </div>
+        </div>
+
+        <button class="btn" type="submit" style="width:100%;justify-content:center">Send the brief</button>
+        <p class="hint" style="text-align:center">We reply to every brief, including the ones we turn down.</p>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/YOUR_HANDLE">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik.tech</div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

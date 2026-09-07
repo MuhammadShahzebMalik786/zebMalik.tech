@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work — zebMalik.tech</title>
+<meta name="description" content="Selected data extraction, AI agent and automation systems designed and shipped by the zebMalik.tech team.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="work.html" aria-current="page">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <span class="label">Work</span>
+    <h1>Systems we designed, built and shipped.</h1>
+    <p class="lead">Public repositories and in-house builds, with the technical decisions written out. Client work under agreement isn't listed — ask and we'll talk through comparable projects.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="worklist" style="border-top:0">
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Lead generation · Python</span>
+          <p class="small muted">Discovery, extraction, generation and dispatch in a single pipeline.</p>
+        </div>
+        <div>
+          <h3>All-in-One Client Finder</h3>
+          <p>An outreach system that finds businesses on LinkedIn and Google Maps, crawls their websites for contact details, generates a personalised message for each contact, sends it over SMTP and logs every send so no one is contacted twice. A second track discovers prospects on freelance marketplaces and drafts pitches for them.</p>
+          <p style="margin-top:14px">It runs unattended with cooldown logic between cycles, keeps every stage in reviewable CSV files rather than a black box, and falls back to a locally hosted model when cloud APIs are unavailable — so a rate limit or an outage doesn't halt the pipeline.</p>
+          <div class="meta"><span class="chip">Python 3.10+</span><span class="chip">Ollama</span><span class="chip">SMTP</span><span class="chip">OpenRouter</span><span class="chip">Gemini</span></div>
+          <div class="outcome"><b>Result:</b> the full cycle — discovery through to sent mail — running from a single command, with per-stage output you can audit.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Price intelligence · Python</span>
+          <p class="small muted">Built to be pointed at a real client catalogue.</p>
+        </div>
+        <div>
+          <h3>E-commerce price scraper</h3>
+          <p>A production-shaped catalogue scraper: page-by-page crawling with pagination handling, structured extraction of name, price, currency, image and stock status, price parsing with currency detection, and deduplication by product ID. Exports to both CSV and JSON, ready for a spreadsheet or a database load.</p>
+          <p style="margin-top:14px">Headless by default for server and CI use, with a configurable delay between requests so it stays polite to the target. Swapping selectors, adding proxy rotation, writing to PostgreSQL instead of CSV, or scheduling it to diff prices over time are all deliberate extension points rather than rewrites.</p>
+          <div class="meta"><span class="chip">SeleniumBase</span><span class="chip">Headless</span><span class="chip">CSV / JSON</span><span class="chip">Dataclasses</span></div>
+          <div class="outcome"><b>Result:</b> repeatable pricing snapshots that can be scheduled and compared across runs.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">AI agents · JavaScript</span>
+          <p class="small muted">Manifest V3 Chrome extension.</p>
+        </div>
+        <div>
+          <h3>Agent Blue — natural-language browser automation</h3>
+          <p>Describe a goal in plain English and the extension carries it out: it analyses the live DOM to work out which controls to use, then navigates, clicks, types and scrolls. Extracted text goes into a memory scratchpad it can reuse across tabs and sites, so multi-step tasks survive a page change.</p>
+          <p style="margin-top:14px">Provider-agnostic across Gemini, GPT-4o, Groq and local Ollama models, on a bring-your-own-key basis — running costs and data stay with the user, and everything executes locally rather than through a hosted service.</p>
+          <div class="meta"><span class="chip">Manifest V3</span><span class="chip">Gemini</span><span class="chip">Groq</span><span class="chip">Ollama</span><span class="chip">BYOK</span></div>
+          <div class="outcome"><b>Result:</b> repetitive browser work described once instead of performed every day.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Market intelligence · Python</span>
+          <p class="small muted">Two related builds.</p>
+        </div>
+        <div>
+          <h3>AI competitor analysis</h3>
+          <p>Scrapes competitor listings and reviews, then uses generative models and sentiment analysis to compare features and surface where a product is losing on perception rather than capability. Results land in a SQL database so they can be queried and tracked over time instead of read once and lost.</p>
+          <p style="margin-top:14px">A second build extends the same pipeline into structured feature-by-feature comparison, producing the kind of grid a product team can act on directly.</p>
+          <div class="meta"><span class="chip">Python</span><span class="chip">Local LLMs</span><span class="chip">SQL</span><span class="chip">Sentiment analysis</span></div>
+          <div class="outcome"><b>Result:</b> competitor positioning tracked continuously rather than researched once a quarter.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Backend · Python</span>
+          <p class="small muted">Deployed service, not a notebook.</p>
+        </div>
+        <div>
+          <h3>Scraper API</h3>
+          <p>Extraction exposed as a service rather than a script: an HTTP API that accepts a target and returns structured records, containerised and deployed to a VPS with a managed browser runtime behind it. Built so a client's own systems can request data on demand instead of waiting for a file.</p>
+          <div class="meta"><span class="chip">FastAPI</span><span class="chip">PostgreSQL</span><span class="chip">Docker</span><span class="chip">ChromeDriver</span></div>
+          <div class="outcome"><b>Result:</b> extraction available as an endpoint your application can call.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Quantitative research · Python</span>
+          <p class="small muted">Research systems, not signal selling.</p>
+        </div>
+        <div>
+          <h3>Algorithmic trading and RL strategy research</h3>
+          <p>Backtesting and reinforcement-learning experiments against live-market data through MT5 and demo accounts, with a separate execution engine for running strategies under controlled conditions. Built as research infrastructure — reproducible runs, logged results, no claims about returns.</p>
+          <div class="meta"><span class="chip">Python</span><span class="chip">Reinforcement learning</span><span class="chip">MT5</span><span class="chip">Backtesting</span></div>
+          <div class="outcome"><b>Result:</b> a testbed where a strategy can be evaluated before any money is involved.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Document processing · n8n</span>
+          <p class="small muted">Automation with OCR in the loop.</p>
+        </div>
+        <div>
+          <h3>OCR document workflows</h3>
+          <p>n8n workflows that take documents in whatever form they arrive — scans, photographs, PDFs — run OCR over them, and push the extracted fields into the systems that need them. The kind of process that otherwise consumes a person's morning, running instead on a trigger.</p>
+          <div class="meta"><span class="chip">n8n</span><span class="chip">OCR</span><span class="chip">Webhooks</span></div>
+          <div class="outcome"><b>Result:</b> paper and PDF input turned into structured records without manual re-typing.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Machine learning · Python</span>
+          <p class="small muted">Classification on messy real-world text.</p>
+        </div>
+        <div>
+          <h3>Fraudulent job posting classifier</h3>
+          <p>A supervised model that separates genuine job listings from fraudulent ones, built through the full cycle — exploratory analysis, feature engineering, model comparison and evaluation. Representative of the classification and scoring work we take on: churn, lead quality, fraud and content triage.</p>
+          <div class="meta"><span class="chip">Python</span><span class="chip">scikit-learn</span><span class="chip">EDA</span><span class="chip">Model evaluation</span></div>
+          <div class="outcome"><b>Result:</b> a scored, evaluated classifier rather than an untested notebook.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Open source · C++</span>
+          <p class="small muted">Contribution to a widely used library.</p>
+        </div>
+        <div>
+          <h3>glaze — string truncation fix</h3>
+          <p>Diagnosed and fixed a string truncation bug in <span class="mono">glaze</span>, a high-performance C++ serialisation and reflection library. Patch reviewed and merged upstream.</p>
+          <div class="meta"><span class="chip">C++</span><span class="chip">Serialisation</span><span class="chip">Upstream merged</span></div>
+          <div class="outcome"><b>Result:</b> a fix now shipping to every downstream user of the library.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <p style="margin-top:44px"><a class="arrow-link" href="https://github.com/MuhammadShahzebMalik786">Browse the repositories on GitHub</a></p>
+  </div>
+</section>
+
+<section class="bg-dark cta-band">
+  <div class="wrap">
+    <span class="label">Start here</span>
+    <h2>Your project probably resembles one of these.</h2>
+    <p class="lead">Tell us which, and we'll tell you what it costs and when it lands.</p>
+    <div class="row">
+      <a href="contact.html" class="btn btn-lite">Start a project</a>
+      <a href="services.html" class="btn" style="border-color:#3a3e45">See services</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/YOUR_HANDLE">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik.tech</div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

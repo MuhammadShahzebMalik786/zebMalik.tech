@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Services — zebMalik.tech</title>
+<meta name="description" content="Data extraction, AI agents and workflow automation, backend engineering and data operations. What each engagement includes and what it costs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html" aria-current="page">Services</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <span class="label">Services</span>
+    <h1>What we take on, and what we don't.</h1>
+    <p class="lead">Four areas. Each one has a defined shape, a typical price and an explicit boundary, so you know before you write to us whether your problem fits.</p>
+  </div>
+</div>
+
+<section id="extraction">
+  <div class="wrap split">
+    <div>
+      <span class="label">01 — Data extraction</span>
+      <h2>Websites into clean, structured datasets.</h2>
+      <p class="lead" style="margin-top:22px">Marketplaces, directories, catalogues, listings and public records. We handle pagination, session state, JavaScript-rendered content and rate limiting, then normalise and deduplicate before anything reaches you.</p>
+      <div class="meta" style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="chip">Python</span><span class="chip">SeleniumBase</span><span class="chip">Scrapy</span><span class="chip">Playwright</span><span class="chip">PostgreSQL</span>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="spec">
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Typical scope</td><td>1–5 sources, 1k–500k rows</td></tr>
+        <tr><td>Delivery</td><td>24–72 hours</td></tr>
+        <tr><td>From</td><td>$120 one-off · $300/mo scheduled</td></tr>
+        <tr><td>Output</td><td>CSV, JSON, Google Sheets, direct DB write</td></tr>
+        <tr><td>Includes</td><td>Field normalisation, dedupe, run logs</td></tr>
+        <tr><td>Not included</td><td>Data behind logins we aren't authorised for, or anything a site's terms forbid</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="automation" class="bg-soft rule-top">
+  <div class="wrap split">
+    <div>
+      <span class="label">02 — AI agents &amp; automation</span>
+      <h2>Work that runs without anyone starting it.</h2>
+      <p class="lead" style="margin-top:22px">Lead discovery and enrichment, document processing, retrieval over your own files, drafting and dispatch. Built with fallbacks — local models where cloud APIs would be a single point of failure, and logs so you can see what ran and what it did.</p>
+      <div class="meta" style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="chip">LangGraph</span><span class="chip">LangChain</span><span class="chip">n8n</span><span class="chip">Ollama</span><span class="chip">OpenAI / Claude / Gemini</span>
+      </div>
+    </div>
+    <div class="table-scroll" style="background:#fff">
+      <table class="spec">
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Typical scope</td><td>One workflow, 3–8 integrated steps</td></tr>
+        <tr><td>Delivery</td><td>3–10 days</td></tr>
+        <tr><td>From</td><td>$400 build · $250/mo maintained</td></tr>
+        <tr><td>Output</td><td>Running workflow, credentials in your accounts</td></tr>
+        <tr><td>Includes</td><td>Error handling, retries, run logging, handover docs</td></tr>
+        <tr><td>Not included</td><td>Bulk unsolicited messaging or anything that breaches anti-spam law</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="backend" class="rule-top">
+  <div class="wrap split">
+    <div>
+      <span class="label">03 — Backend engineering</span>
+      <h2>Services built security-first.</h2>
+      <p class="lead" style="margin-top:22px">APIs, integrations, internal tools and dashboards. Authentication and authorisation, tenant isolation, presigned uploads, background queues and deployment. We have done this work on production fintech and CRM systems, and we treat security as part of the build rather than a later pass.</p>
+      <div class="meta" style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="chip">FastAPI</span><span class="chip">NestJS</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">Docker</span><span class="chip">Cloudflare</span>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="spec">
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Typical scope</td><td>A service, an integration, or a hardening pass</td></tr>
+        <tr><td>Delivery</td><td>1–4 weeks</td></tr>
+        <tr><td>From</td><td>$800 project · monthly retainer available</td></tr>
+        <tr><td>Output</td><td>Deployed service, source, and written documentation</td></tr>
+        <tr><td>Includes</td><td>Auth, input validation, logging, deployment setup</td></tr>
+        <tr><td>Not included</td><td>Formal penetration testing or compliance certification</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="dataops" class="bg-soft rule-top">
+  <div class="wrap split">
+    <div>
+      <span class="label">04 — Data operations</span>
+      <h2>The recurring work, taken off your desk.</h2>
+      <p class="lead" style="margin-top:22px">List building, cleaning, deduplication, enrichment and scheduled reporting. Usually the cheapest thing we do and the one clients notice most, because it removes a task somebody was doing by hand every week.</p>
+      <div class="meta" style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="chip">Pandas</span><span class="chip">Google Sheets API</span><span class="chip">Airtable</span><span class="chip">cron</span>
+      </div>
+    </div>
+    <div class="table-scroll" style="background:#fff">
+      <table class="spec">
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Typical scope</td><td>One recurring report or data set</td></tr>
+        <tr><td>Delivery</td><td>24–48 hours to first run</td></tr>
+        <tr><td>From</td><td>$60 one-off · $150/mo scheduled</td></tr>
+        <tr><td>Output</td><td>Sheet, dashboard or scheduled email</td></tr>
+        <tr><td>Includes</td><td>Validation rules and a failure alert</td></tr>
+        <tr><td>Not included</td><td>Manual data entry priced by the hour</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Boundaries</span>
+      <h2>Things we will turn down.</h2>
+      <p class="lead">Saying this upfront saves everyone a week.</p>
+    </div>
+    <div class="cards">
+      <div class="item">
+        <h3>Data we aren't authorised to take</h3>
+        <p>Anything behind a login we have no right to use, or that a site's terms clearly prohibit. We will tell you before quoting, not after invoicing.</p>
+      </div>
+      <div class="item">
+        <h3>Unsolicited bulk messaging</h3>
+        <p>We build outreach systems, but not spam operations. Volume without consent or a lawful basis is not a project we take.</p>
+      </div>
+      <div class="item">
+        <h3>Guaranteed trading returns</h3>
+        <p>We build and test trading and research systems. We do not promise profit, and we won't write copy that implies it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-dark cta-band">
+  <div class="wrap">
+    <span class="label">Next step</span>
+    <h2>Describe the job. Get a number back the same day.</h2>
+    <p class="lead">If it doesn't fit any of the four, tell us anyway — a straight "not us" is faster than a proposal.</p>
+    <div class="row">
+      <a href="contact.html" class="btn btn-lite">Start a project</a>
+      <a href="pricing.html" class="btn" style="border-color:#3a3e45">See pricing</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/YOUR_HANDLE">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik.tech</div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

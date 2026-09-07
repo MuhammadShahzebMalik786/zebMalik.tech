@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>zebMalik — Data extraction, automation and AI engineering</title>
+<meta name="description" content="An engineering team that builds web scrapers, AI agents and backend automation. Fixed scope, fixed price, delivered in days.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <h1>We build the data and automation systems other teams keep putting off.</h1>
+    <p class="lead">Web scrapers, AI agents and backend services — scoped in writing, priced as a fixed number, delivered in days rather than quarters. Most projects never need a call.</p>
+    <div class="hero-actions">
+      <a href="free-sample.html" class="btn">Get a free sample</a>
+      <a href="work.html" class="btn btn-out">See our work</a>
+    </div>
+
+    <div class="statbar">
+      <div><b>24–72h</b><span>Typical delivery window</span></div>
+      <div><b>Fixed</b><span>Price agreed before we start</span></div>
+      <div><b>Async</b><span>Written scope, no discovery calls</span></div>
+      <div><b>Yours</b><span>Source code handed over</span></div>
+    </div>
+  </div>
+</div>
+
+<section class="rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">What we do</span>
+      <h2>Four disciplines, deliberately narrow.</h2>
+      <p class="lead">We turned down the long service list on purpose. These are the areas where we can quote a price in an hour and ship something that survives contact with production.</p>
+    </div>
+
+    <div class="numbered">
+      <div class="row">
+        <div class="n">01</div>
+        <div><h3>Data extraction at scale</h3></div>
+        <div>
+          <p>Public websites, marketplaces and directories turned into clean, deduplicated datasets. Pagination, session handling, JavaScript-rendered pages and rate-limit politeness are handled properly rather than patched around. Output as CSV, JSON, Google Sheets or straight into your database.</p>
+          <div class="meta"><span class="chip">Python</span><span class="chip">SeleniumBase</span><span class="chip">Scrapy</span><span class="chip">PostgreSQL</span></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="n">02</div>
+        <div><h3>AI agents and workflow automation</h3></div>
+        <div>
+          <p>Systems that do the repetitive work: lead discovery and enrichment, document processing, drafting and sending outreach, retrieval over your own files. Built with a local-model fallback where it matters, so a cloud API outage doesn't stop the pipeline.</p>
+          <div class="meta"><span class="chip">LangGraph</span><span class="chip">LangChain</span><span class="chip">n8n</span><span class="chip">Ollama</span></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="n">03</div>
+        <div><h3>Backend and API engineering</h3></div>
+        <div>
+          <p>Services, integrations and internal tools built security-first — authentication and authorisation, tenant isolation, presigned uploads, queueing, and deployment that doesn't fall over. Documented and handed across so you are never dependent on us.</p>
+          <div class="meta"><span class="chip">FastAPI</span><span class="chip">NestJS</span><span class="chip">Redis</span><span class="chip">Docker</span></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="n">04</div>
+        <div><h3>Data operations</h3></div>
+        <div>
+          <p>The unglamorous half: cleaning, normalisation, deduplication, enrichment and recurring reporting. Set up once, scheduled, and monitored — so nobody on your team opens a spreadsheet on a Monday morning again.</p>
+          <div class="meta"><span class="chip">Pandas</span><span class="chip">Sheets API</span><span class="chip">Airtable</span><span class="chip">cron</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:40px"><a class="arrow-link" href="services.html">Full service detail</a></p>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="wrap split">
+    <div>
+      <span class="label">What you actually receive</span>
+      <h2>Structured output, not a screenshot of a spreadsheet.</h2>
+      <p class="lead" style="margin-top:22px">Every extraction job ships with normalised fields, parsed prices and currencies, deduplication keys, and both CSV and JSON exports. If you want it in your own database instead, we write it there directly.</p>
+      <p style="margin-top:28px"><a class="arrow-link" href="work.html">See a real project</a></p>
+    </div>
+
+    <div class="code">
+      <div class="bar"><span></span><span></span><span></span>&nbsp;output/products.json</div>
+<pre>{
+  <span class="k">"scraped_at"</span>: <span class="s">"2026-09-07T18:04:11Z"</span>,
+  <span class="k">"source"</span>:     <span class="s">"catalogue.example.com"</span>,
+  <span class="k">"pages"</span>:      <span class="s">42</span>,
+  <span class="k">"rows"</span>:       <span class="s">1174</span>,
+  <span class="k">"duplicates_removed"</span>: <span class="s">63</span>,
+  <span class="k">"records"</span>: [
+    {
+      <span class="k">"product_id"</span>: <span class="s">"SKU-88213"</span>,
+      <span class="k">"name"</span>:       <span class="s">"Aluminium Roof Rail"</span>,
+      <span class="k">"price"</span>:      <span class="s">129.95</span>,
+      <span class="k">"currency"</span>:   <span class="s">"EUR"</span>,
+      <span class="k">"in_stock"</span>:   <span class="s">true</span>,
+      <span class="k">"image_url"</span>:  <span class="s">"https://..."</span>
+    }
+  ]
+}
+<span class="c">// also written to output/products.csv</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Selected work</span>
+      <h2>Systems we have designed, built and shipped.</h2>
+      <p class="lead">A sample of public and in-house builds. Client work under agreement is not listed here — we will talk through comparable projects on request.</p>
+    </div>
+
+    <div class="worklist">
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Lead generation · Python</span>
+        </div>
+        <div>
+          <h3>An end-to-end outreach pipeline</h3>
+          <p>Discovers businesses across LinkedIn and Google Maps, extracts contact details from their websites, generates a personalised message per contact, sends over SMTP and logs every send so nobody is contacted twice. Runs unattended with cooldown logic, and falls back to a local model when cloud APIs are unavailable.</p>
+          <div class="meta"><span class="chip">Python</span><span class="chip">Ollama</span><span class="chip">SMTP</span><span class="chip">CSV pipeline</span></div>
+          <div class="outcome"><b>Result:</b> a full outreach cycle — discovery to sent mail — running from one command.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">Price intelligence · Python</span>
+        </div>
+        <div>
+          <h3>Competitor price monitoring</h3>
+          <p>A production-style catalogue scraper handling pagination, price and currency parsing, stock status and deduplication by product ID, exporting to CSV and JSON. Headless by default with configurable request delays, so it can run on a schedule from a server without getting the client blocked.</p>
+          <div class="meta"><span class="chip">SeleniumBase</span><span class="chip">Headless</span><span class="chip">CSV / JSON</span></div>
+          <div class="outcome"><b>Result:</b> repeatable pricing snapshots that can be diffed over time.</div>
+        </div>
+      </div>
+
+      <div class="workrow">
+        <div class="side">
+          <span class="label">AI agents · JavaScript</span>
+        </div>
+        <div>
+          <h3>Agent Blue — natural-language browser automation</h3>
+          <p>A Chrome extension that reads the live DOM and carries out instructions written in plain English — navigating, clicking, typing and extracting text into a memory scratchpad it can reuse across tabs. Provider-agnostic across Gemini, GPT-4o, Groq and local Ollama models, with bring-your-own-key so running costs stay with the user.</p>
+          <div class="meta"><span class="chip">Manifest V3</span><span class="chip">Gemini</span><span class="chip">Groq</span><span class="chip">Ollama</span></div>
+          <div class="outcome"><b>Result:</b> repetitive browser work described once instead of performed daily.</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:40px"><a class="arrow-link" href="work.html">All work</a></p>
+  </div>
+</section>
+
+<section class="bg-soft">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">How we work</span>
+      <h2>Written scope, fixed number, sample before the full run.</h2>
+    </div>
+    <div class="steps">
+      <div class="s"><span class="num">STEP 01</span><h4>Send the brief</h4><p>Describe the site or the task and the fields you need. Two minutes in a form — no call, no discovery workshop.</p></div>
+      <div class="s"><span class="num">STEP 02</span><h4>Get a fixed quote</h4><p>Within a few hours you get a flat price, a delivery date and what is explicitly out of scope. If it isn't a fit, we say so.</p></div>
+      <div class="s"><span class="num">STEP 03</span><h4>Review a sample</h4><p>You see real output early — before the full run — so direction is corrected while it is still cheap to correct.</p></div>
+      <div class="s"><span class="num">STEP 04</span><h4>Delivery and handover</h4><p>Final data, plus the script or workflow and its documentation if you want to keep running it yourself.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">The team</span>
+      <h2>You are hiring named engineers, not an inbox.</h2>
+      <p class="lead">A small team by choice. The people below are the people who do the work — their repositories are public, so you can check the standard before you commit a budget.</p>
+    </div>
+
+    <div class="cards" style="grid-template-columns:repeat(2,1fr)">
+      <div class="item">
+        <span class="label" style="margin-bottom:14px">Backend &amp; AI engineering</span>
+        <h3>Muhammad Shahzeb Malik</h3>
+        <p style="margin-bottom:16px">Backend services, agent architectures and data extraction. Production work across CRM, KYC and fintech systems — authentication, tenant isolation and API security. BS in Artificial Intelligence.</p>
+        <div class="meta" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+          <span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">NestJS</span><span class="chip">LangGraph</span><span class="chip">Docker</span>
+        </div>
+        <a class="arrow-link" href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+      </div>
+
+      <div class="item">
+        <span class="label" style="margin-bottom:14px">Machine learning &amp; automation</span>
+        <h3>Syed Qaim Raza</h3>
+        <p style="margin-bottom:16px">Machine learning, exploratory data analysis and classification models, plus n8n workflow automation including OCR-based document processing and front-end delivery.</p>
+        <div class="meta" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px">
+          <span class="chip">Python</span><span class="chip">Deep learning</span><span class="chip">n8n</span><span class="chip">OCR</span><span class="chip">JavaScript</span>
+        </div>
+        <a class="arrow-link" href="https://github.com/Qaim9980">GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-dark cta-band">
+  <div class="wrap">
+    <span class="label">Start here</span>
+    <h2>Tell us what you need extracted, automated or built.</h2>
+    <p class="lead">Send the brief today and you will have a fixed quote back within a few hours.</p>
+    <div class="row">
+      <a href="contact.html" class="btn btn-lite">Start a project</a>
+      <a href="pricing.html" class="btn" style="border-color:#3a3e45">See pricing</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/YOUR_HANDLE">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik.tech</div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

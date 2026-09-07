@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Competitor price monitoring service — zebMalik.tech</title>
+<meta name="description" content="Automated competitor price monitoring for e-commerce. Daily catalogue scrapes with price, stock and variant tracking, delivered to a sheet or your database. From $300/month.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <span class="label">Competitor price monitoring</span>
+    <h1>Know what your competitors charge, every morning, without anyone checking.</h1>
+    <p class="lead">We scrape competitor catalogues on a schedule — price, currency, stock status, variants — and deliver them into a sheet or straight into your database. Set up in days, maintained when their site changes.</p>
+    <div class="hero-actions">
+      <a href="free-sample.html" class="btn">Free sample on one competitor</a>
+      <a href="contact.html" class="btn btn-out">Get a quote</a>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">The problem</span>
+      <h2>Manual price checking fails in a predictable way.</h2>
+    </div>
+    <div class="cards">
+      <div class="item">
+        <h3>It's always out of date</h3>
+        <p>Someone checks the top 30 SKUs once a month. By the time the sheet is filled in, half the prices have moved and nobody trusts it enough to act on.</p>
+      </div>
+      <div class="item">
+        <h3>It doesn't scale past a few SKUs</h3>
+        <p>Checking 3,000 products by hand isn't a task anyone completes. So teams check the products they already worry about — and miss the ones quietly losing.</p>
+      </div>
+      <div class="item">
+        <h3>It hides the interesting part</h3>
+        <p>A price today tells you little. A price history tells you when they discount, how deep, and how long they hold it. Manual checking never produces that.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft rule-top">
+  <div class="wrap split">
+    <div>
+      <span class="label">What we deliver</span>
+      <h2>A dated row for every product, every run.</h2>
+      <p class="lead" style="margin-top:22px">Because each run is timestamped and stored, you get a price history as a by-product — so you can see discount patterns, not just today's number.</p>
+      <div class="meta" style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="chip">Shopify</span><span class="chip">WooCommerce</span><span class="chip">Magento</span><span class="chip">Amazon listings</span><span class="chip">Custom catalogues</span>
+      </div>
+      <p style="margin-top:28px"><a class="arrow-link" href="free-sample.html">Try it on one competitor, free</a></p>
+    </div>
+
+    <div class="code">
+      <div class="bar"><span></span><span></span><span></span>&nbsp;competitor_prices.csv</div>
+<pre><span class="c">date,sku,name,price,currency,in_stock,discount</span>
+<span class="s">2026-09-07</span>,<span class="s">A-8821</span>,<span class="s">Roof Rail</span>,<span class="k">129.95</span>,EUR,<span class="k">true</span>,<span class="k">0%</span>
+<span class="s">2026-09-06</span>,<span class="s">A-8821</span>,<span class="s">Roof Rail</span>,<span class="k">149.95</span>,EUR,<span class="k">true</span>,<span class="k">0%</span>
+<span class="s">2026-09-07</span>,<span class="s">A-8822</span>,<span class="s">Cargo Box</span>,<span class="k">319.00</span>,EUR,<span class="k">false</span>,<span class="k">20%</span>
+<span class="s">2026-09-07</span>,<span class="s">A-8823</span>,<span class="s">Bike Mount</span>,<span class="k">89.50</span>,EUR,<span class="k">true</span>,<span class="k">10%</span>
+
+<span class="c"># 3,140 rows · 4 competitors · run completed 06:00 UTC
+# 12 price changes since yesterday → alert sent</span></pre>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">How it works</span>
+      <h2>Live within a week, usually less.</h2>
+    </div>
+    <div class="steps">
+      <div class="s"><span class="num">STEP 01</span><h4>Name the competitors</h4><p>Send us the catalogue URLs and the fields you care about. We check each one is extractable before quoting.</p></div>
+      <div class="s"><span class="num">STEP 02</span><h4>Sample run</h4><p>We extract 100 rows from one of them so you can verify accuracy against the live site yourself.</p></div>
+      <div class="s"><span class="num">STEP 03</span><h4>Scheduled build</h4><p>Full extraction goes on a daily or weekly schedule, with failure alerts if a run breaks.</p></div>
+      <div class="s"><span class="num">STEP 04</span><h4>Maintained</h4><p>When a competitor redesigns their site, fixing the selectors is our job, not a new invoice.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Pricing</span>
+      <h2>Start with a snapshot, move to a feed.</h2>
+    </div>
+    <div class="table-scroll" style="background:#fff">
+      <table class="spec">
+        <tr><th>Option</th><th>What you get</th><th>Price</th></tr>
+        <tr><td>One-off snapshot</td><td>A single competitor catalogue, extracted once, delivered as CSV or a Sheet</td><td>$120</td></tr>
+        <tr><td>Weekly feed</td><td>Up to 3 competitors, refreshed weekly, with change alerts</td><td>$300/month</td></tr>
+        <tr><td>Daily feed</td><td>Up to 5 competitors, refreshed daily, written to your sheet or database</td><td>$450/month</td></tr>
+        <tr><td>Custom</td><td>Larger catalogues, proxy infrastructure, real-time monitoring</td><td>Quoted</td></tr>
+      </table>
+    </div>
+    <p class="small muted" style="margin-top:18px">All plans include selector maintenance and can be cancelled any month.</p>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="wrap">
+    <div class="sec-head"><span class="label">Questions</span><h2>Before you ask.</h2></div>
+    <div class="faq">
+      <details open>
+        <summary>Is scraping competitor prices legal?</summary>
+        <p>We collect publicly accessible pricing — the same pages any shopper can see — and respect each site's terms and rate limits. We do not access anything behind a login we aren't authorised for. Competitive price research is common practice, but how you use the data is your decision, and if it involves personal data rather than product data, check your obligations under GDPR or your local equivalent.</p>
+      </details>
+      <details>
+        <summary>What happens when they change their site?</summary>
+        <p>Selectors break — that's normal, and fixing them is included in every monthly plan. You'll usually know because we've already fixed it, not because your feed went empty.</p>
+      </details>
+      <details>
+        <summary>Can it write into our existing system?</summary>
+        <p>Yes. Google Sheets, S3, PostgreSQL, MySQL, Airtable, or a webhook into whatever you already run.</p>
+      </details>
+      <details>
+        <summary>How fast can it be running?</summary>
+        <p>A single competitor snapshot is usually same-day. A full scheduled feed across several competitors is typically live within a week.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="bg-dark cta-band">
+  <div class="wrap">
+    <span class="label">Start here</span>
+    <h2>Pick one competitor. We'll send you their prices tomorrow.</h2>
+    <p class="lead">Free, 100 rows, no commitment — the fastest way to see whether this is worth paying for.</p>
+    <div class="row">
+      <a href="free-sample.html" class="btn btn-lite">Get a free sample</a>
+      <a href="pricing.html" class="btn" style="border-color:#3a3e45">See pricing</a>
+    </div>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/YOUR_HANDLE">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik.tech</div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

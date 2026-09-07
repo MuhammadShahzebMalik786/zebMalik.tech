@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free sample — zebMalik.tech</title>
+<meta name="description" content="Send us one public source. We extract 100 rows and deliver them within 24 hours, free, with no commitment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <span class="label">No charge, no commitment</span>
+    <h1>Send one source. Get 100 rows back within 24 hours.</h1>
+    <p class="lead">You have no reason to trust a team you found on the internet. So don't — judge the output instead. Tell us a public page and the fields you want, and we'll extract a hundred real rows from it and send you the sheet. Free, once per company.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap split" style="align-items:start">
+    <div>
+      <span class="label">Why we do this</span>
+      <h2 style="margin-bottom:22px">It costs us an hour and settles the argument.</h2>
+      <p class="lead">Every scraping quote is a promise about data you haven't seen. A sample turns that promise into a spreadsheet you can open, sort and check against the live site yourself.</p>
+
+      <div class="numbered" style="margin-top:36px">
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">01</div>
+          <div><h4>You send the source</h4><p class="small muted" style="margin-top:4px">A URL and the columns you want. That's the whole brief.</p></div>
+        </div>
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">02</div>
+          <div><h4>We extract 100 rows</h4><p class="small muted" style="margin-top:4px">Real data from the live site — normalised, deduplicated, exactly as the full job would arrive.</p></div>
+        </div>
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">03</div>
+          <div><h4>You get a Google Sheet</h4><p class="small muted" style="margin-top:4px">Within 24 hours, with a fixed quote for the full job alongside it.</p></div>
+        </div>
+        <div class="row" style="grid-template-columns:60px 1fr;padding:22px 0">
+          <div class="n">04</div>
+          <div><h4>You decide, or you don't</h4><p class="small muted" style="margin-top:4px">Keep the sample either way. There is no follow-up sequence and no invoice.</p></div>
+        </div>
+      </div>
+
+      <div style="margin-top:36px;padding-top:28px;border-top:1px solid var(--line)">
+        <span class="label">The fine print, in full</span>
+        <p class="small muted">One free sample per company. 100 rows, one source. Publicly accessible pages only — nothing behind a login we aren't authorised for, and nothing a site's terms forbid. If your source falls outside that, we'll say so within the hour rather than go quiet.</p>
+      </div>
+    </div>
+
+    <div>
+      <!-- REPLACE YOUR_FORM_ID with your Formspree endpoint -->
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input type="hidden" name="_subject" value="Free sample request">
+        <input type="hidden" name="request_type" value="free-sample">
+
+        <div class="two">
+          <div class="field">
+            <label for="name">Name <span class="req">*</span></label>
+            <input id="name" name="name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="email">Work email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text">
+        </div>
+
+        <div class="field">
+          <label for="source">The page you want extracted <span class="req">*</span></label>
+          <input id="source" name="source" type="url" placeholder="https://" required>
+          <div class="hint">A category or listing page works best — that's where the rows are.</div>
+        </div>
+
+        <div class="field">
+          <label for="fields">Which columns do you want? <span class="req">*</span></label>
+          <textarea id="fields" name="fields" required placeholder="e.g. product name, price, currency, SKU, stock status, image URL, product page link" style="min-height:110px"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="usecase">What would you do with the full dataset?</label>
+          <select id="usecase" name="usecase">
+            <option>Competitor price monitoring</option>
+            <option>Lead list building</option>
+            <option>Market or product research</option>
+            <option>Populating a catalogue or database</option>
+            <option>Still working that out</option>
+          </select>
+          <div class="hint">Optional, but it changes what we'd recommend.</div>
+        </div>
+
+        <button class="btn" type="submit" style="width:100%;justify-content:center">Send me the sample</button>
+        <p class="hint" style="text-align:center">Delivered within 24 hours. We reply to every request, including the ones we can't take.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Questions</span>
+      <h2>What people ask before sending one.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>What's the catch?</summary>
+        <p>There isn't one, but here is the honest reasoning: most people who see accurate data from their own target site go on to order the full job, and the ones who don't cost us an hour. It's cheaper than advertising and more convincing than a case study.</p>
+      </details>
+      <details>
+        <summary>Will you keep emailing me?</summary>
+        <p>No. You get the sample, the quote, and one follow-up a few days later. If you don't reply to that, we stop.</p>
+      </details>
+      <details>
+        <summary>Can I ask for more than 100 rows?</summary>
+        <p>Not free. A hundred rows is enough to judge field accuracy, formatting and completeness — which is the entire point. Beyond that it becomes the job itself.</p>
+      </details>
+      <details>
+        <summary>What if the site is difficult?</summary>
+        <p>Then the sample is more useful, not less. If a source has aggressive bot protection or a structure that makes extraction unreliable, we'd rather find that out on our own time and tell you honestly than discover it after you've paid.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/YOUR_HANDLE">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik.tech</div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>
