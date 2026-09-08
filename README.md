@@ -36,7 +36,7 @@ Find it:
 grep -rn "YOUR_FORM_ID" *.html
 ```
 
-Contact details are already wired in: `malikshahzebabd@gmail.com`,
+Contact details are already wired in: `hello@zebmalik.tech` (forwards to Gmail via Cloudflare Email Routing),
 `wa.me/923448970498`, and the LinkedIn profile in every footer.
 
 ## Deploying
