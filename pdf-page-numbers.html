@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free Image Converter — JPG, PNG &amp; WebP</title>
-<meta name="description" content="Convert images between JPG, PNG and WebP online for free. Fast browser-based conversion with no upload and no watermark.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add Page Numbers to PDF Online — Free &amp; Private</title>
+<meta name="description" content="Add page numbers to a PDF online for free. Choose a starting number and format, then download the numbered PDF created in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-<body data-tool="converter">
+<body data-tool="pdf-page-numbers">
 <header class="site-header">
   <div class="wrap hdr">
     <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
@@ -23,15 +27,18 @@
     <a href="free-sample.html" class="btn">Get a free sample</a>
   </div>
 </header>
-<div class="pagehead"><div class="wrap"><span class="label">Tools / Image converter</span><h1>Convert JPG, PNG and WebP in your browser.</h1><p class="lead">Choose an output format and download a clean copy. No account, watermark or server upload.</p></div></div>
+<div class="pagehead"><div class="wrap"><span class="label">Tools / PDF page numbers</span><h1>Add page numbers to a PDF in seconds.</h1><p class="lead">Number reports, proposals and document bundles with a clean footer label. Your file stays on your device.</p></div></div>
 <div class="wrap ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
-<section><div class="wrap tool-layout"><div class="tool-card"><h2>Convert an image</h2><p>Switch formats for websites, design tools, messaging apps or archives.</p>
-<label id="dropzone" class="tool-dropzone" for="file-input"><strong>Drop images here</strong><span>or click to choose one or more JPG, PNG or WebP files</span><small>Convert a whole batch at once</small><input id="file-input" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif"></label>
-<ul id="selected-files" class="file-list"></ul>
-<div class="tool-options"><div class="field"><label for="output-format">Convert to</label><select id="output-format"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div></div>
-<p id="tool-status" class="tool-status">Choose one or more images to begin.</p><button id="process-button" class="btn" type="button">Convert images</button><div id="tool-output" class="tool-output"></div></div>
-<aside><span class="label">Format guide</span><h2>Pick the right file.</h2><p class="lead">JPG is compact for photographs. PNG keeps transparency and sharp graphics. WebP is often the smallest choice for modern websites.</p><ul class="tool-list"><li>JPG for photos and email</li><li>PNG for transparency and logos</li><li>WebP for fast websites</li></ul></aside></div></section>
-<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="image-compressor.html">Compress an image</a> &nbsp; <a class="arrow-link" href="image-resizer.html">Resize an image</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
+<section><div class="wrap tool-layout"><div class="tool-card">
+  <h2>Number your PDF</h2><p>Numbers are added at the bottom center of every page.</p>
+  <label class="tool-dropzone" for="pdf-file-input"><strong>Drop a PDF here</strong><span>or click to choose one PDF file</span><small>Local processing · no upload</small><input id="pdf-file-input" type="file" accept="application/pdf"></label>
+  <ul id="selected-files" class="file-list"></ul>
+  <div class="tool-options"><div class="field"><label for="page-start">Starting number</label><input id="page-start" type="number" min="1" value="1"></div><div class="field"><label for="page-style">Number format</label><select id="page-style"><option value="plain">1</option><option value="of" selected>Page 1 of 10</option></select></div></div>
+  <p id="tool-status" class="tool-status">Choose a PDF to begin.</p>
+  <button id="process-button" class="btn" type="button" disabled>Add page numbers</button>
+  <div id="tool-output" class="tool-output"></div>
+</div><aside><span class="label">Good to know</span><h2>Ready for a report.</h2><p class="lead">Start at any number when a PDF is one section of a larger document.</p><ul class="tool-list"><li>Plain or Page X of Y format</li><li>Choose the starting number</li><li>No upload or account</li></ul></aside></div></section>
+<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="watermark-pdf.html">Watermark a PDF</a> &nbsp; <a class="arrow-link" href="pdf-organizer.html">Organize pages</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
 <footer class="site-footer">
   <div class="wrap">
     <div class="fcols">
@@ -96,5 +103,7 @@
 </footer>
 
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
-<script src="tools.js"></script>
-</body></html>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="advanced-tools.js"></script>
+</body>
+</html>

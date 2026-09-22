@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free Image Converter — JPG, PNG &amp; WebP</title>
-<meta name="description" content="Convert images between JPG, PNG and WebP online for free. Fast browser-based conversion with no upload and no watermark.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Word Counter — Count Words and Characters Online</title>
+<meta name="description" content="Count words, characters, lines and estimated reading time online for free. A fast, private word counter that runs in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-<body data-tool="converter">
+<body data-tool="word-counter">
 <header class="site-header">
   <div class="wrap hdr">
     <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
@@ -23,15 +27,21 @@
     <a href="free-sample.html" class="btn">Get a free sample</a>
   </div>
 </header>
-<div class="pagehead"><div class="wrap"><span class="label">Tools / Image converter</span><h1>Convert JPG, PNG and WebP in your browser.</h1><p class="lead">Choose an output format and download a clean copy. No account, watermark or server upload.</p></div></div>
+<div class="pagehead"><div class="wrap"><span class="label">Tools / Word counter</span><h1>Count words while you write.</h1><p class="lead">Paste or type text to see word count, character count, lines and estimated reading time immediately.</p></div></div>
 <div class="wrap ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
-<section><div class="wrap tool-layout"><div class="tool-card"><h2>Convert an image</h2><p>Switch formats for websites, design tools, messaging apps or archives.</p>
-<label id="dropzone" class="tool-dropzone" for="file-input"><strong>Drop images here</strong><span>or click to choose one or more JPG, PNG or WebP files</span><small>Convert a whole batch at once</small><input id="file-input" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif"></label>
-<ul id="selected-files" class="file-list"></ul>
-<div class="tool-options"><div class="field"><label for="output-format">Convert to</label><select id="output-format"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div></div>
-<p id="tool-status" class="tool-status">Choose one or more images to begin.</p><button id="process-button" class="btn" type="button">Convert images</button><div id="tool-output" class="tool-output"></div></div>
-<aside><span class="label">Format guide</span><h2>Pick the right file.</h2><p class="lead">JPG is compact for photographs. PNG keeps transparency and sharp graphics. WebP is often the smallest choice for modern websites.</p><ul class="tool-list"><li>JPG for photos and email</li><li>PNG for transparency and logos</li><li>WebP for fast websites</li></ul></aside></div></section>
-<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="image-compressor.html">Compress an image</a> &nbsp; <a class="arrow-link" href="image-resizer.html">Resize an image</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
+<section><div class="wrap tool-layout"><div class="tool-card">
+  <h2>Word and character counter</h2><p>Useful for essays, applications, blog posts, social captions and SEO copy.</p>
+  <div class="field"><label for="word-input">Your text</label><textarea id="word-input" class="tool-textarea" rows="15" placeholder="Start typing or paste your text here…"></textarea></div>
+  <div class="stats-grid">
+    <div class="stat"><strong id="word-count">0</strong><span>Words</span></div>
+    <div class="stat"><strong id="character-count">0</strong><span>Characters</span></div>
+    <div class="stat"><strong id="character-no-space-count">0</strong><span>No spaces</span></div>
+    <div class="stat"><strong id="line-count">0</strong><span>Lines</span></div>
+    <div class="stat"><strong id="reading-time">0 min</strong><span>Reading time</span></div>
+  </div>
+  <p id="tool-status" class="tool-status">Your text is counted locally in real time.</p>
+</div><aside><span class="label">Good to know</span><h2>Clear numbers, no account.</h2><p class="lead">The reading-time estimate uses 200 words per minute. It is a guide, not a measurement of speaking speed.</p><ul class="tool-list"><li>Live word and character count</li><li>Line and reading-time estimate</li><li>Your text stays in this browser</li></ul></aside></div></section>
+<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="json-formatter.html">Format JSON</a> &nbsp; <a class="arrow-link" href="image-compressor.html">Compress an image</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
 <footer class="site-footer">
   <div class="wrap">
     <div class="fcols">
@@ -96,5 +106,6 @@
 </footer>
 
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
-<script src="tools.js"></script>
-</body></html>
+<script src="advanced-tools.js"></script>
+</body>
+</html>

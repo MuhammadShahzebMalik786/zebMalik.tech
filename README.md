@@ -26,7 +26,18 @@ image-converter.html              Browser-based format converter
 image-to-pdf.html                 Browser-based image to PDF tool
 pdf-to-image.html                 Browser-based PDF renderer
 image-metadata-remover.html       Browser-based EXIF metadata remover
-tools.js / pdf-to-image.js        Client-side tool logic
+merge-pdf.html                    Browser-based PDF merger
+split-pdf.html                    Browser-based PDF page extractor
+compress-pdf.html                 Browser-based PDF optimizer
+extract-text-from-pdf.html        Browser-based PDF text extraction and OCR
+pdf-organizer.html                Browser-based PDF page organizer
+watermark-pdf.html                Browser-based text watermark tool
+pdf-page-numbers.html             Browser-based PDF page numbering
+qr-code-generator.html            Browser-based QR code generator
+json-formatter.html               Browser-based JSON formatter and validator
+word-counter.html                 Browser-based word and character counter
+tools.js / advanced-tools.js      Client-side tool logic
+pdf-to-image.js                   PDF rendering logic
 styles.css                        Shared stylesheet
 sitemap.xml / robots.txt          Search
 _headers / 404.html                Cloudflare Pages headers and fallback page
@@ -49,10 +60,19 @@ grep -rn "YOUR_FORM_ID" *.html
 Contact details are already wired in: `hello@zebmalik.tech` (forwards to Gmail via Cloudflare Email Routing),
 `wa.me/923448970498`, and the LinkedIn profile in every footer.
 
-The Tools pages process images and PDFs in the visitor's browser. Files are not
-uploaded to this site. Image compressor, resizer, converter and metadata remover
-support batches; Image to PDF supports multiple pages and drag-to-reorder.
-PDF-to-image uses PDF.js from cdnjs; the other tools have no runtime dependency.
+The Tools pages process images, PDFs and text in the visitor's browser. Files are
+not uploaded to this site. Image compressor, resizer, converter and metadata
+remover support batches; Image to PDF supports multiple pages and drag-to-reorder.
+PDF merge, split and optimization use pdf-lib from jsDelivr. PDF-to-image uses
+PDF.js from cdnjs, and the QR generator uses qrcode-generator from jsDelivr.
+PDF text extraction uses PDF.js and offers optional Tesseract.js OCR for scanned
+pages. JSON formatting and word counting have no runtime dependency. External
+libraries are loaded only to provide the relevant browser-side feature; the site
+does not send user files to an application server.
+The PDF organizer, watermark and page-number tools use pdf-lib in the browser.
+They do not claim to provide password removal, encryption, PDF-to-Word conversion
+or permanent redaction; those features need additional format-specific handling
+and should not be represented as simple browser operations.
 
 ## Deploying
 

@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free Image Converter — JPG, PNG &amp; WebP</title>
-<meta name="description" content="Convert images between JPG, PNG and WebP online for free. Fast browser-based conversion with no upload and no watermark.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add a Watermark to PDF Online — Free &amp; Private</title>
+<meta name="description" content="Add a visible text watermark to every PDF page for free. Choose the watermark size and opacity; processing stays in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-<body data-tool="converter">
+<body data-tool="watermark-pdf">
 <header class="site-header">
   <div class="wrap hdr">
     <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
@@ -23,15 +27,19 @@
     <a href="free-sample.html" class="btn">Get a free sample</a>
   </div>
 </header>
-<div class="pagehead"><div class="wrap"><span class="label">Tools / Image converter</span><h1>Convert JPG, PNG and WebP in your browser.</h1><p class="lead">Choose an output format and download a clean copy. No account, watermark or server upload.</p></div></div>
+<div class="pagehead"><div class="wrap"><span class="label">Tools / Watermark PDF</span><h1>Stamp a visible watermark on every page.</h1><p class="lead">Add a diagonal text watermark to a PDF before sharing it with a client, reviewer or team member.</p></div></div>
 <div class="wrap ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
-<section><div class="wrap tool-layout"><div class="tool-card"><h2>Convert an image</h2><p>Switch formats for websites, design tools, messaging apps or archives.</p>
-<label id="dropzone" class="tool-dropzone" for="file-input"><strong>Drop images here</strong><span>or click to choose one or more JPG, PNG or WebP files</span><small>Convert a whole batch at once</small><input id="file-input" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif"></label>
-<ul id="selected-files" class="file-list"></ul>
-<div class="tool-options"><div class="field"><label for="output-format">Convert to</label><select id="output-format"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div></div>
-<p id="tool-status" class="tool-status">Choose one or more images to begin.</p><button id="process-button" class="btn" type="button">Convert images</button><div id="tool-output" class="tool-output"></div></div>
-<aside><span class="label">Format guide</span><h2>Pick the right file.</h2><p class="lead">JPG is compact for photographs. PNG keeps transparency and sharp graphics. WebP is often the smallest choice for modern websites.</p><ul class="tool-list"><li>JPG for photos and email</li><li>PNG for transparency and logos</li><li>WebP for fast websites</li></ul></aside></div></section>
-<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="image-compressor.html">Compress an image</a> &nbsp; <a class="arrow-link" href="image-resizer.html">Resize an image</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
+<section><div class="wrap tool-layout"><div class="tool-card">
+  <h2>Watermark a PDF</h2><p>The watermark is drawn into a new copy of the document.</p>
+  <label class="tool-dropzone" for="pdf-file-input"><strong>Drop a PDF here</strong><span>or click to choose one PDF file</span><small>Local processing · no upload</small><input id="pdf-file-input" type="file" accept="application/pdf"></label>
+  <ul id="selected-files" class="file-list"></ul>
+  <div class="tool-options"><div class="field"><label for="watermark-text">Watermark text</label><input id="watermark-text" type="text" value="DRAFT" maxlength="80"></div><div class="field"><label for="watermark-size">Text size</label><select id="watermark-size"><option value="28">Small</option><option value="42" selected>Medium</option><option value="64">Large</option></select></div></div>
+  <div class="field"><label for="watermark-opacity">Opacity</label><div class="tool-range"><input id="watermark-opacity" type="range" min="10" max="80" value="28"><output id="watermark-opacity-value">28%</output></div></div>
+  <p id="tool-status" class="tool-status">Choose a PDF to begin.</p>
+  <button id="process-button" class="btn" type="button" disabled>Apply watermark</button>
+  <div id="tool-output" class="tool-output"></div>
+</div><aside><span class="label">Good to know</span><h2>Make sharing intent clear.</h2><p class="lead">Use DRAFT, SAMPLE, CONFIDENTIAL or your own short label. The watermark is visible in the exported PDF.</p><ul class="tool-list"><li>Text watermark on every page</li><li>Adjustable size and opacity</li><li>Original file stays untouched</li></ul></aside></div></section>
+<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="pdf-page-numbers.html">Add page numbers</a> &nbsp; <a class="arrow-link" href="pdf-organizer.html">Organize pages</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
 <footer class="site-footer">
   <div class="wrap">
     <div class="fcols">
@@ -96,5 +104,8 @@
 </footer>
 
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
-<script src="tools.js"></script>
-</body></html>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="advanced-tools.js"></script>
+<script>document.getElementById('watermark-opacity').addEventListener('input',function(){document.getElementById('watermark-opacity-value').textContent=this.value+'%';});</script>
+</body>
+</html>

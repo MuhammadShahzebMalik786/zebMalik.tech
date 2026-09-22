@@ -9,6 +9,16 @@ TOOL_PAGES = {
     "image-to-pdf.html",
     "pdf-to-image.html",
     "image-metadata-remover.html",
+    "merge-pdf.html",
+    "split-pdf.html",
+    "compress-pdf.html",
+    "extract-text-from-pdf.html",
+    "pdf-organizer.html",
+    "watermark-pdf.html",
+    "pdf-page-numbers.html",
+    "qr-code-generator.html",
+    "json-formatter.html",
+    "word-counter.html",
 }
 
 NAV = [
@@ -60,6 +70,16 @@ FOOTER = '''<footer class="site-footer">
         <a href="image-to-pdf.html">Image to PDF</a>
         <a href="pdf-to-image.html">PDF to image</a>
         <a href="image-metadata-remover.html">Metadata remover</a>
+        <a href="merge-pdf.html">Merge PDF</a>
+        <a href="split-pdf.html">Split PDF</a>
+        <a href="compress-pdf.html">Compress PDF</a>
+        <a href="extract-text-from-pdf.html">PDF to text &amp; OCR</a>
+        <a href="pdf-organizer.html">Organize PDF pages</a>
+        <a href="watermark-pdf.html">Watermark PDF</a>
+        <a href="pdf-page-numbers.html">Add page numbers</a>
+        <a href="qr-code-generator.html">QR code generator</a>
+        <a href="json-formatter.html">JSON formatter</a>
+        <a href="word-counter.html">Word counter</a>
       </div>
       <div>
         <h4>Solutions</h4>

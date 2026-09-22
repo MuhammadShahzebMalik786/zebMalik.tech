@@ -326,6 +326,25 @@ textarea{min-height:140px;resize:vertical;line-height:1.55}
 .tool-range output{font-family:var(--mono);font-size:13px;min-width:42px}
 .tool-status{font-size:14px;color:var(--ink-2);min-height:24px;margin:16px 0}
 .tool-status.is-error{color:var(--accent-dark)}
+.tool-card .field{margin:0 0 18px}
+.tool-card .field>label{display:block;font-size:14px;font-weight:500;margin-bottom:7px}
+.tool-card .field p{font-size:14px}
+.tool-field-note{padding:11px 0;color:var(--ink-3)!important}
+.tool-actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 4px}
+.tool-actions .btn{padding:10px 14px;font-size:14px}
+.tool-textarea{min-height:120px;resize:vertical}
+.tool-code-input,.json-result{font-family:var(--mono);font-size:13px;line-height:1.65}
+.json-result{margin:20px 0 0;padding:18px;min-height:100px;max-height:420px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--paper-2);border:1px solid var(--line);color:var(--ink-2)}
+.json-result.is-ready{color:var(--ink)}
+.qr-output{display:none;align-items:center;gap:18px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:22px;margin-top:24px}
+.qr-output.has-result{display:flex}
+.qr-output img{width:auto;height:auto;max-width:100%;border:1px solid var(--line);image-rendering:auto}
+.qr-output .btn{padding:10px 14px;font-size:14px}
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:22px}
+.stat{background:var(--paper-2);padding:16px 12px}
+.stat strong{display:block;font-size:24px;line-height:1.1;letter-spacing:-.03em;overflow-wrap:anywhere}
+.stat span{display:block;color:var(--ink-3);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;margin-top:7px}
+button:disabled{cursor:not-allowed;opacity:.5}
 .tool-output{display:none;border-top:1px solid var(--line);padding-top:22px;margin-top:24px;gap:12px;align-items:stretch;flex-wrap:wrap}
 .tool-output.has-result{display:flex}
 .tool-preview{max-width:180px;max-height:140px;object-fit:contain;border:1px solid var(--line);background:var(--paper-2)}
@@ -358,6 +377,11 @@ textarea{min-height:140px;resize:vertical;line-height:1.55}
 .file-list li[draggable="true"]{cursor:grab}
 .file-list li[draggable="true"]:active{cursor:grabbing;background:var(--paper-2)}
 .file-list li.is-dragging{opacity:.45}
+.organizer-list{list-style:none;margin:20px 0 0;padding:0;border-top:1px solid var(--line)}
+.organizer-page{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.organizer-page>span{font-size:13px;color:var(--ink-3)}
+.organizer-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.organizer-actions .btn{padding:5px 8px;font-size:12px;min-width:32px;justify-content:center}
 .file-order-note{font-size:13px;color:var(--ink-3);margin-top:12px}
 .pdf-help{margin-top:30px;padding-top:24px;border-top:1px solid var(--line)}
 .pdf-pages{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:26px}
@@ -375,6 +399,8 @@ body[data-tool] .tool-grid .item:nth-child(5){animation-delay:.24s}
 @keyframes tool-fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes tool-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media(max-width:850px){.tool-layout{grid-template-columns:1fr;gap:32px}}
-@media(max-width:620px){.tool-options,.tool-grid,.pdf-pages{grid-template-columns:1fr}.tool-card{padding:20px}.tool-dropzone{padding:36px 18px}.tool-result-card{grid-template-columns:64px 1fr}.tool-result-card .tool-preview{width:64px;height:56px}.tool-result-card .btn{grid-column:2;justify-self:start}}
+@media(max-width:850px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.tool-options,.tool-grid,.pdf-pages{grid-template-columns:1fr}.tool-card{padding:20px}.tool-dropzone{padding:36px 18px}.tool-result-card{grid-template-columns:64px 1fr}.tool-result-card .tool-preview{width:64px;height:56px}.tool-result-card .btn{grid-column:2;justify-self:start}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.organizer-page{grid-template-columns:1fr}.organizer-actions{justify-content:flex-start}}
 @media(prefers-reduced-motion:reduce){body[data-tool] .pagehead,body[data-tool] .tool-card,body[data-tool] .tool-layout>aside,body[data-tool] .tool-grid .item,.tool-result-card,.pdf-page{animation:none}.tool-dropzone,.tool-dropzone:hover{transform:none}}
 .tech-mark{color:var(--accent)}
