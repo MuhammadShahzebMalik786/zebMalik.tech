@@ -1,3 +1,5 @@
+import html
+import json
 import re, glob, os
 
 SITE = os.path.dirname(os.path.abspath(__file__))
@@ -24,6 +26,94 @@ TOOL_PAGES = {
     "json-formatter.html",
     "word-counter.html",
 }
+
+SITE_URL = "https://zebmalik.tech"
+SOCIAL_IMAGE = SITE_URL + "/android-chrome-512x512.png"
+
+def page_url(fname):
+    return SITE_URL + ("/" if fname == "index.html" else "/" + fname)
+
+def seo_block(fname, title, description):
+    if fname == "404.html":
+        return '''<!-- SEO-META -->
+<meta name="robots" content="noindex, nofollow">
+<!-- /SEO-META -->'''
+
+    url = page_url(fname)
+    clean_title = html.unescape(title)
+    clean_description = html.unescape(description)
+    label = "Home" if fname == "index.html" else re.sub(r"\s*[—|].*$", "", clean_title).strip()
+    graph = [{
+        "@type": "WebPage",
+        "@id": url + "#webpage",
+        "url": url,
+        "name": clean_title,
+        "description": clean_description,
+        "isPartOf": {"@id": SITE_URL + "/#website"},
+        "inLanguage": "en"
+    }]
+    if fname != "index.html":
+        graph.append({
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL + "/"},
+                {"@type": "ListItem", "position": 2, "name": label, "item": url}
+            ]
+        })
+    if fname == "index.html":
+        graph.extend([{
+            "@type": "Organization",
+            "@id": SITE_URL + "/#organization",
+            "name": "zebMalik.tech",
+            "url": SITE_URL + "/",
+            "logo": {"@type": "ImageObject", "url": SOCIAL_IMAGE},
+            "sameAs": [
+                "https://github.com/MuhammadShahzebMalik786",
+                "https://www.linkedin.com/in/muhammad-shahzeb-malik/"
+            ]
+        }, {
+            "@type": "WebSite",
+            "@id": SITE_URL + "/#website",
+            "url": SITE_URL + "/",
+            "name": "zebMalik.tech",
+            "publisher": {"@id": SITE_URL + "/#organization"},
+            "inLanguage": "en"
+        }])
+    elif fname in TOOL_PAGES and fname != "tools.html":
+        graph.append({
+            "@type": "SoftwareApplication",
+            "name": clean_title,
+            "url": url,
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Web browser",
+            "isAccessibleForFree": True,
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+            "featureList": [
+                "Processing in the web browser",
+                "No account required",
+                "Tool inputs are not sent to an application server"
+            ]
+        })
+    payload = json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=True)
+    return f'''<!-- SEO-META -->
+<link rel="canonical" href="{html.escape(url, quote=True)}">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="zebMalik.tech">
+<meta name="theme-color" content="#121316">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="zebMalik.tech">
+<meta property="og:title" content="{html.escape(clean_title, quote=True)}">
+<meta property="og:description" content="{html.escape(clean_description, quote=True)}">
+<meta property="og:url" content="{html.escape(url, quote=True)}">
+<meta property="og:image" content="{SOCIAL_IMAGE}">
+<meta property="og:image:alt" content="zebMalik.tech">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{html.escape(clean_title, quote=True)}">
+<meta name="twitter:description" content="{html.escape(clean_description, quote=True)}">
+<meta name="twitter:image" content="{SOCIAL_IMAGE}">
+<script type="application/ld+json">{payload}</script>
+<!-- /SEO-META -->'''
 
 NAV = [
     ("services.html", "Services"),
@@ -126,8 +216,14 @@ ftr_re = re.compile(r'<footer class="site-footer">.*?</footer>\s*(?:<script>docu
 
 for path in sorted(glob.glob(os.path.join(SITE, "*.html"))):
     fname = os.path.basename(path)
-    src = open(path).read()
+    src = open(path, encoding="utf-8").read()
     h = header(fname)
+    title_match = re.search(r"<title>(.*?)</title>", src, re.S | re.I)
+    description_match = re.search(r'<meta name="description" content="([^"]*)"', src, re.I)
+    if title_match and description_match:
+        src = re.sub(r"<!-- SEO-META -->.*?<!-- /SEO-META -->\s*", "", src, flags=re.S)
+        metadata = seo_block(fname, html.unescape(title_match.group(1)), html.unescape(description_match.group(1)))
+        src = src.replace("</head>", metadata + "\n</head>", 1)
 
     if "<!--HEADER-->" in src:
         src = src.replace("<!--HEADER-->", h)
@@ -139,5 +235,5 @@ for path in sorted(glob.glob(os.path.join(SITE, "*.html"))):
     else:
         src = ftr_re.sub(lambda m: FOOTER, src, count=1)
 
-    open(path, "w").write(src)
+    open(path, "w", encoding="utf-8").write(src)
     print("updated", fname)

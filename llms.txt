@@ -1,0 +1,24 @@
+# zebMalik.tech
+
+> Privacy-first browser tools for images, PDFs, text and developer workflows, plus fixed-scope engineering services.
+
+## What this site provides
+
+zebMalik.tech is a static website. The free tools process files in the visitor's browser wherever the page says local/browser processing. Files are not sent to an application server. Some pages load open-source browser libraries from public CDNs for PDF rendering, PDF editing and OCR.
+
+The engineering side of the site offers data extraction, AI chatbot and RAG development, workflow automation, backend/API engineering, and data operations. Project scope, price and source-code handover are discussed directly; the site does not claim that every project is already completed.
+
+## Useful pages
+
+- [All browser tools](https://zebmalik.tech/tools.html): image, PDF, QR, JSON and writing utilities.
+- [Image tools](https://zebmalik.tech/image-compressor.html): compress, resize, convert, crop, rotate, watermark and remove metadata.
+- [PDF tools](https://zebmalik.tech/merge-pdf.html): merge, split, optimize, extract text/OCR, organize, watermark and number pages.
+- [JSON formatter](https://zebmalik.tech/json-formatter.html): validate, format, minify, copy and download JSON locally.
+- [Word counter](https://zebmalik.tech/word-counter.html): count words, characters, lines and estimated reading time locally.
+- [Engineering services](https://zebmalik.tech/services.html): extraction, automation, backend and data operations.
+- [AI chatbot and RAG service](https://zebmalik.tech/ai-chatbot-rag.html): custom website chat, private document retrieval and handover.
+- [Contact](https://zebmalik.tech/contact.html): send a project brief.
+
+## Important limitations
+
+Browser processing depends on the visitor's device, browser memory and supported formats. OCR can make recognition mistakes and should be checked against the source. The free tools do not claim to replace professional redaction, password recovery, legal review or guaranteed lossless compression.

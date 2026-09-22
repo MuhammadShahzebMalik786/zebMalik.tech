@@ -16,5 +16,12 @@
 /advanced-tools.js
   Cache-Control: public, max-age=86400, must-revalidate
 
+/image-extra-tools.js
+  Cache-Control: public, max-age=86400, must-revalidate
+
+/llms.txt
+  Content-Type: text/plain; charset=UTF-8
+  Cache-Control: public, max-age=86400, must-revalidate
+
 /sitemap.xml
   Content-Type: application/xml; charset=UTF-8
