@@ -9,6 +9,10 @@
   <url><loc>https://zebmalik.tech/image-to-pdf.html</loc><priority>0.8</priority></url>
   <url><loc>https://zebmalik.tech/pdf-to-image.html</loc><priority>0.8</priority></url>
   <url><loc>https://zebmalik.tech/image-metadata-remover.html</loc><priority>0.8</priority></url>
+  <url><loc>https://zebmalik.tech/image-cropper.html</loc><priority>0.8</priority></url>
+  <url><loc>https://zebmalik.tech/image-rotator.html</loc><priority>0.8</priority></url>
+  <url><loc>https://zebmalik.tech/image-watermark.html</loc><priority>0.8</priority></url>
+  <url><loc>https://zebmalik.tech/meme-generator.html</loc><priority>0.8</priority></url>
   <url><loc>https://zebmalik.tech/merge-pdf.html</loc><priority>0.8</priority></url>
   <url><loc>https://zebmalik.tech/split-pdf.html</loc><priority>0.8</priority></url>
   <url><loc>https://zebmalik.tech/compress-pdf.html</loc><priority>0.8</priority></url>

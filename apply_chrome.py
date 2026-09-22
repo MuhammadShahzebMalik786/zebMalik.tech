@@ -9,6 +9,10 @@ TOOL_PAGES = {
     "image-to-pdf.html",
     "pdf-to-image.html",
     "image-metadata-remover.html",
+    "image-cropper.html",
+    "image-rotator.html",
+    "image-watermark.html",
+    "meme-generator.html",
     "merge-pdf.html",
     "split-pdf.html",
     "compress-pdf.html",
@@ -70,6 +74,10 @@ FOOTER = '''<footer class="site-footer">
         <a href="image-to-pdf.html">Image to PDF</a>
         <a href="pdf-to-image.html">PDF to image</a>
         <a href="image-metadata-remover.html">Metadata remover</a>
+        <a href="image-cropper.html">Image cropper</a>
+        <a href="image-rotator.html">Rotate images</a>
+        <a href="image-watermark.html">Image watermark</a>
+        <a href="meme-generator.html">Meme generator</a>
         <a href="merge-pdf.html">Merge PDF</a>
         <a href="split-pdf.html">Split PDF</a>
         <a href="compress-pdf.html">Compress PDF</a>

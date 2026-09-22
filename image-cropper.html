@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Free Image Converter — JPG, PNG &amp; WebP</title>
-<meta name="description" content="Convert images between JPG, PNG and WebP online for free. Fast browser-based conversion with no upload and no watermark.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop Image Online — Free JPG, PNG &amp; WebP Cropper</title>
+<meta name="description" content="Crop JPG, PNG and WebP images to exact pixel coordinates online for free. Your image stays in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
-<body data-tool="converter">
+<body data-tool="image-cropper">
 <header class="site-header">
   <div class="wrap hdr">
     <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
@@ -23,15 +27,16 @@
     <a href="free-sample.html" class="btn">Get a free sample</a>
   </div>
 </header>
-<div class="pagehead"><div class="wrap"><span class="label">Tools / Image converter</span><h1>Convert JPG, PNG and WebP in your browser.</h1><p class="lead">Choose an output format and download a clean copy. No account, watermark or server upload.</p></div></div>
+<div class="pagehead"><div class="wrap"><span class="label">Tools / Image cropper</span><h1>Crop an image to exact pixels.</h1><p class="lead">Choose an image, enter the crop area and download a focused JPG, PNG or WebP copy. Processing stays on your device.</p></div></div>
 <div class="wrap ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
-<section><div class="wrap tool-layout"><div class="tool-card"><h2>Convert an image</h2><p>Switch formats for websites, design tools, messaging apps or archives.</p>
-<label id="dropzone" class="tool-dropzone" for="file-input"><strong>Drop images here</strong><span>or click to choose one or more JPG, PNG or WebP files</span><small>Convert a whole batch at once</small><input id="file-input" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif"></label>
-<ul id="selected-files" class="file-list"></ul>
-<div class="tool-options"><div class="field"><label for="output-format">Convert to</label><select id="output-format"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div></div>
-<p id="tool-status" class="tool-status">Choose one or more images to begin.</p><button id="process-button" class="btn" type="button">Convert images</button><div id="tool-output" class="tool-output"></div></div>
-<aside><span class="label">Format guide</span><h2>Pick the right file.</h2><p class="lead">JPG is compact for photographs. PNG keeps transparency and sharp graphics. WebP is often the smallest choice for modern websites.</p><ul class="tool-list"><li>JPG for photos and email</li><li>PNG for transparency and logos</li><li>WebP for fast websites</li></ul></aside></div></section>
-<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="image-compressor.html">Compress an image</a> &nbsp; <a class="arrow-link" href="image-resizer.html">Resize an image</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
+<section><div class="wrap tool-layout"><div class="tool-card">
+  <h2>Crop an image</h2><p>Coordinates start at the top-left corner of the original image.</p>
+  <label id="dropzone" class="tool-dropzone" for="file-input"><strong>Drop an image here</strong><span>or click to choose one JPG, PNG, WebP or GIF</span><small>Local processing · no upload</small><input id="file-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+  <ul id="selected-files" class="file-list"></ul>
+  <div class="tool-options"><div class="field"><label for="crop-x">X position</label><input id="crop-x" type="number" min="0" value="0"></div><div class="field"><label for="crop-y">Y position</label><input id="crop-y" type="number" min="0" value="0"></div><div class="field"><label for="crop-width">Crop width</label><input id="crop-width" type="number" min="1" value="800"></div><div class="field"><label for="crop-height">Crop height</label><input id="crop-height" type="number" min="1" value="600"></div><div class="field"><label for="output-format">Output format</label><select id="output-format"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div></div>
+  <p id="tool-status" class="tool-status">Choose an image to begin.</p><button id="process-button" class="btn" type="button" disabled>Crop image</button><div id="tool-output" class="tool-output"></div>
+</div><aside><span class="label">Good to know</span><h2>Focus the frame.</h2><p class="lead">Crop product photos, profile images, screenshots or social graphics without changing the original file.</p><ul class="tool-list"><li>Exact pixel crop area</li><li>JPG, PNG and WebP output</li><li>Original stays untouched</li></ul></aside></div></section>
+<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="image-resizer.html">Resize an image</a> &nbsp; <a class="arrow-link" href="image-compressor.html">Compress an image</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
 <footer class="site-footer">
   <div class="wrap">
     <div class="fcols">
@@ -100,5 +105,6 @@
 </footer>
 
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
-<script src="tools.js"></script>
-</body></html>
+<script src="image-extra-tools.js"></script>
+</body>
+</html>

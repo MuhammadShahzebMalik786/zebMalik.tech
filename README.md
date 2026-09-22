@@ -26,6 +26,10 @@ image-converter.html              Browser-based format converter
 image-to-pdf.html                 Browser-based image to PDF tool
 pdf-to-image.html                 Browser-based PDF renderer
 image-metadata-remover.html       Browser-based EXIF metadata remover
+image-cropper.html                Browser-based image cropper
+image-rotator.html                Browser-based rotate and flip tool
+image-watermark.html              Browser-based text watermark tool
+meme-generator.html               Browser-based meme caption tool
 merge-pdf.html                    Browser-based PDF merger
 split-pdf.html                    Browser-based PDF page extractor
 compress-pdf.html                 Browser-based PDF optimizer
@@ -63,6 +67,8 @@ Contact details are already wired in: `hello@zebmalik.tech` (forwards to Gmail v
 The Tools pages process images, PDFs and text in the visitor's browser. Files are
 not uploaded to this site. Image compressor, resizer, converter and metadata
 remover support batches; Image to PDF supports multiple pages and drag-to-reorder.
+The cropper and meme generator process one image at a time; the rotator and
+watermark tools support batches.
 PDF merge, split and optimization use pdf-lib from jsDelivr. PDF-to-image uses
 PDF.js from cdnjs, and the QR generator uses qrcode-generator from jsDelivr.
 PDF text extraction uses PDF.js and offers optional Tesseract.js OCR for scanned
