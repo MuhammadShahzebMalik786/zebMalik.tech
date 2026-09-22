@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Chatbot &amp; RAG Development — zebMalik.tech</title>
+<meta name="description" content="Custom AI chatbots and retrieval-augmented generation assistants for websites, support teams and private business documents. Fixed scope and source handover.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="tools.html">Tools</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <span class="label">AI chatbots &amp; RAG</span>
+    <h1>A useful chat assistant, grounded in your actual information.</h1>
+    <p class="lead">We build website chatbots, internal knowledge assistants and retrieval-augmented generation systems that answer from approved sources instead of guessing from a generic prompt.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap split">
+    <div>
+      <span class="label">What we build</span>
+      <h2>Conversation with a boundary.</h2>
+      <p class="lead" style="margin-top:22px">The assistant can search your documents, knowledge base or product information, cite the source it used, and hand off uncertain questions instead of pretending to know.</p>
+      <div class="meta" style="margin-top:26px;display:flex;flex-wrap:wrap;gap:8px">
+        <span class="chip">Website chat</span><span class="chip">Private RAG</span><span class="chip">Document Q&amp;A</span><span class="chip">Human handoff</span>
+      </div>
+    </div>
+    <div class="code">
+      <div class="bar"><span></span><span></span><span></span>&nbsp;assistant/response.json</div>
+<pre>{
+  <span class="k">"answer"</span>: <span class="s">"Your return window is 30 days."</span>,
+  <span class="k">"sources"</span>: [
+    <span class="s">"returns-policy.pdf · page 2"</span>
+  ],
+  <span class="k">"confidence"</span>: <span class="s">"grounded"</span>,
+  <span class="k">"handoff"</span>: <span class="s">false</span>
+}</pre>
+    </div>
+  </div>
+</section>
+
+<section class="bg-soft rule-top">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">A practical first version</span>
+      <h2>Start narrow, then make it smarter.</h2>
+      <p class="lead">A focused knowledge base is easier to test and more useful than a chatbot that claims to answer everything.</p>
+    </div>
+    <div class="steps">
+      <div class="s"><span class="num">STEP 01</span><h4>Define the sources</h4><p>Choose the documents, pages or product data the assistant is allowed to use.</p></div>
+      <div class="s"><span class="num">STEP 02</span><h4>Build retrieval</h4><p>Chunk, index and retrieve relevant context with source references and sensible limits.</p></div>
+      <div class="s"><span class="num">STEP 03</span><h4>Design the chat</h4><p>Give visitors a clear interface, useful empty states and a human handoff when needed.</p></div>
+      <div class="s"><span class="num">STEP 04</span><h4>Test and hand over</h4><p>Review real questions, document known limits, and deliver the code and deployment notes.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="rule-top">
+  <div class="wrap split">
+    <div>
+      <span class="label">Typical engagement</span>
+      <h2>A defined assistant, not an open-ended AI experiment.</h2>
+    </div>
+    <div class="table-scroll">
+      <table class="spec">
+        <tr><th>Item</th><th>Detail</th></tr>
+        <tr><td>Typical scope</td><td>One website or internal assistant over an agreed knowledge base</td></tr>
+        <tr><td>Delivery</td><td>1–3 weeks depending on sources and integrations</td></tr>
+        <tr><td>From</td><td>$800 build · maintenance available after launch</td></tr>
+        <tr><td>Output</td><td>Chat interface, retrieval service, source code and handover docs</td></tr>
+        <tr><td>Privacy</td><td>Credentials and data stay in your accounts; retention is agreed in writing</td></tr>
+        <tr><td>Boundary</td><td>No guaranteed accuracy, regulated advice or training on customer data without permission</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="bg-dark cta-band">
+  <div class="wrap">
+    <span class="label">Start with the brief</span>
+    <h2>Tell us what the assistant should know.</h2>
+    <p class="lead">The current client work is still in progress, so we do not present it as a delivered case study. We can scope a separate assistant around your sources, users and handoff rules.</p>
+    <div class="row">
+      <a href="contact.html" class="btn btn-lite">Discuss a chatbot</a>
+      <a href="services.html#automation" class="btn" style="border-color:#3a3e45">See all services</a>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <a href="image-compressor.html">Image compressor</a>
+        <a href="image-resizer.html">Image resizer</a>
+        <a href="image-converter.html">Image converter</a>
+        <a href="image-to-pdf.html">Image to PDF</a>
+        <a href="pdf-to-image.html">PDF to image</a>
+        <a href="image-metadata-remover.html">Metadata remover</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="ai-chatbot-rag.html">AI chatbots &amp; RAG</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/muhammad-shahzeb-malik/">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-n8n-automation-ai-agents-and-ai-workflow-automation">Fiverr &mdash; n8n &amp; AI Agents</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-an-ai-chatbot-rag-agent-and-ai-assistant-for-your-data">Fiverr &mdash; AI Chatbot &amp; RAG</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik<span class="tech-mark">.tech</span></div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

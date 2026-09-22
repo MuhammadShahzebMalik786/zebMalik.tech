@@ -1,44 +1,46 @@
-import re, glob, os
-
-SITE = os.path.dirname(os.path.abspath(__file__))
-TOOL_PAGES = {
-    "tools.html",
-    "image-compressor.html",
-    "image-resizer.html",
-    "image-converter.html",
-    "image-to-pdf.html",
-    "pdf-to-image.html",
-    "image-metadata-remover.html",
-}
-
-NAV = [
-    ("services.html", "Services"),
-    ("tools.html", "Tools"),
-    ("work.html", "Work"),
-    ("pricing.html", "Pricing"),
-    ("about.html", "About"),
-    ("contact.html", "Contact"),
-]
-
-def header(fname):
-    links = []
-    for href, text in NAV:
-        cur = ' aria-current="page"' if href == fname or (href == "tools.html" and fname in TOOL_PAGES) else ""
-        links.append(f'      <a href="{href}"{cur}>{text}</a>')
-    nav = "\n".join(links)
-    return f'''<header class="site-header">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found — zebMalik.tech</title>
+<meta name="description" content="The page you requested could not be found. Return to zebMalik.tech or browse the available tools and services.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
   <div class="wrap hdr">
     <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
     <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
     <nav class="mainnav">
-{nav}
+      <a href="services.html">Services</a>
+      <a href="tools.html">Tools</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
       <a href="free-sample.html" class="navcta">Free sample</a>
     </nav>
     <a href="free-sample.html" class="btn">Get a free sample</a>
   </div>
-</header>'''
+</header>
 
-FOOTER = '''<footer class="site-footer">
+<div class="hero">
+  <div class="wrap">
+    <span class="label">404 — Not found</span>
+    <h1>That page took a wrong turn.</h1>
+    <p class="lead">The link may be outdated or the address may have been typed incorrectly. The useful part of the site is still here.</p>
+    <div class="hero-actions">
+      <a class="btn" href="index.html">Back to home</a>
+      <a class="btn btn-out" href="tools.html">Browse tools</a>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
   <div class="wrap">
     <div class="fcols">
       <div class="about">
@@ -91,25 +93,6 @@ FOOTER = '''<footer class="site-footer">
   </div>
 </footer>
 
-<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>'''
-
-hdr_re = re.compile(r'<header class="site-header">.*?</header>', re.S)
-ftr_re = re.compile(r'<footer class="site-footer">.*?</footer>\s*(?:<script>document\.getElementById\(\'yr\'\).*?</script>)?', re.S)
-
-for path in sorted(glob.glob(os.path.join(SITE, "*.html"))):
-    fname = os.path.basename(path)
-    src = open(path).read()
-    h = header(fname)
-
-    if "<!--HEADER-->" in src:
-        src = src.replace("<!--HEADER-->", h)
-    else:
-        src = hdr_re.sub(lambda m: h, src, count=1)
-
-    if "<!--FOOTER-->" in src:
-        src = src.replace("<!--FOOTER-->", FOOTER)
-    else:
-        src = ftr_re.sub(lambda m: FOOTER, src, count=1)
-
-    open(path, "w").write(src)
-    print("updated", fname)
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

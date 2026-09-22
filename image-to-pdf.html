@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Image to PDF Converter — JPG to PDF Online</title>
+<meta name="description" content="Convert one or more JPG, PNG or WebP images to a PDF online for free. Reorder is supported by selection order and files stay in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css">
+</head>
+<body data-tool="image-to-pdf">
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="tools.html" aria-current="page">Tools</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+<div class="pagehead"><div class="wrap"><span class="label">Tools / Image to PDF</span><h1>Turn images into one PDF document.</h1><p class="lead">Select one or more images and create a simple PDF locally. Nothing is uploaded and there is no watermark.</p></div></div>
+<div class="wrap ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
+<section><div class="wrap tool-layout"><div class="tool-card"><h2>Create a PDF</h2><p>Select files in the order you want them to appear. Each image becomes one page.</p>
+<label id="dropzone" class="tool-dropzone" for="file-input"><strong>Drop images here</strong><span>or click to choose one or more JPG, PNG or WebP files</span><small>Drag the list below to set page order</small><input id="file-input" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif"></label>
+<ul id="file-list" class="file-list"></ul><p class="file-order-note">The order above becomes the page order in your PDF.</p><p id="tool-status" class="tool-status">Choose one or more images to begin.</p><button id="pdf-process-button" class="btn" type="button" disabled>Make PDF</button><div id="tool-output" class="tool-output"></div></div>
+<aside><span class="label">Good to know</span><h2>One image, one page.</h2><p class="lead">The PDF page is sized to the image and scaled down to fit standard A4 bounds when necessary. Larger batches may take longer on a phone.</p><ul class="tool-list"><li>Multiple images in one PDF</li><li>JPG, PNG and WebP input</li><li>Local processing, no upload</li></ul></aside></div></section>
+<section class="bg-soft rule-top"><div class="wrap narrow"><span class="label">Related tools</span><p><a class="arrow-link" href="pdf-to-image.html">Convert PDF to images</a> &nbsp; <a class="arrow-link" href="image-compressor.html">Compress an image</a> &nbsp; <a class="arrow-link" href="tools.html">All tools</a></p></div></section>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <a href="image-compressor.html">Image compressor</a>
+        <a href="image-resizer.html">Image resizer</a>
+        <a href="image-converter.html">Image converter</a>
+        <a href="image-to-pdf.html">Image to PDF</a>
+        <a href="pdf-to-image.html">PDF to image</a>
+        <a href="image-metadata-remover.html">Metadata remover</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="ai-chatbot-rag.html">AI chatbots &amp; RAG</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/muhammad-shahzeb-malik/">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-n8n-automation-ai-agents-and-ai-workflow-automation">Fiverr &mdash; n8n &amp; AI Agents</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-an-ai-chatbot-rag-agent-and-ai-assistant-for-your-data">Fiverr &mdash; AI Chatbot &amp; RAG</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik<span class="tech-mark">.tech</span></div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script src="tools.js"></script>
+</body></html>
