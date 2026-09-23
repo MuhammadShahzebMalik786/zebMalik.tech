@@ -282,19 +282,41 @@ textarea{min-height:140px;resize:vertical;line-height:1.55}
 
 /* ---------- footer ---------- */
 .site-footer{border-top:1px solid var(--line);padding:64px 0 40px;background:var(--paper-2)}
-.fcols{display:grid;grid-template-columns:1.4fr repeat(5,1fr);gap:30px}
+.fcols{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:32px}
 .fcols h4{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-cool);font-weight:400;margin-bottom:18px}
 .fcols a{display:block;font-size:15px;color:var(--ink-2);padding:6px 0}
 .fcols a:hover{color:var(--accent)}
 .fcols .about p{font-size:15px;color:var(--ink-2);max-width:34ch;margin-top:14px}
+
+.ftools{margin-top:48px;padding-top:32px;border-top:1px solid var(--line)}
+.ftools-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.ftools-head h4{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-cool);font-weight:400;margin:0}
+.ftools-head a{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.04em;text-decoration:none}
+.ftools-head a:hover{text-decoration:underline}
+.ftools-grid{display:grid;grid-template-columns:1.8fr 1.1fr 1fr;gap:36px}
+.ftools-group h5{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:500;margin:0 0 12px}
+.ftools-subgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.ftools a{display:block;font-size:14px;color:var(--ink-2);padding:5px 0}
+.ftools a:hover{color:var(--accent)}
+
 .fbot{
   display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
-  margin-top:52px;padding-top:26px;border-top:1px solid var(--line);
+  margin-top:40px;padding-top:24px;border-top:1px solid var(--line);
   font-size:14px;color:var(--ink-3);
 }
-@media(max-width:980px){.fcols{grid-template-columns:1fr 1fr 1fr;gap:32px}}
-@media(max-width:760px){.fcols{grid-template-columns:1fr 1fr;gap:30px}}
-@media(max-width:520px){.fcols{grid-template-columns:1fr}}
+@media(max-width:980px){
+  .fcols{grid-template-columns:1fr 1fr 1fr;gap:32px}
+  .ftools-grid{grid-template-columns:1fr 1fr;gap:28px}
+}
+@media(max-width:760px){
+  .fcols{grid-template-columns:1fr 1fr;gap:30px}
+  .ftools-grid{grid-template-columns:1fr;gap:24px}
+}
+@media(max-width:520px){
+  .fcols{grid-template-columns:1fr}
+  .ftools-subgrid{grid-template-columns:1fr}
+  .ftools-head{flex-direction:column;align-items:flex-start;gap:8px}
+}
 
 /* ---------- page header (interior pages) ---------- */
 .pagehead{padding:80px 0 56px;border-bottom:1px solid var(--line)}
