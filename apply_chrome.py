@@ -33,7 +33,9 @@ SITE_URL = "https://zebmalik.tech"
 SOCIAL_IMAGE = SITE_URL + "/android-chrome-512x512.png"
 
 def page_url(fname):
-    return SITE_URL + ("/" if fname == "index.html" else "/" + fname)
+    if fname == "index.html":
+        return SITE_URL + "/"
+    return SITE_URL + "/" + fname.replace(".html", "")
 
 def seo_block(fname, title, description):
     if fname == "404.html":
