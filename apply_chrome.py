@@ -39,6 +39,7 @@ def seo_block(fname, title, description):
     if fname == "404.html":
         return '''<!-- SEO-META -->
 <meta name="robots" content="noindex, nofollow">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9522829065676411" crossorigin="anonymous"></script>
 <!-- /SEO-META -->'''
 
     url = page_url(fname)
@@ -115,6 +116,7 @@ def seo_block(fname, title, description):
 <meta name="twitter:description" content="{html.escape(clean_description, quote=True)}">
 <meta name="twitter:image" content="{SOCIAL_IMAGE}">
 <script type="application/ld+json">{payload}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9522829065676411" crossorigin="anonymous"></script>
 <!-- /SEO-META -->'''
 
 NAV = [
