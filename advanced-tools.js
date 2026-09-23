@@ -677,6 +677,77 @@
     update();
   }
 
+  function setupRotatePdf() {
+    var files = [];
+    setupFileInput("pdf-file-input", "selected-files", "process-button", false, function (selected) {
+      files = selected.slice(0, 1);
+      setStatus(files.length ? "PDF ready. Choose rotation." : "Choose one PDF file.", !files.length);
+    });
+    var button = document.getElementById("process-button");
+    if (!button) return;
+    button.addEventListener("click", async function () {
+      if (!files.length) return;
+      button.disabled = true;
+      setStatus("Rotating PDF pages in your browser…");
+      try {
+        var PDFDocument = requirePdfLib();
+        var pdf = await PDFDocument.load(await files[0].arrayBuffer());
+        var angle = Number(document.getElementById("rotation-angle").value);
+        pdf.getPages().forEach(function (page) {
+          page.setRotation(PDFLib.degrees((page.getRotation().angle + angle) % 360));
+        });
+        var bytes = await pdf.save({ useObjectStreams: true });
+        showResult({ blob: new Blob([bytes], { type: "application/pdf" }), filename: files[0].name.replace(/\.pdf$/i, "") + "-rotated.pdf", note: pdf.getPageCount() + " pages rotated" });
+        setStatus("Done. The PDF was rotated locally.");
+      } catch (error) {
+        setStatus(error.message || "The PDF could not be rotated.", true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  function setupPasswordGenerator() {
+    var lengthInput = document.getElementById("pw-length");
+    var uppercaseCb = document.getElementById("pw-uppercase");
+    var lowercaseCb = document.getElementById("pw-lowercase");
+    var numbersCb = document.getElementById("pw-numbers");
+    var symbolsCb = document.getElementById("pw-symbols");
+    var resultInput = document.getElementById("pw-result");
+    var generateBtn = document.getElementById("pw-generate");
+    var copyBtn = document.getElementById("pw-copy");
+    
+    if (!lengthInput || !generateBtn) return;
+    
+    function generate() {
+      var charset = "";
+      if (uppercaseCb.checked) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      if (lowercaseCb.checked) charset += "abcdefghijklmnopqrstuvwxyz";
+      if (numbersCb.checked) charset += "0123456789";
+      if (symbolsCb.checked) charset += "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+      if (!charset) {
+        charset = "abcdefghijklmnopqrstuvwxyz";
+        lowercaseCb.checked = true;
+      }
+      var length = Number(lengthInput.value) || 16;
+      var password = "";
+      var array = new Uint32Array(length);
+      window.crypto.getRandomValues(array);
+      for (var i = 0; i < length; i++) {
+        password += charset[array[i] % charset.length];
+      }
+      resultInput.value = password;
+      setStatus("Password generated locally.");
+    }
+    generateBtn.addEventListener("click", generate);
+    copyBtn.addEventListener("click", function() {
+      if (!resultInput.value) return;
+      if (navigator.clipboard) navigator.clipboard.writeText(resultInput.value).then(function () { setStatus("Password copied to your clipboard."); });
+      else setStatus("Select the password and copy it manually.");
+    });
+    generate();
+  }
+
   if (tool === "merge-pdf") setupMerge();
   if (tool === "split-pdf") setupSplit();
   if (tool === "compress-pdf") setupCompressPdf();
@@ -684,7 +755,9 @@
   if (tool === "watermark-pdf") setupWatermark();
   if (tool === "pdf-page-numbers") setupPageNumbers();
   if (tool === "extract-text") setupExtractText();
+  if (tool === "rotate-pdf") setupRotatePdf();
   if (tool === "qr-code-generator") setupQr();
   if (tool === "json-formatter") setupJson();
   if (tool === "word-counter") setupWordCounter();
+  if (tool === "password-generator") setupPasswordGenerator();
 }());

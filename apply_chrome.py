@@ -22,9 +22,11 @@ TOOL_PAGES = {
     "pdf-organizer.html",
     "watermark-pdf.html",
     "pdf-page-numbers.html",
+    "rotate-pdf.html",
     "qr-code-generator.html",
     "json-formatter.html",
     "word-counter.html",
+    "password-generator.html",
 }
 
 SITE_URL = "https://zebmalik.tech"
@@ -182,7 +184,7 @@ FOOTER = '''<footer class="site-footer">
     <div class="ftools">
       <div class="ftools-head">
         <h4>Free Browser Tools</h4>
-        <a href="tools.html">Browse all 20 tools &rarr;</a>
+        <a href="tools.html">Browse all 22 tools &rarr;</a>
       </div>
       <div class="ftools-grid">
         <div class="ftools-group image-group">
@@ -213,12 +215,14 @@ FOOTER = '''<footer class="site-footer">
           <a href="pdf-organizer.html">Organize PDF pages</a>
           <a href="watermark-pdf.html">Watermark PDF</a>
           <a href="pdf-page-numbers.html">Add page numbers</a>
+          <a href="rotate-pdf.html">Rotate PDF</a>
         </div>
         <div class="ftools-group">
           <h5>Developer &amp; Utilities</h5>
           <a href="qr-code-generator.html">QR code generator</a>
           <a href="json-formatter.html">JSON formatter</a>
           <a href="word-counter.html">Word counter</a>
+          <a href="password-generator.html">Password generator</a>
         </div>
       </div>
     </div>
