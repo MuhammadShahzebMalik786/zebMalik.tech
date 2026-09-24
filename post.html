@@ -239,8 +239,22 @@ document.addEventListener('DOMContentLoaded', async function () {
       document.getElementById('post-content').textContent = post.content_markdown;
     }
 
-    // Trigger Anti-Bot Verified Read (credits 40% earnings to author)
-    ZebBlog.trackVerifiedView(post.id);
+    // Author Shield: Protect AdSense from self-clicks and disable self-views
+    var currentUser = await ZebBlog.getCurrentUser();
+    var isAuthor = currentUser && (currentUser.id === post.author_id);
+
+    if (isAuthor) {
+      document.querySelectorAll('.ad-slot').forEach(function(el) {
+        el.style.display = 'none';
+      });
+      var previewNotice = document.createElement('div');
+      previewNotice.style.cssText = 'background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--fg);padding:0.75rem 1.25rem;border-radius:6px;margin-bottom:1.5rem;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem';
+      previewNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="author-dashboard.html" style="color:inherit;font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
+      document.getElementById('post-content').parentNode.insertBefore(previewNotice, document.getElementById('post-content'));
+    } else {
+      // Trigger Anti-Bot Verified Read for legitimate public readers
+      ZebBlog.trackVerifiedView(post.id);
+    }
 
   } catch (err) {
     console.error('Error loading article:', err);

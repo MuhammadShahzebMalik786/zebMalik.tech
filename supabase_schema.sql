@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS public.post_views (
 CREATE TABLE IF NOT EXISTS public.payout_requests (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   author_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
-  amount NUMERIC(10,2) NOT NULL CHECK (amount >= 20.00),
+  amount NUMERIC(10,2) NOT NULL CHECK (amount >= 5.00),
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'paid', 'declined')),
   notes TEXT,
   requested_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
