@@ -10,15 +10,158 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=2">
 <style>
-  .article-body { font-size: 1.125rem; line-height: 1.8; color: var(--ink); margin-top: 2rem; }
-  .article-body h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-size: 1.75rem; }
-  .article-body h3 { margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.35rem; }
-  .article-body p { margin-bottom: 1.5rem; }
-  .article-body pre { background: var(--paper-2); border: 1px solid var(--line); border-radius: 6px; padding: 1.25rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; margin-bottom: 1.5rem; }
-  .article-body code { font-family: 'JetBrains Mono', monospace; background: var(--paper-2); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
-  .article-body pre code { background: none; padding: 0; }
-  .article-body img { max-width: 100%; border-radius: 6px; margin: 1.5rem 0; }
-  .article-body blockquote { border-left: 3px solid var(--accent); margin-left: 0; padding-left: 1.25rem; color: var(--ink-2); font-style: italic; }
+  /* Responsive Reader Layout */
+  .article-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  @media (min-width: 1400px) {
+    .article-wrap {
+      max-width: 1040px;
+    }
+  }
+  @media (max-width: 640px) {
+    .article-wrap {
+      padding: 0 20px;
+    }
+  }
+
+  .post-header-wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  @media (min-width: 1400px) {
+    .post-header-wrap {
+      max-width: 1080px;
+    }
+  }
+  @media (max-width: 640px) {
+    .post-header-wrap {
+      padding: 0 20px;
+    }
+  }
+
+  .post-cover-wrapper {
+    max-width: 1140px;
+    margin: 2rem auto 2.5rem auto;
+    padding: 0 32px;
+  }
+  @media (max-width: 640px) {
+    .post-cover-wrapper {
+      padding: 0 20px;
+      margin: 1.25rem auto 1.75rem auto;
+    }
+  }
+  .post-cover-img {
+    width: 100%;
+    max-height: 560px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    box-shadow: 0 8px 30px rgba(18, 19, 22, 0.06);
+    display: block;
+  }
+
+  .article-body {
+    font-size: 1.18rem;
+    line-height: 1.85;
+    color: var(--ink);
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 640px) {
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.75;
+    }
+  }
+
+  .article-body h1 {
+    font-size: clamp(28px, 4vw, 42px);
+    margin-top: 3.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .article-body h2 {
+    margin-top: 3.5rem;
+    margin-bottom: 1.25rem;
+    font-size: clamp(24px, 3.2vw, 34px);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+  }
+  .article-body h3 {
+    margin-top: 2.25rem;
+    margin-bottom: 0.85rem;
+    font-size: clamp(19px, 2.4vw, 24px);
+    letter-spacing: -0.01em;
+  }
+  .article-body p {
+    margin-bottom: 1.65rem;
+  }
+  .article-body ul, .article-body ol {
+    margin-bottom: 1.75rem;
+    padding-left: 1.75rem;
+  }
+  .article-body li {
+    margin-bottom: 0.65rem;
+    line-height: 1.75;
+  }
+  .article-body pre {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    margin: 2rem 0;
+  }
+  .article-body code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--paper-2);
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: 1px solid var(--line);
+  }
+  .article-body pre code {
+    background: none;
+    padding: 0;
+    border: none;
+  }
+  .article-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    margin: 2rem 0;
+    box-shadow: 0 6px 24px rgba(18, 19, 22, 0.05);
+  }
+  .article-body blockquote {
+    border-left: 4px solid var(--accent);
+    margin: 2rem 0;
+    padding: 1.1rem 1.5rem;
+    background: var(--paper-2);
+    border-radius: 0 8px 8px 0;
+    color: var(--ink-2);
+    font-style: italic;
+  }
+  .article-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 1rem;
+  }
+  .article-body th, .article-body td {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    text-align: left;
+  }
+  .article-body th {
+    background: var(--paper-2);
+    font-weight: 600;
+  }
 </style>
 <!-- SEO-META -->
 <link rel="canonical" href="https://zebmalik.tech/post">
@@ -61,39 +204,47 @@
   </div>
 </header>
 
-<div class="pagehead">
-  <div class="wrap narrow">
-    <div style="margin-bottom:1rem">
+<div class="pagehead" style="padding:3.5rem 0 2rem 0">
+  <div class="post-header-wrap">
+    <div style="margin-bottom:1.25rem">
       <a href="blog.html" class="arrow-link">&larr; All Articles</a>
     </div>
     <span id="post-meta" class="label">Loading article...</span>
-    <h1 id="post-title" style="margin-top:0.5rem">Loading...</h1>
-    <div id="post-byline" style="display:flex;align-items:center;gap:1rem;margin-top:1.5rem;color:var(--muted);font-size:0.95rem"></div>
+    <h1 id="post-title" style="margin-top:0.75rem;font-size:clamp(32px, 4.5vw, 54px);line-height:1.15;letter-spacing:-0.025em">Loading...</h1>
+    <div id="post-byline" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.75rem 1.25rem;margin-top:1.5rem;color:var(--muted);font-size:0.95rem"></div>
   </div>
 </div>
 
-<div class="wrap narrow ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
+<div id="post-cover-wrapper" class="post-cover-wrapper" style="display:none">
+  <div id="post-cover"></div>
+</div>
+
+<div class="article-wrap ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
 
 <article>
-  <div class="wrap narrow">
-    <div id="post-cover" style="margin-bottom:2rem"></div>
+  <div class="article-wrap">
     <div id="post-content" class="article-body">
       <p class="muted">Fetching article contents from secure database...</p>
     </div>
   </div>
 </article>
 
-<div class="wrap narrow ad-slot" aria-label="Advertisement" style="margin-top:3rem"><span>Advertisement</span></div>
+<div class="article-wrap ad-slot" aria-label="Advertisement" style="margin-top:3.5rem"><span>Advertisement</span></div>
 
-<section class="bg-soft rule-top" style="margin-top:4rem">
-  <div class="wrap narrow">
-    <div id="author-box" class="split" style="align-items:center">
-      <div>
-        <span class="label">Written By</span>
-        <h3 id="author-name">Engineering Contributor</h3>
-        <p id="author-bio" class="muted" style="margin-top:0.5rem">Independent engineer publishing open research on zebMalik.tech.</p>
+<section class="bg-soft rule-top" style="margin-top:4.5rem;padding:3.5rem 0">
+  <div class="article-wrap">
+    <div id="author-box" style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:1.25rem">
+        <div id="author-avatar" style="width:64px;height:64px;border-radius:50%;background:var(--paper-3);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.4rem;color:var(--ink-2);overflow:hidden;flex-shrink:0">
+          ✍️
+        </div>
+        <div>
+          <span class="label" style="margin-bottom:4px">Written By</span>
+          <h3 id="author-name" style="margin:0">Engineering Contributor</h3>
+          <p id="author-bio" class="muted" style="margin-top:0.35rem;font-size:0.95rem">Independent engineer publishing open research on zebMalik.tech.</p>
+        </div>
       </div>
-      <div style="text-align:right">
+      <div style="display:flex;gap:0.75rem;align-items:center">
         <a href="write.html" class="btn btn-out">Write an Article</a>
       </div>
     </div>
@@ -220,20 +371,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     var authorName = post.profiles ? post.profiles.full_name : 'Author';
     var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'long', day:'numeric', year:'numeric'}) : '';
     
+    // Render Article Content (supports rich visual HTML with multiple inline images or Markdown)
+    var rawContent = post.content_markdown || '';
+    var wordCount = rawContent.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+    var readMinutes = Math.max(1, Math.round(wordCount / 200));
+
     document.getElementById('post-meta').textContent = (post.tags && post.tags.length ? post.tags.join(' · ') : 'Research');
-    document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorName + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span>';
+    document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorName + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + readMinutes + ' min read</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span>';
 
     if (post.cover_image_url) {
-      document.getElementById('post-cover').innerHTML = '<img src="' + post.cover_image_url + '" alt="' + post.title + '" style="width:100%;border-radius:8px;max-height:420px;object-fit:cover">';
+      document.getElementById('post-cover-wrapper').style.display = 'block';
+      document.getElementById('post-cover').innerHTML = '<img class="post-cover-img" src="' + post.cover_image_url + '" alt="' + post.title + '">';
     }
 
     if (post.profiles) {
-      document.getElementById('author-name').textContent = post.profiles.full_name;
+      document.getElementById('author-name').textContent = post.profiles.full_name || 'Engineering Contributor';
       if (post.profiles.bio) document.getElementById('author-bio').textContent = post.profiles.bio;
+      if (post.profiles.avatar_url) {
+        document.getElementById('author-avatar').innerHTML = '<img src="' + post.profiles.avatar_url + '" alt="' + (post.profiles.full_name || 'Author') + '" style="width:100%;height:100%;object-fit:cover">';
+      } else if (post.profiles.full_name) {
+        document.getElementById('author-avatar').textContent = post.profiles.full_name.charAt(0).toUpperCase();
+      }
     }
 
-    // Render Article Content (supports rich visual HTML with multiple inline images or Markdown)
-    var rawContent = post.content_markdown || '';
     if (rawContent.trim().startsWith('<')) {
       document.getElementById('post-content').innerHTML = rawContent;
     } else if (window.marked) {
