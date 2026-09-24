@@ -17,9 +17,13 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   payout_details TEXT DEFAULT '',
   total_earned NUMERIC(10,2) DEFAULT 0.00,
   current_balance NUMERIC(10,2) DEFAULT 0.00,
+  tax_verified BOOLEAN DEFAULT FALSE, -- Required if total_earned >= $600.00
   is_admin BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Safe migration if table already exists
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS tax_verified BOOLEAN DEFAULT FALSE;
 
 -- 3. Posts Table
 CREATE TABLE IF NOT EXISTS public.posts (
