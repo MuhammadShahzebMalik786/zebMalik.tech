@@ -231,6 +231,55 @@
     });
   }
 
+  // --- Admin Moderation & Operations ---
+  async function fetchAdminPendingPosts() {
+    var sb = getClient();
+    if (!sb) return [];
+    var res = await sb
+      .from('posts')
+      .select('*, profiles(full_name, username, avatar_url)')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+    return res.data || [];
+  }
+
+  async function adminApprovePost(postId) {
+    var sb = getClient();
+    if (!sb || !postId) throw new Error('Missing parameter');
+    return await sb
+      .from('posts')
+      .update({ status: 'published', published_at: new Date().toISOString() })
+      .eq('id', postId);
+  }
+
+  async function adminRejectPost(postId, reason) {
+    var sb = getClient();
+    if (!sb || !postId) throw new Error('Missing parameter');
+    return await sb
+      .from('posts')
+      .update({ status: 'rejected', rejection_reason: reason || '' })
+      .eq('id', postId);
+  }
+
+  async function fetchAdminPayoutRequests() {
+    var sb = getClient();
+    if (!sb) return [];
+    var res = await sb
+      .from('payout_requests')
+      .select('*, profiles(full_name, username, payout_method, payout_details)')
+      .order('requested_at', { ascending: false });
+    return res.data || [];
+  }
+
+  async function adminUpdatePayoutStatus(requestId, status) {
+    var sb = getClient();
+    if (!sb || !requestId) throw new Error('Missing parameter');
+    return await sb
+      .from('payout_requests')
+      .update({ status: status, processed_at: new Date().toISOString() })
+      .eq('id', requestId);
+  }
+
   // --- Client-side Image Optimization to WebP ---
   function convertToWebP(file, maxDimension, quality) {
     return new Promise(function (resolve, reject) {
@@ -324,6 +373,11 @@
     convertToWebP: convertToWebP,
     uploadBlogImage: uploadBlogImage,
     resetPasswordForEmail: resetPasswordForEmail,
-    updateUserPassword: updateUserPassword
+    updateUserPassword: updateUserPassword,
+    fetchAdminPendingPosts: fetchAdminPendingPosts,
+    adminApprovePost: adminApprovePost,
+    adminRejectPost: adminRejectPost,
+    fetchAdminPayoutRequests: fetchAdminPayoutRequests,
+    adminUpdatePayoutStatus: adminUpdatePayoutStatus
   };
 }));

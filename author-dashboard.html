@@ -125,6 +125,62 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Admin Moderation & Operations Panel (Visible ONLY to Admins) -->
+      <div id="admin-panel" style="display:none;margin-top:3.5rem;padding-top:2.5rem;border-top:2px dashed var(--line)">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+          <div>
+            <span class="label" style="color:var(--accent)">🛡️ Admin Portal</span>
+            <h2 style="margin-top:0.25rem">Community Moderation &amp; Payouts</h2>
+            <p class="muted" style="margin:0">Approve pending submissions from authors and process revenue withdrawals.</p>
+          </div>
+          <div>
+            <button type="button" id="btn-refresh-admin" class="btn btn-out" style="padding:6px 14px;font-size:0.85rem">🔄 Refresh Queue</button>
+          </div>
+        </div>
+
+        <!-- Pending Submissions Table -->
+        <h3 style="margin-bottom:0.75rem;font-size:1.15rem">Pending Articles for Approval</h3>
+        <div class="table-scroll" style="margin-bottom:2.5rem">
+          <table class="spec">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Date</th>
+                <th style="text-align:right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-pending-tbody">
+              <tr>
+                <td colspan="4" style="text-align:center;color:var(--muted)">Checking queue…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Payout Requests Table -->
+        <h3 style="margin-bottom:0.75rem;font-size:1.15rem">Payout Requests</h3>
+        <div class="table-scroll">
+          <table class="spec">
+            <thead>
+              <tr>
+                <th>Author</th>
+                <th>Amount</th>
+                <th>Details / Notes</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th style="text-align:right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-payouts-tbody">
+              <tr>
+                <td colspan="6" style="text-align:center;color:var(--muted)">Checking payout requests…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -223,7 +279,7 @@
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="blog-config.js?v=4"></script>
+<script src="blog-config.js?v=5"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   try {
@@ -297,6 +353,138 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     document.getElementById('metric-reads').textContent = totalReads.toLocaleString();
+
+    // Admin Moderation Engine (Visible ONLY if profile.is_admin === true)
+    if (profile && profile.is_admin) {
+      var adminPanel = document.getElementById('admin-panel');
+      if (adminPanel) adminPanel.style.display = 'block';
+
+      async function loadAdminData() {
+        // 1. Pending Posts Queue
+        var pendingTbody = document.getElementById('admin-pending-tbody');
+        try {
+          var pendingPosts = await ZebBlog.fetchAdminPendingPosts();
+          pendingTbody.innerHTML = '';
+          if (pendingPosts && pendingPosts.length > 0) {
+            pendingPosts.forEach(function (post) {
+              var tr = document.createElement('tr');
+              var authorName = post.profiles ? post.profiles.full_name : 'Author';
+              var dateStr = new Date(post.created_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+              tr.innerHTML = '<td><strong>' + post.title + '</strong><br><small style="color:var(--muted)">slug: ' + post.slug + '</small></td>' +
+                '<td>' + authorName + '</td>' +
+                '<td>' + dateStr + '</td>' +
+                '<td style="text-align:right;white-space:nowrap">' +
+                  '<a href="post.html?slug=' + encodeURIComponent(post.slug) + '" target="_blank" class="btn btn-out" style="padding:4px 8px;font-size:12px;margin-right:6px">👁️ Preview</a>' +
+                  '<button type="button" class="btn" style="padding:4px 10px;font-size:12px;background:var(--accent);border-color:var(--accent);margin-right:6px" data-approve="' + post.id + '">✓ Approve</button>' +
+                  '<button type="button" class="btn btn-out" style="padding:4px 8px;font-size:12px;color:#ef4444;border-color:#ef4444" data-reject="' + post.id + '">✕ Reject</button>' +
+                '</td>';
+              pendingTbody.appendChild(tr);
+            });
+
+            pendingTbody.querySelectorAll('[data-approve]').forEach(function (btn) {
+              btn.addEventListener('click', async function () {
+                var pid = this.getAttribute('data-approve');
+                this.textContent = 'Publishing…';
+                this.disabled = true;
+                try {
+                  await ZebBlog.adminApprovePost(pid);
+                  alert('✓ Post approved and published live to /blog!');
+                  loadAdminData();
+                  // Also refresh personal table if it's the admin's post
+                  setTimeout(function(){ window.location.reload(); }, 600);
+                } catch(e) {
+                  alert('Error approving post: ' + e.message);
+                  this.textContent = '✓ Approve';
+                  this.disabled = false;
+                }
+              });
+            });
+
+            pendingTbody.querySelectorAll('[data-reject]').forEach(function (btn) {
+              btn.addEventListener('click', async function () {
+                var pid = this.getAttribute('data-reject');
+                var reason = prompt('Optional rejection reason / editorial feedback for author:');
+                if (reason !== null) {
+                  this.textContent = 'Rejecting…';
+                  this.disabled = true;
+                  try {
+                    await ZebBlog.adminRejectPost(pid, reason);
+                    loadAdminData();
+                  } catch(e) {
+                    alert('Error: ' + e.message);
+                  }
+                }
+              });
+            });
+
+          } else {
+            pendingTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:1.5rem">No pending articles in review queue. All clear!</td></tr>';
+          }
+        } catch(e) {
+          pendingTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#ef4444">Could not load pending posts. Make sure Admin RLS policies are applied in Supabase.</td></tr>';
+        }
+
+        // 2. Payout Requests Queue
+        var payoutsTbody = document.getElementById('admin-payouts-tbody');
+        try {
+          var payouts = await ZebBlog.fetchAdminPayoutRequests();
+          payoutsTbody.innerHTML = '';
+          if (payouts && payouts.length > 0) {
+            payouts.forEach(function (req) {
+              var tr = document.createElement('tr');
+              var authorName = req.profiles ? req.profiles.full_name : 'Author';
+              var details = req.notes || (req.profiles ? req.profiles.payout_details : 'No details');
+              var dateStr = new Date(req.requested_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+              var statusChip = '<span class="chip" style="font-size:0.75rem;text-transform:uppercase">' + req.status + '</span>';
+              var actions = '';
+              if (req.status === 'pending') {
+                actions = '<button type="button" class="btn" style="padding:4px 8px;font-size:12px;margin-right:6px" data-payout-paid="' + req.id + '">Mark Paid</button>' +
+                  '<button type="button" class="btn btn-out" style="padding:4px 8px;font-size:12px" data-payout-decline="' + req.id + '">Decline</button>';
+              } else {
+                actions = '<span style="color:var(--muted);font-size:0.85rem">Processed</span>';
+              }
+
+              tr.innerHTML = '<td><strong>' + authorName + '</strong></td>' +
+                '<td>$' + Number(req.amount || 0).toFixed(2) + '</td>' +
+                '<td>' + details + '</td>' +
+                '<td>' + dateStr + '</td>' +
+                '<td>' + statusChip + '</td>' +
+                '<td style="text-align:right;white-space:nowrap">' + actions + '</td>';
+              payoutsTbody.appendChild(tr);
+            });
+
+            payoutsTbody.querySelectorAll('[data-payout-paid]').forEach(function (btn) {
+              btn.addEventListener('click', async function () {
+                var rid = this.getAttribute('data-payout-paid');
+                if (confirm('Mark this payout as completed/paid?')) {
+                  await ZebBlog.adminUpdatePayoutStatus(rid, 'paid');
+                  loadAdminData();
+                }
+              });
+            });
+
+            payoutsTbody.querySelectorAll('[data-payout-decline]').forEach(function (btn) {
+              btn.addEventListener('click', async function () {
+                var rid = this.getAttribute('data-payout-decline');
+                if (confirm('Decline this payout request?')) {
+                  await ZebBlog.adminUpdatePayoutStatus(rid, 'declined');
+                  loadAdminData();
+                }
+              });
+            });
+
+          } else {
+            payoutsTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:1.5rem">No payout requests pending.</td></tr>';
+          }
+        } catch(e) {
+          payoutsTbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#ef4444">Could not load payout requests.</td></tr>';
+        }
+      }
+
+      loadAdminData();
+      var btnRefreshAdmin = document.getElementById('btn-refresh-admin');
+      if (btnRefreshAdmin) btnRefreshAdmin.addEventListener('click', loadAdminData);
+    }
 
   } catch (err) {
     console.error('Error loading author dashboard:', err);
