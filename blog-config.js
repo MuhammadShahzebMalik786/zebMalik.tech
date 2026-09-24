@@ -152,13 +152,33 @@
   async function fetchPostBySlug(slug) {
     var sb = getClient();
     if (!sb || !slug) return null;
+
+    // 1. Try public published query (fast path for readers)
     var res = await sb
       .from('posts')
       .select('*, profiles(full_name, username, bio, avatar_url)')
       .eq('slug', slug)
       .eq('status', 'published')
-      .single();
-    return res.data;
+      .maybeSingle();
+
+    if (res && res.data) return res.data;
+
+    // 2. If not published, check if user is logged in (author or admin preview)
+    try {
+      var user = await getCurrentUser();
+      if (user) {
+        var previewRes = await sb
+          .from('posts')
+          .select('*, profiles(full_name, username, bio, avatar_url)')
+          .eq('slug', slug)
+          .maybeSingle();
+        if (previewRes && previewRes.data) return previewRes.data;
+      }
+    } catch (e) {
+      console.warn('Preview fetch error:', e);
+    }
+
+    return null;
   }
 
   // --- View Tracking with Anti-Bot & Retention Verification ---

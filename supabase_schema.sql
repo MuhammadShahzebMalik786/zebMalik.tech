@@ -117,6 +117,13 @@ CREATE POLICY "Published posts are public" ON public.posts
 CREATE POLICY "Authors can view own posts" ON public.posts
   FOR SELECT USING (auth.uid() = author_id);
 
+-- Posts: Admins can view all posts (draft, pending, rejected, published)
+DROP POLICY IF EXISTS "Admins can view all posts" ON public.posts;
+CREATE POLICY "Admins can view all posts" ON public.posts
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true)
+  );
+
 -- Posts: Authors can create drafts
 CREATE POLICY "Authors can insert own posts" ON public.posts
   FOR INSERT WITH CHECK (auth.uid() = author_id);
@@ -124,6 +131,27 @@ CREATE POLICY "Authors can insert own posts" ON public.posts
 -- Posts: Authors can update own drafts or pending posts (not published)
 CREATE POLICY "Authors can update own drafts" ON public.posts
   FOR UPDATE USING (auth.uid() = author_id AND status IN ('draft', 'pending', 'rejected'));
+
+-- Posts: Admins can update all posts (to approve, reject, edit)
+DROP POLICY IF EXISTS "Admins can update all posts" ON public.posts;
+CREATE POLICY "Admins can update all posts" ON public.posts
+  FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true)
+  );
+
+-- Payouts: Admins can view all payout requests
+DROP POLICY IF EXISTS "Admins can view all payout requests" ON public.payout_requests;
+CREATE POLICY "Admins can view all payout requests" ON public.payout_requests
+  FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true)
+  );
+
+-- Payouts: Admins can update all payout requests (mark as paid, approved, declined)
+DROP POLICY IF EXISTS "Admins can update all payout requests" ON public.payout_requests;
+CREATE POLICY "Admins can update all payout requests" ON public.payout_requests
+  FOR UPDATE USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND is_admin = true)
+  );
 
 -- ==============================================================================
 -- ZERO-TRUST HARDENING TRIGGERS (Blocks Mass-Assignment & Console Hacking)
