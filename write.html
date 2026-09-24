@@ -757,11 +757,16 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
       modalStatus.className = 'tool-status is-error';
     } else {
-      modalStatus.textContent = 'Account created and logged in!';
-      setTimeout(async function () {
-        authModal.style.display = 'none';
-        await refreshUser();
-      }, 1000);
+      if (res.data && res.data.user && !res.data.session) {
+        modalStatus.textContent = '✓ Verification link sent! Please check your email inbox to activate your account.';
+        modalStatus.className = 'tool-status';
+      } else {
+        modalStatus.textContent = 'Account created and logged in!';
+        setTimeout(async function () {
+          authModal.style.display = 'none';
+          await refreshUser();
+        }, 1000);
+      }
     }
   });
 
