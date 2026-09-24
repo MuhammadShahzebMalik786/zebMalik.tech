@@ -164,3 +164,30 @@ BEGIN
   RETURN FALSE;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ==============================================================================
+-- 6. Storage Bucket & Policies for Blog Images (Compressed WebP)
+-- ==============================================================================
+
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('blog-images', 'blog-images', true)
+ON CONFLICT (id) DO NOTHING;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE policyname = 'Authenticated users can upload blog images'
+  ) THEN
+    CREATE POLICY "Authenticated users can upload blog images"
+    ON storage.objects FOR INSERT
+    WITH CHECK (bucket_id = 'blog-images' AND auth.role() = 'authenticated');
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE policyname = 'Public can view blog images'
+  ) THEN
+    CREATE POLICY "Public can view blog images"
+    ON storage.objects FOR SELECT
+    USING (bucket_id = 'blog-images');
+  END IF;
+END $$;

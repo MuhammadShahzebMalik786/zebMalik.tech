@@ -207,14 +207,79 @@
     return res.data || [];
   }
 
-  async function requestPayout(authorId, amount, details) {
-    var sb = getClient();
-    if (!sb || !authorId) throw new Error('Unauthorized');
-    return await sb.from('payout_requests').insert({
-      author_id: authorId,
-      amount: amount,
-      notes: details
+  // --- Client-side Image Optimization to WebP ---
+  function convertToWebP(file, maxDimension, quality) {
+    return new Promise(function (resolve, reject) {
+      if (!file || !file.type.startsWith('image/')) {
+        return reject(new Error('Selected file is not an image.'));
+      }
+      var maxDim = maxDimension || 1600;
+      var qual = quality || 0.82;
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var img = new Image();
+        img.onload = function () {
+          var width = img.width;
+          var height = img.height;
+
+          // Responsive downscaling to preserve storage & speed
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          var canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(function (blob) {
+            if (!blob) return reject(new Error('Canvas WebP conversion failed.'));
+            resolve(blob);
+          }, 'image/webp', qual);
+        };
+        img.onerror = function () { reject(new Error('Failed to load image.')); };
+        img.src = e.target.result;
+      };
+      reader.onerror = function () { reject(new Error('Failed to read file.')); };
+      reader.readAsDataURL(file);
     });
+  }
+
+  // --- Upload to Supabase Storage as WebP ---
+  async function uploadBlogImage(file) {
+    var sb = getClient();
+    var user = await getCurrentUser();
+    if (!sb || !user) throw new Error('You must be signed in to upload images.');
+
+    // 1. Convert to high-efficiency WebP locally in browser
+    var webpBlob = await convertToWebP(file, 1600, 0.82);
+
+    // 2. Generate unique path
+    var filename = Date.now() + '-' + Math.random().toString(36).substring(2, 8) + '.webp';
+    var filePath = user.id + '/' + filename;
+
+    // 3. Upload to 'blog-images' bucket
+    var uploadRes = await sb.storage
+      .from('blog-images')
+      .upload(filePath, webpBlob, {
+        contentType: 'image/webp',
+        cacheControl: '31536000',
+        upsert: false
+      });
+
+    if (uploadRes.error) throw uploadRes.error;
+
+    // 4. Return public CDN URL
+    var publicUrlRes = sb.storage.from('blog-images').getPublicUrl(filePath);
+    return publicUrlRes.data.publicUrl;
   }
 
   return {
@@ -231,6 +296,8 @@
     trackVerifiedView: trackVerifiedView,
     savePostDraft: savePostDraft,
     fetchAuthorPosts: fetchAuthorPosts,
-    requestPayout: requestPayout
+    requestPayout: requestPayout,
+    convertToWebP: convertToWebP,
+    uploadBlogImage: uploadBlogImage
   };
 }));

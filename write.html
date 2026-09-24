@@ -199,8 +199,13 @@
     </div>
 
     <div class="frm-group" style="margin-top:1.25rem">
-      <label for="post-cover">Main Cover Photo URL (Optional)</label>
-      <input type="url" id="post-cover" class="frm-input" placeholder="https://images.unsplash.com/... or paste image link" />
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;flex-wrap:wrap;gap:0.5rem">
+        <label for="post-cover" style="margin:0">Main Cover Photo (Auto-compressed to WebP)</label>
+        <button type="button" id="btn-trigger-cover" class="btn btn-out" style="padding:6px 14px;font-size:0.85rem">📁 Upload from Device</button>
+        <input type="file" id="cover-file-input" accept="image/*" style="display:none" />
+      </div>
+      <input type="url" id="post-cover" class="frm-input" placeholder="Click Upload above or paste an image URL..." />
+      <span id="cover-upload-status" class="tool-status" style="margin:0.25rem 0 0 0;font-size:0.85rem"></span>
     </div>
 
     <div class="frm-group" style="margin-top:1.25rem">
@@ -388,6 +393,78 @@ document.addEventListener('DOMContentLoaded', async function () {
         ['link', 'image'], // Allows adding MULTIPLE inline images
         ['clean']
       ]
+    }
+  });
+
+  // 1b. Custom Image Upload Handler (Auto WebP Conversion + Supabase Storage)
+  var quillFileInput = document.createElement('input');
+  quillFileInput.type = 'file';
+  quillFileInput.accept = 'image/*';
+  quillFileInput.style.display = 'none';
+  document.body.appendChild(quillFileInput);
+
+  var toolbar = quill.getModule('toolbar');
+  toolbar.addHandler('image', function () {
+    if (!currentUser) {
+      document.getElementById('auth-modal').style.display = 'flex';
+      document.getElementById('modal-status').textContent = 'Please log in to upload photos.';
+      document.getElementById('modal-status').className = 'tool-status is-error';
+      return;
+    }
+    quillFileInput.click();
+  });
+
+  quillFileInput.addEventListener('change', async function () {
+    var file = quillFileInput.files[0];
+    if (!file) return;
+
+    var range = quill.getSelection(true);
+    quill.insertText(range.index, '⏳ Optimizing to WebP & uploading…\n', 'italic', true);
+
+    try {
+      var webpUrl = await ZebBlog.uploadBlogImage(file);
+      quill.deleteText(range.index, '⏳ Optimizing to WebP & uploading…\n'.length);
+      quill.insertEmbed(range.index, 'image', webpUrl);
+      quill.setSelection(range.index + 1);
+    } catch (err) {
+      quill.deleteText(range.index, '⏳ Optimizing to WebP & uploading…\n'.length);
+      alert('Upload failed: ' + (err.message || 'Make sure storage bucket is set up.'));
+    } finally {
+      quillFileInput.value = '';
+    }
+  });
+
+  // Cover image upload handler
+  var btnTriggerCover = document.getElementById('btn-trigger-cover');
+  var coverFileInput = document.getElementById('cover-file-input');
+  var coverInput = document.getElementById('post-cover');
+  var coverStatus = document.getElementById('cover-upload-status');
+
+  btnTriggerCover.addEventListener('click', function () {
+    if (!currentUser) {
+      document.getElementById('auth-modal').style.display = 'flex';
+      document.getElementById('modal-status').textContent = 'Please sign in to upload cover photos.';
+      document.getElementById('modal-status').className = 'tool-status is-error';
+      return;
+    }
+    coverFileInput.click();
+  });
+
+  coverFileInput.addEventListener('change', async function () {
+    var file = coverFileInput.files[0];
+    if (!file) return;
+    coverStatus.textContent = 'Optimizing to WebP & uploading…';
+    coverStatus.className = 'tool-status';
+    try {
+      var webpUrl = await ZebBlog.uploadBlogImage(file);
+      coverInput.value = webpUrl;
+      coverStatus.textContent = '✓ Cover uploaded and compressed to WebP!';
+      coverStatus.className = 'tool-status';
+    } catch (err) {
+      coverStatus.textContent = err.message || 'Upload failed.';
+      coverStatus.className = 'tool-status is-error';
+    } finally {
+      coverFileInput.value = '';
     }
   });
 
