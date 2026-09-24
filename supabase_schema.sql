@@ -126,6 +126,84 @@ CREATE POLICY "Authors can update own drafts" ON public.posts
   FOR UPDATE USING (auth.uid() = author_id AND status IN ('draft', 'pending', 'rejected'));
 
 -- ==============================================================================
+-- ZERO-TRUST HARDENING TRIGGERS (Blocks Mass-Assignment & Console Hacking)
+-- ==============================================================================
+
+-- 1. Lock down sensitive profile columns (is_admin, balances, tax_verified)
+CREATE OR REPLACE FUNCTION public.protect_profile_security_fields()
+RETURNS TRIGGER AS $$
+DECLARE
+  caller_is_admin BOOLEAN := FALSE;
+BEGIN
+  -- Check if caller is admin
+  SELECT is_admin INTO caller_is_admin FROM public.profiles WHERE id = auth.uid();
+  
+  -- If NOT an admin, block any attempt to modify admin flag, balances, or tax status
+  IF caller_is_admin IS NOT TRUE THEN
+    IF NEW.is_admin IS DISTINCT FROM OLD.is_admin THEN
+      RAISE EXCEPTION 'Security Violation: Only an administrator can modify admin privileges.';
+    END IF;
+    IF NEW.current_balance IS DISTINCT FROM OLD.current_balance OR NEW.total_earned IS DISTINCT FROM OLD.total_earned THEN
+      RAISE EXCEPTION 'Security Violation: Balances and earnings can only be credited by verified views.';
+    END IF;
+    IF NEW.tax_verified IS DISTINCT FROM OLD.tax_verified THEN
+      RAISE EXCEPTION 'Security Violation: Tax verification status must be verified by an administrator.';
+    END IF;
+  END IF;
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS trg_protect_profile_security ON public.profiles;
+CREATE TRIGGER trg_protect_profile_security
+  BEFORE UPDATE ON public.profiles
+  FOR EACH ROW EXECUTE PROCEDURE public.protect_profile_security_fields();
+
+-- 2. Lock down post status transitions (Prevent authors from self-publishing or faking views)
+CREATE OR REPLACE FUNCTION public.protect_post_status_transitions()
+RETURNS TRIGGER AS $$
+DECLARE
+  caller_is_admin BOOLEAN := FALSE;
+BEGIN
+  SELECT is_admin INTO caller_is_admin FROM public.profiles WHERE id = auth.uid();
+
+  -- If NOT admin, authors can ONLY set status to 'draft' or 'pending'
+  IF caller_is_admin IS NOT TRUE THEN
+    IF NEW.status NOT IN ('draft', 'pending') THEN
+      RAISE EXCEPTION 'Security Violation: Authors can only submit posts as draft or pending review.';
+    END IF;
+    -- Authors cannot manually inflate views or earnings
+    NEW.view_count := OLD.view_count;
+    NEW.estimated_earnings := OLD.estimated_earnings;
+    NEW.published_at := OLD.published_at;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS trg_protect_post_status ON public.posts;
+CREATE TRIGGER trg_protect_post_status
+  BEFORE UPDATE ON public.posts
+  FOR EACH ROW EXECUTE PROCEDURE public.protect_post_status_transitions();
+
+-- 3. Lock down Payout Requests
+DROP POLICY IF EXISTS "Authors can insert own payout requests" ON public.payout_requests;
+CREATE POLICY "Authors can insert own payout requests" ON public.payout_requests
+  FOR INSERT WITH CHECK (
+    auth.uid() = author_id 
+    AND status = 'pending'
+    AND amount >= 5.00
+    AND amount <= (SELECT current_balance FROM public.profiles WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Authors can view own payout requests" ON public.payout_requests;
+CREATE POLICY "Authors can view own payout requests" ON public.payout_requests
+  FOR SELECT USING (auth.uid() = author_id);
+
+
+-- ==============================================================================
 -- Stored Procedures: Record Verified View & Credit Author Earnings (40% Rev-Share)
 -- Baseline RPM: $2.50 per 1,000 views => Author cut (40%) = $1.00 per 1,000 views ($0.001 per view)
 -- ==============================================================================
