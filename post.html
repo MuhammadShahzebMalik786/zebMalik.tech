@@ -16,23 +16,23 @@
 
   /* Header and Footer Widescreen Alignment (Small edge gaps) */
   .site-header .hdr {
-    max-width: 1760px;
-    width: calc(100% - 64px);
+    max-width: 1840px;
+    width: calc(100% - 48px);
     margin: 0 auto;
     padding: 0;
   }
 
   .site-footer .wrap {
-    max-width: 1760px;
-    width: calc(100% - 64px);
+    max-width: 1840px;
+    width: calc(100% - 48px);
     margin: 0 auto;
     padding: 0;
   }
 
   /* Main Reader Container */
   .reader-container {
-    max-width: 1760px;
-    width: calc(100% - 64px);
+    max-width: 1840px;
+    width: calc(100% - 48px);
     margin: 0 auto;
     padding: 0;
   }
@@ -46,18 +46,21 @@
     }
   }
 
-  /* Pagehead Title & Byline */
+  /* Pagehead Title & Byline (Occupying full available space) */
   .pagehead-reader {
     padding: 2.25rem 0 1.25rem 0;
     border-bottom: 1px solid var(--line);
   }
+  .pagehead-reader h1,
   .reader-title {
     margin-top: 0.75rem;
     font-size: clamp(32px, 3.8vw, 50px);
-    line-height: 1.14;
+    line-height: 1.15;
     letter-spacing: -0.025em;
     font-weight: 600;
     color: var(--ink);
+    max-width: 100% !important;
+    width: 100%;
   }
   .reader-byline {
     display: flex;
