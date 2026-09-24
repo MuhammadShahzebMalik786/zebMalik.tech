@@ -646,7 +646,11 @@ document.addEventListener('DOMContentLoaded', async function () {
       document.getElementById('signup-name').value.trim()
     );
     if (res.error) {
-      modalStatus.textContent = res.error.message || 'Could not register account.';
+      if ((res.error.message || '').toLowerCase().includes('rate limit')) {
+        modalStatus.textContent = 'Email limit reached. If you already registered, switch to the "Log In" tab above to sign in directly with your password.';
+      } else {
+        modalStatus.textContent = res.error.message || 'Could not register account.';
+      }
       modalStatus.className = 'tool-status is-error';
     } else {
       modalStatus.textContent = 'Account created and logged in!';
