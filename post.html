@@ -727,7 +727,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="blog-config.js?v=4"></script>
+<script src="blog-config.js?v=6"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   var params = new URLSearchParams(window.location.search);
@@ -820,7 +820,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     } catch(e){}
     var isAuthor = currentUser && (currentUser.id === post.author_id);
-    var isAdmin = currentProfile && currentProfile.is_admin;
+    var isAdmin = (currentProfile && currentProfile.is_admin) || (currentUser && (currentUser.email === 'malikshahzebabd@gmail.com' || currentUser.id === 'c3735295-8408-44ea-a4d8-b5f4b5077358'));
     var isUnpublished = (post.status !== 'published');
 
     if (isUnpublished) {

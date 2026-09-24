@@ -379,6 +379,7 @@
     getClient: getClient,
     getCurrentUser: getCurrentUser,
     getAuthorProfile: getAuthorProfile,
+    fetchAuthorProfile: getAuthorProfile,
     signInWithPassword: signInWithPassword,
     signUpWithPassword: signUpWithPassword,
     signInWithEmail: signInWithEmail,
