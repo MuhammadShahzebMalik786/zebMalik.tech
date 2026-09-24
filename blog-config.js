@@ -116,6 +116,20 @@
     window.location.reload();
   }
 
+  async function resetPasswordForEmail(email) {
+    var sb = getClient();
+    if (!sb) return { error: { message: 'Database client not ready' } };
+    return await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/write'
+    });
+  }
+
+  async function updateUserPassword(newPassword) {
+    var sb = getClient();
+    if (!sb) return { error: { message: 'Database client not ready' } };
+    return await sb.auth.updateUser({ password: newPassword });
+  }
+
   // --- Posts & Feed Utilities ---
   async function fetchPublishedPosts(limit, tag) {
     var sb = getClient();
@@ -308,6 +322,8 @@
     fetchAuthorPosts: fetchAuthorPosts,
     requestPayout: requestPayout,
     convertToWebP: convertToWebP,
-    uploadBlogImage: uploadBlogImage
+    uploadBlogImage: uploadBlogImage,
+    resetPasswordForEmail: resetPasswordForEmail,
+    updateUserPassword: updateUserPassword
   };
 }));

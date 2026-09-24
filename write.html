@@ -330,12 +330,36 @@
         <input type="email" id="login-email" class="frm-input" placeholder="you@domain.com" required />
       </div>
       <div class="frm-group" style="margin-bottom:1.5rem">
-        <label for="login-password">Password</label>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <label for="login-password" style="margin:0">Password</label>
+          <a href="#" id="link-forgot-pw" style="font-size:12px;color:var(--accent);text-decoration:underline">Forgot?</a>
+        </div>
         <input type="password" id="login-password" class="frm-input" placeholder="••••••••" required />
       </div>
       <button type="submit" class="btn" style="width:100%">Sign In &amp; Stay Logged In</button>
       <div style="text-align:center;margin:1rem 0;color:var(--ink-3);font-size:0.85rem">— OR —</div>
       <button type="button" id="btn-login-google" class="btn btn-out" style="width:100%">Sign In with Google</button>
+    </form>
+
+    <!-- Forgot Password Form (hidden by default) -->
+    <form id="form-forgot" style="display:none">
+      <p style="font-size:14px;color:var(--ink-2);margin-top:0;margin-bottom:1rem">Enter your author email address and we'll send you a password reset link.</p>
+      <div class="frm-group" style="margin-bottom:1.25rem">
+        <label for="forgot-email">Email Address</label>
+        <input type="email" id="forgot-email" class="frm-input" placeholder="you@domain.com" required />
+      </div>
+      <button type="submit" class="btn" style="width:100%">Send Reset Link</button>
+      <button type="button" id="btn-back-to-login" class="btn btn-out" style="width:100%;margin-top:0.75rem">Back to Log In</button>
+    </form>
+
+    <!-- Set New Password Form (shown when arriving from recovery link) -->
+    <form id="form-recovery" style="display:none">
+      <p style="font-size:14px;color:var(--ink-2);margin-top:0;margin-bottom:1rem">Enter a new strong password for your author account.</p>
+      <div class="frm-group" style="margin-bottom:1.25rem">
+        <label for="recovery-password">New Password (Min 8 chars, 1 number)</label>
+        <input type="password" id="recovery-password" class="frm-input" placeholder="••••••••" minlength="8" required />
+      </div>
+      <button type="submit" class="btn" style="width:100%">Update Password &amp; Log In</button>
     </form>
 
     <!-- Sign Up Form (hidden by default) -->
@@ -455,7 +479,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-<script src="blog-config.js?v=3"></script>
+<script src="blog-config.js?v=4"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   // 1. Initialize Quill 2.0 Visual Editor (Blogger/Medium Toolbar)
@@ -598,11 +622,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     authModal.style.display = 'none';
   });
 
+  var authTabs = document.querySelector('.auth-tabs');
+  var formForgot = document.getElementById('form-forgot');
+  var formRecovery = document.getElementById('form-recovery');
+  var linkForgotPw = document.getElementById('link-forgot-pw');
+  var btnBackToLogin = document.getElementById('btn-back-to-login');
+
   tabLogin.addEventListener('click', function () {
     tabLogin.classList.add('active');
     tabSignup.classList.remove('active');
     formLogin.style.display = 'block';
     formSignup.style.display = 'none';
+    formForgot.style.display = 'none';
+    formRecovery.style.display = 'none';
+    authTabs.style.display = 'flex';
     modalStatus.textContent = '';
   });
 
@@ -611,8 +644,79 @@ document.addEventListener('DOMContentLoaded', async function () {
     tabLogin.classList.remove('active');
     formSignup.style.display = 'block';
     formLogin.style.display = 'none';
+    formForgot.style.display = 'none';
+    formRecovery.style.display = 'none';
+    authTabs.style.display = 'flex';
     modalStatus.textContent = '';
   });
+
+  linkForgotPw.addEventListener('click', function (e) {
+    e.preventDefault();
+    authTabs.style.display = 'none';
+    formLogin.style.display = 'none';
+    formSignup.style.display = 'none';
+    formRecovery.style.display = 'none';
+    formForgot.style.display = 'block';
+    modalStatus.textContent = '';
+  });
+
+  btnBackToLogin.addEventListener('click', function () {
+    authTabs.style.display = 'flex';
+    formForgot.style.display = 'none';
+    formLogin.style.display = 'block';
+    modalStatus.textContent = '';
+  });
+
+  formForgot.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    modalStatus.textContent = 'Sending password reset link…';
+    modalStatus.className = 'tool-status';
+    var email = document.getElementById('forgot-email').value.trim();
+    var res = await ZebBlog.resetPasswordForEmail(email);
+    if (res.error) {
+      modalStatus.textContent = res.error.message || 'Error sending reset email.';
+      modalStatus.className = 'tool-status is-error';
+    } else {
+      modalStatus.textContent = '✓ Reset link sent! Check your inbox (from hello@zebmalik.tech).';
+      modalStatus.className = 'tool-status';
+    }
+  });
+
+  formRecovery.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    modalStatus.textContent = 'Updating password…';
+    modalStatus.className = 'tool-status';
+    var newPass = document.getElementById('recovery-password').value;
+    if (!newPass || newPass.length < 8 || !/\d/.test(newPass)) {
+      modalStatus.textContent = 'Password must be at least 8 characters with at least 1 number.';
+      modalStatus.className = 'tool-status is-error';
+      return;
+    }
+    var res = await ZebBlog.updateUserPassword(newPass);
+    if (res.error) {
+      modalStatus.textContent = res.error.message || 'Error updating password.';
+      modalStatus.className = 'tool-status is-error';
+    } else {
+      modalStatus.textContent = '✓ Password updated! Logging you in…';
+      modalStatus.className = 'tool-status';
+      setTimeout(async function () {
+        authModal.style.display = 'none';
+        window.location.hash = '';
+        await refreshUser();
+      }, 1000);
+    }
+  });
+
+  // Check if user landed from a Password Recovery email link (#type=recovery)
+  if (window.location.hash && window.location.hash.includes('type=recovery')) {
+    authModal.style.display = 'flex';
+    authTabs.style.display = 'none';
+    formLogin.style.display = 'none';
+    formSignup.style.display = 'none';
+    formForgot.style.display = 'none';
+    formRecovery.style.display = 'block';
+    modalStatus.textContent = 'Please enter your new password below.';
+  }
 
   // Handle Password Log In
   formLogin.addEventListener('submit', async function (e) {
