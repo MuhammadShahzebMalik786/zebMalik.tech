@@ -258,8 +258,18 @@
     <!-- Big Title Input -->
     <input type="text" id="post-title" class="title-input" placeholder="Title of your story or research..." required />
     
+    <!-- Mode Switcher (Visual vs HTML Source) -->
+    <div style="display:flex;justify-content:flex-end;align-items:center;background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px 16px;gap:8px">
+      <span style="font-size:12px;font-family:var(--mono);color:var(--ink-3);margin-right:auto">EDITOR MODE:</span>
+      <button type="button" id="btn-mode-visual" class="btn" style="padding:5px 12px;font-size:13px;border-radius:3px">Visual View</button>
+      <button type="button" id="btn-mode-html" class="btn btn-out" style="padding:5px 12px;font-size:13px;border-radius:3px">&lt;/&gt; HTML Source</button>
+    </div>
+
     <!-- Quill Visual Editor Toolbar and Canvas -->
     <div id="editor-canvas"></div>
+
+    <!-- Raw HTML Source Editor -->
+    <textarea id="raw-html-editor" style="display:none;width:100%;min-height:520px;padding:2rem;font-family:var(--mono);font-size:14px;line-height:1.6;border:none;background:var(--paper);color:var(--ink);resize:vertical;box-sizing:border-box;outline:none" placeholder="Paste or type raw HTML code here..."></textarea>
   </div>
 
   <!-- Publishing & Metadata Settings Card -->
@@ -497,6 +507,41 @@ document.addEventListener('DOMContentLoaded', async function () {
         ['clean']
       ]
     }
+  });
+
+  // 1c. Mode Switcher (Visual View vs HTML Source Code)
+  var btnModeVisual = document.getElementById('btn-mode-visual');
+  var btnModeHtml = document.getElementById('btn-mode-html');
+  var rawHtmlEditor = document.getElementById('raw-html-editor');
+  var editorCanvas = document.getElementById('editor-canvas');
+  var qlToolbar = document.querySelector('.ql-toolbar');
+  var isHtmlMode = false;
+
+  btnModeHtml.addEventListener('click', function () {
+    if (isHtmlMode) return;
+    isHtmlMode = true;
+    rawHtmlEditor.value = quill.getSemanticHTML ? quill.getSemanticHTML() : quill.root.innerHTML;
+    editorCanvas.style.display = 'none';
+    if (qlToolbar) qlToolbar.style.display = 'none';
+    rawHtmlEditor.style.display = 'block';
+    btnModeHtml.className = 'btn';
+    btnModeVisual.className = 'btn btn-out';
+  });
+
+  btnModeVisual.addEventListener('click', function () {
+    if (!isHtmlMode) return;
+    isHtmlMode = false;
+    var htmlVal = rawHtmlEditor.value;
+    if (quill.clipboard && quill.clipboard.dangerouslyPasteHTML) {
+      quill.clipboard.dangerouslyPasteHTML(htmlVal);
+    } else {
+      quill.root.innerHTML = htmlVal;
+    }
+    rawHtmlEditor.style.display = 'none';
+    editorCanvas.style.display = 'block';
+    if (qlToolbar) qlToolbar.style.display = 'block';
+    btnModeVisual.className = 'btn';
+    btnModeHtml.className = 'btn btn-out';
   });
 
   // 1b. Custom Image Upload Handler (Auto WebP Conversion + Supabase Storage)
@@ -806,9 +851,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     var title = titleInput.value.trim();
     var slug = slugInput.value.trim();
-    var htmlContent = quill.getSemanticHTML(); // Rich HTML with inline images
+    var htmlContent = isHtmlMode ? rawHtmlEditor.value : (quill.getSemanticHTML ? quill.getSemanticHTML() : quill.root.innerHTML);
+    var plainText = isHtmlMode ? rawHtmlEditor.value.replace(/<[^>]+>/g, '').trim() : quill.getText().trim();
 
-    if (!title || !slug || quill.getText().trim().length < 20) {
+    if (!title || !slug || plainText.length < 20) {
       saveStatus.textContent = 'Please provide a title and at least a few sentences of content.';
       saveStatus.className = 'tool-status is-error';
       return;
