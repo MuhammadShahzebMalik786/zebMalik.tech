@@ -10,53 +10,228 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=2">
 <style>
-  /* Responsive Reader Layout */
-  .article-wrap {
-    max-width: 960px;
+  /* ============================================================
+     Widescreen Reader Layout with Small Edge Margins (Wikipedia Style)
+     ============================================================ */
+
+  /* Header and Footer Widescreen Alignment (Small edge gaps) */
+  .site-header .hdr {
+    max-width: 1760px;
+    width: calc(100% - 64px);
     margin: 0 auto;
-    padding: 0 32px;
+    padding: 0;
   }
-  @media (min-width: 1400px) {
-    .article-wrap {
-      max-width: 1040px;
-    }
+
+  .site-footer .wrap {
+    max-width: 1760px;
+    width: calc(100% - 64px);
+    margin: 0 auto;
+    padding: 0;
   }
-  @media (max-width: 640px) {
-    .article-wrap {
+
+  /* Main Reader Container */
+  .reader-container {
+    max-width: 1760px;
+    width: calc(100% - 64px);
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  @media (max-width: 768px) {
+    .site-header .hdr,
+    .site-footer .wrap,
+    .reader-container {
+      width: 100%;
       padding: 0 20px;
     }
   }
 
-  .post-header-wrap {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 32px;
+  /* Pagehead Title & Byline */
+  .pagehead-reader {
+    padding: 2.25rem 0 1.25rem 0;
+    border-bottom: 1px solid var(--line);
   }
-  @media (min-width: 1400px) {
-    .post-header-wrap {
-      max-width: 1080px;
+  .reader-title {
+    margin-top: 0.75rem;
+    font-size: clamp(32px, 3.8vw, 50px);
+    line-height: 1.14;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .reader-byline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin-top: 1.25rem;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  /* 3-Column Responsive Grid */
+  .reader-grid {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 290px;
+    gap: 36px;
+    align-items: start;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  @media (max-width: 1320px) {
+    .reader-grid {
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 32px;
     }
-  }
-  @media (max-width: 640px) {
-    .post-header-wrap {
-      padding: 0 20px;
+    .reader-right-col {
+      display: none;
     }
   }
 
+  @media (max-width: 980px) {
+    .reader-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    .reader-left-col {
+      position: static;
+    }
+    .toc-card {
+      position: static;
+      max-height: none;
+    }
+  }
+
+  /* Left Column: Wikipedia-style Table of Contents */
+  .reader-left-col {
+    position: sticky;
+    top: 92px;
+  }
+  .toc-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.25rem;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+  .toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .toc-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .toc-toggle {
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    user-select: none;
+  }
+  .toc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 1.25rem;
+  }
+  .toc-item {
+    color: var(--ink-2);
+    font-size: 0.88rem;
+    line-height: 1.4;
+    padding: 5px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border-left: 2px solid transparent;
+    display: block;
+    word-break: break-word;
+  }
+  .toc-item:hover {
+    color: var(--accent);
+    background: var(--paper);
+  }
+  .toc-item.active {
+    color: var(--accent);
+    background: var(--paper);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  .toc-item.toc-h3 {
+    padding-left: 18px;
+    font-size: 0.82rem;
+    color: var(--ink-3);
+  }
+  .toc-footer {
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .reading-progress-wrap {
+    margin-bottom: 0.75rem;
+  }
+  .reading-progress-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+  }
+  .reading-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #read-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.1s ease;
+  }
+  .toc-share {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .share-btn {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--ink);
+    transition: all 0.15s ease;
+  }
+  .share-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* Center Column: Cover Image & Article Body */
+  .reader-center-col {
+    min-width: 0;
+  }
   .post-cover-wrapper {
-    max-width: 1140px;
-    margin: 2rem auto 2.5rem auto;
-    padding: 0 32px;
-  }
-  @media (max-width: 640px) {
-    .post-cover-wrapper {
-      padding: 0 20px;
-      margin: 1.25rem auto 1.75rem auto;
-    }
+    width: 100%;
+    margin-bottom: 2rem;
   }
   .post-cover-img {
     width: 100%;
-    max-height: 560px;
+    max-height: 520px;
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid var(--line);
@@ -68,7 +243,6 @@
     font-size: 1.18rem;
     line-height: 1.85;
     color: var(--ink);
-    margin-top: 1.5rem;
   }
   @media (max-width: 640px) {
     .article-body {
@@ -78,7 +252,7 @@
   }
 
   .article-body h1 {
-    font-size: clamp(28px, 4vw, 42px);
+    font-size: clamp(28px, 4vw, 40px);
     margin-top: 3.5rem;
     margin-bottom: 1.25rem;
   }
@@ -89,12 +263,14 @@
     border-bottom: 1px solid var(--line);
     padding-bottom: 0.5rem;
     letter-spacing: -0.02em;
+    scroll-margin-top: 90px;
   }
   .article-body h3 {
     margin-top: 2.25rem;
     margin-bottom: 0.85rem;
     font-size: clamp(19px, 2.4vw, 24px);
     letter-spacing: -0.01em;
+    scroll-margin-top: 90px;
   }
   .article-body p {
     margin-bottom: 1.65rem;
@@ -152,6 +328,8 @@
     border-collapse: collapse;
     margin: 2rem 0;
     font-size: 1rem;
+    display: block;
+    overflow-x: auto;
   }
   .article-body th, .article-body td {
     padding: 10px 14px;
@@ -161,6 +339,72 @@
   .article-body th {
     background: var(--paper-2);
     font-weight: 600;
+  }
+
+  /* Right Column: Wikipedia-style Infobox & Sidebar */
+  .reader-right-col {
+    position: sticky;
+    top: 92px;
+  }
+  .infobox-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-size: 0.92rem;
+  }
+  .infobox-header {
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .infobox-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .infobox-header h4 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .infobox-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    display: table;
+  }
+  .infobox-table th, .infobox-table td {
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .infobox-table th {
+    text-align: left;
+    color: var(--ink-2);
+    font-weight: 500;
+    width: 42%;
+  }
+  .infobox-table td {
+    text-align: right;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .infobox-links a {
+    display: block;
+    padding: 6px 0;
+    color: var(--ink-2);
+    font-size: 0.9rem;
+    border-bottom: 1px dashed var(--line);
+    transition: color 0.15s ease;
+  }
+  .infobox-links a:hover {
+    color: var(--accent);
   }
 </style>
 <!-- SEO-META -->
@@ -204,52 +448,140 @@
   </div>
 </header>
 
-<div class="pagehead" style="padding:3.5rem 0 2rem 0">
-  <div class="post-header-wrap">
-    <div style="margin-bottom:1.25rem">
+<div class="pagehead pagehead-reader">
+  <div class="reader-container">
+    <div style="margin-bottom:1rem">
       <a href="blog.html" class="arrow-link">&larr; All Articles</a>
     </div>
     <span id="post-meta" class="label">Loading article...</span>
-    <h1 id="post-title" style="margin-top:0.75rem;font-size:clamp(32px, 4.5vw, 54px);line-height:1.15;letter-spacing:-0.025em">Loading...</h1>
-    <div id="post-byline" style="display:flex;align-items:center;flex-wrap:wrap;gap:0.75rem 1.25rem;margin-top:1.5rem;color:var(--muted);font-size:0.95rem"></div>
+    <h1 id="post-title" class="reader-title">Loading...</h1>
+    <div id="post-byline" class="reader-byline"></div>
   </div>
 </div>
 
-<div id="post-cover-wrapper" class="post-cover-wrapper" style="display:none">
-  <div id="post-cover"></div>
+<div class="reader-container">
+  <div class="reader-grid">
+    <!-- Left Column: Wikipedia-style Sticky Table of Contents -->
+    <aside id="toc-container" class="reader-left-col">
+      <div class="toc-card">
+        <div class="toc-header">
+          <span class="toc-title">Contents</span>
+          <span class="toc-toggle" onclick="toggleToc(this)">[hide]</span>
+        </div>
+        <nav id="toc-list" class="toc-links">
+          <span class="muted" style="font-size:0.85rem">Loading sections...</span>
+        </nav>
+        <div class="toc-footer">
+          <div class="reading-progress-wrap">
+            <div class="reading-progress-label">Reading progress</div>
+            <div class="reading-progress-bar"><div id="read-progress-fill" style="width:0%"></div></div>
+          </div>
+          <div class="toc-share">
+            <span>Share:</span>
+            <button onclick="shareArticle('twitter')" class="share-btn" title="Share on X">𝕏</button>
+            <button onclick="shareArticle('linkedin')" class="share-btn" title="Share on LinkedIn">in</button>
+            <button onclick="shareArticle('copy')" class="share-btn" title="Copy link">🔗</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Column: Hero Graphic, Article Content & Author Card -->
+    <main class="reader-center-col">
+      <div id="post-cover-wrapper" class="post-cover-wrapper" style="display:none">
+        <div id="post-cover"></div>
+      </div>
+
+      <div class="ad-slot" aria-label="Advertisement" style="margin-bottom:2rem"><span>Advertisement</span></div>
+
+      <article id="post-content" class="article-body">
+        <p class="muted">Fetching article contents from secure database...</p>
+      </article>
+
+      <div class="ad-slot" aria-label="Advertisement" style="margin-top:3.5rem"><span>Advertisement</span></div>
+
+      <!-- Author Box -->
+      <div id="author-box" class="article-author-card" style="margin-top:4rem;padding:2rem;background:var(--paper-2);border:1px solid var(--line);border-radius:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:1.25rem">
+            <div id="author-avatar" style="width:64px;height:64px;border-radius:50%;background:var(--paper-3);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.4rem;color:var(--ink-2);overflow:hidden;flex-shrink:0">
+              ✍️
+            </div>
+            <div>
+              <span class="label" style="margin-bottom:4px">Written By</span>
+              <h3 id="author-name" style="margin:0;font-size:1.35rem">Engineering Contributor</h3>
+              <p id="author-bio" class="muted" style="margin-top:0.35rem;font-size:0.95rem">Independent engineer publishing open research on zebMalik.tech.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center">
+            <a href="write.html" class="btn btn-out">Write an Article</a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Column: Wikipedia-style Infobox & Sidebar -->
+    <aside class="reader-right-col">
+      <div class="infobox-card">
+        <div class="infobox-header">
+          <span class="infobox-badge">Quick Facts</span>
+          <h4 id="info-card-title">Article Summary</h4>
+        </div>
+        <table class="infobox-table">
+          <tbody>
+            <tr>
+              <th>Author</th>
+              <td id="info-author">Author</td>
+            </tr>
+            <tr>
+              <th>Published</th>
+              <td id="info-date">-</td>
+            </tr>
+            <tr>
+              <th>Read Time</th>
+              <td id="info-readtime">-</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td id="info-category">Engineering</td>
+            </tr>
+            <tr>
+              <th>Verified Reads</th>
+              <td id="info-views">0</td>
+            </tr>
+            <tr>
+              <th>Platform</th>
+              <td>zebMalik.tech</td>
+            </tr>
+            <tr>
+              <th>Author Cut</th>
+              <td style="color:var(--accent);font-weight:600">40% Revenue</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:1.25rem;padding-top:0.75rem;border-top:1px solid var(--line)">
+          <a href="write.html" class="btn btn-out" style="width:100%;justify-content:center;font-size:13px;padding:9px 12px">Write for zebMalik (40%)</a>
+        </div>
+      </div>
+
+      <div class="ad-slot" aria-label="Advertisement" style="margin-top:1.5rem"><span>Advertisement</span></div>
+
+      <div class="infobox-card" style="margin-top:1.5rem">
+        <div class="infobox-header">
+          <span class="infobox-badge">Free Tools</span>
+          <h4>Run 100% in Browser</h4>
+        </div>
+        <div class="infobox-links">
+          <a href="image-compressor.html">&rarr; Image Compressor</a>
+          <a href="merge-pdf.html">&rarr; Merge PDF Files</a>
+          <a href="qr-code-generator.html">&rarr; QR Code Generator</a>
+          <a href="ai-chatbot-rag.html">&rarr; AI Chatbot &amp; RAG Systems</a>
+          <a href="tools.html" style="font-weight:600;color:var(--accent);border-bottom:none">&rarr; Browse all 22 tools</a>
+        </div>
+      </div>
+    </aside>
+  </div>
 </div>
-
-<div class="article-wrap ad-slot" aria-label="Advertisement"><span>Advertisement</span></div>
-
-<article>
-  <div class="article-wrap">
-    <div id="post-content" class="article-body">
-      <p class="muted">Fetching article contents from secure database...</p>
-    </div>
-  </div>
-</article>
-
-<div class="article-wrap ad-slot" aria-label="Advertisement" style="margin-top:3.5rem"><span>Advertisement</span></div>
-
-<section class="bg-soft rule-top" style="margin-top:4.5rem;padding:3.5rem 0">
-  <div class="article-wrap">
-    <div id="author-box" style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:1.25rem">
-        <div id="author-avatar" style="width:64px;height:64px;border-radius:50%;background:var(--paper-3);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.4rem;color:var(--ink-2);overflow:hidden;flex-shrink:0">
-          ✍️
-        </div>
-        <div>
-          <span class="label" style="margin-bottom:4px">Written By</span>
-          <h3 id="author-name" style="margin:0">Engineering Contributor</h3>
-          <p id="author-bio" class="muted" style="margin-top:0.35rem;font-size:0.95rem">Independent engineer publishing open research on zebMalik.tech.</p>
-        </div>
-      </div>
-      <div style="display:flex;gap:0.75rem;align-items:center">
-        <a href="write.html" class="btn btn-out">Write an Article</a>
-      </div>
-    </div>
-  </div>
-</section>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -402,6 +734,23 @@ document.addEventListener('DOMContentLoaded', async function () {
       document.getElementById('post-content').textContent = rawContent;
     }
 
+    // Populate Right-hand Infobox
+    var infoTitle = document.getElementById('info-card-title');
+    if (infoTitle) infoTitle.textContent = post.title.length > 34 ? post.title.substring(0, 32) + '...' : post.title;
+    var infoAuth = document.getElementById('info-author');
+    if (infoAuth) infoAuth.textContent = authorName;
+    var infoDate = document.getElementById('info-date');
+    if (infoDate) infoDate.textContent = readDate || 'Recent';
+    var infoTime = document.getElementById('info-readtime');
+    if (infoTime) infoTime.textContent = readMinutes + ' min';
+    var infoCat = document.getElementById('info-category');
+    if (infoCat) infoCat.textContent = (post.tags && post.tags.length ? post.tags[0] : 'Engineering');
+    var infoViews = document.getElementById('info-views');
+    if (infoViews) infoViews.textContent = (post.view_count || 0) + ' reads';
+
+    // Build Wikipedia-style Table of Contents
+    buildTableOfContents();
+
     // Author Shield: Protect AdSense from self-clicks and disable self-views
     var currentUser = null;
     try {
@@ -416,7 +765,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         el.style.display = 'none';
       });
       var previewNotice = document.createElement('div');
-      previewNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:0.75rem 1.25rem;border-radius:6px;margin-bottom:1.5rem;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:gap:0.5rem';
+      previewNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:0.75rem 1.25rem;border-radius:6px;margin-bottom:1.5rem;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem';
       previewNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="author-dashboard.html" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
       document.getElementById('post-content').parentNode.insertBefore(previewNotice, document.getElementById('post-content'));
     } else {
@@ -429,6 +778,118 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('post-content').innerHTML = '<p class="is-error">Unable to connect to database. Please check your Supabase credentials in blog-config.js.</p>';
   }
 });
+
+/* Wikipedia-style TOC & Interactive Features */
+function toggleToc(btn) {
+  var list = document.getElementById('toc-list');
+  if (!list) return;
+  if (list.style.display === 'none') {
+    list.style.display = 'flex';
+    btn.textContent = '[hide]';
+  } else {
+    list.style.display = 'none';
+    btn.textContent = '[show]';
+  }
+}
+
+function shareArticle(type) {
+  var url = encodeURIComponent(window.location.href);
+  var title = encodeURIComponent(document.title);
+  if (type === 'twitter') {
+    window.open('https://twitter.com/intent/tweet?text=' + title + '&url=' + url, '_blank');
+  } else if (type === 'linkedin') {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank');
+  } else if (type === 'copy') {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(function() {
+        alert('Article link copied to clipboard!');
+      });
+    }
+  }
+}
+
+function buildTableOfContents() {
+  var content = document.getElementById('post-content');
+  if (!content) return;
+  var headings = content.querySelectorAll('h2, h3');
+  var tocList = document.getElementById('toc-list');
+  var tocContainer = document.getElementById('toc-container');
+  if (!tocList) return;
+  tocList.innerHTML = '';
+
+  if (!headings.length) {
+    if (tocContainer) tocContainer.style.display = 'none';
+    return;
+  }
+  if (tocContainer) tocContainer.style.display = 'block';
+
+  // Add (Top) item like Wikipedia
+  var topLink = document.createElement('a');
+  topLink.href = '#post-title';
+  topLink.className = 'toc-item toc-top active';
+  topLink.textContent = '(Top)';
+  topLink.onclick = function(e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  tocList.appendChild(topLink);
+
+  headings.forEach(function(h, idx) {
+    if (!h.id) {
+      h.id = 'sec-' + idx + '-' + h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = 'toc-item toc-' + h.tagName.toLowerCase();
+    a.textContent = h.textContent.trim();
+    a.onclick = function(e) {
+      e.preventDefault();
+      var target = document.getElementById(h.id);
+      if (target) {
+        var yOffset = -90;
+        var y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    };
+    tocList.appendChild(a);
+  });
+}
+
+window.addEventListener('scroll', function() {
+  // Reading Progress Bar
+  var winScroll = window.scrollY;
+  var height = document.documentElement.scrollHeight - window.innerHeight;
+  var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+  var prog = document.getElementById('read-progress-fill');
+  if (prog) prog.style.width = scrolled + '%';
+
+  // Scroll Spy for TOC
+  var content = document.getElementById('post-content');
+  if (!content) return;
+  var headings = content.querySelectorAll('h2, h3');
+  var scrollPos = window.scrollY + 120;
+  var currentId = '';
+
+  if (window.scrollY < 200) {
+    currentId = 'post-title';
+  } else {
+    headings.forEach(function(h) {
+      if (h.offsetTop <= scrollPos) {
+        currentId = h.id;
+      }
+    });
+  }
+
+  document.querySelectorAll('.toc-item').forEach(function(link) {
+    if (currentId === 'post-title' && link.classList.contains('toc-top')) {
+      link.classList.add('active');
+    } else if (currentId && link.getAttribute('href') === '#' + currentId) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+}, { passive: true });
 </script>
 </body>
 </html>
