@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Author Earnings &amp; Dashboard — zebMalik.tech</title>
+<meta name="description" content="View your article reads, track your 40% ad revenue share earnings, and request payouts on zebMalik.tech.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=2">
+<!-- SEO-META -->
+<link rel="canonical" href="https://zebmalik.tech/author-dashboard">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="zebMalik.tech">
+<meta name="theme-color" content="#121316">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="zebMalik.tech">
+<meta property="og:title" content="Author Earnings &amp; Dashboard — zebMalik.tech">
+<meta property="og:description" content="View your article reads, track your 40% ad revenue share earnings, and request payouts on zebMalik.tech.">
+<meta property="og:url" content="https://zebmalik.tech/author-dashboard">
+<meta property="og:image" content="https://zebmalik.tech/android-chrome-512x512.png">
+<meta property="og:image:alt" content="zebMalik.tech">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Author Earnings &amp; Dashboard — zebMalik.tech">
+<meta name="twitter:description" content="View your article reads, track your 40% ad revenue share earnings, and request payouts on zebMalik.tech.">
+<meta name="twitter:image" content="https://zebmalik.tech/android-chrome-512x512.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "@id": "https://zebmalik.tech/author-dashboard#webpage", "url": "https://zebmalik.tech/author-dashboard", "name": "Author Earnings & Dashboard \u2014 zebMalik.tech", "description": "View your article reads, track your 40% ad revenue share earnings, and request payouts on zebMalik.tech.", "isPartOf": {"@id": "https://zebmalik.tech/#website"}, "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://zebmalik.tech/"}, {"@type": "ListItem", "position": 2, "name": "Author Earnings & Dashboard", "item": "https://zebmalik.tech/author-dashboard"}]}]}</script>
+<meta name="google-adsense-account" content="ca-pub-9522829065676411">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9522829065676411" crossorigin="anonymous"></script>
+<!-- /SEO-META -->
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="services.html">Services</a>
+      <a href="tools.html">Tools</a>
+      <a href="blog.html">Blog</a>
+      <a href="work.html">Work</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="free-sample.html" class="navcta">Free sample</a>
+    </nav>
+    <a href="free-sample.html" class="btn">Get a free sample</a>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem">
+    <div>
+      <span class="label">Author Portal</span>
+      <h1>Your Earnings &amp; Articles</h1>
+      <p class="lead">Track your reader analytics and withdraw your 40% revenue share.</p>
+    </div>
+    <div style="display:flex;gap:0.75rem">
+      <a href="write.html" class="btn">Write New Article</a>
+      <button type="button" id="btn-signout" class="btn btn-out" style="display:none">Sign Out</button>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <!-- Unauthenticated View -->
+    <div id="unauth-view" class="tool-card" style="text-align:center;padding:3rem 1.5rem">
+      <h2>Sign in to view your author dashboard</h2>
+      <p class="muted" style="max-width:480px;margin:0 auto 1.5rem auto">Sign in with the email or Google account you used to publish your articles to view earnings and request withdrawals.</p>
+      <div style="display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
+        <a href="write.html" class="btn">Go to Writer Studio &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Authenticated Dashboard -->
+    <div id="auth-view" style="display:none">
+      <!-- Metrics Overview -->
+      <div class="cards" style="grid-template-columns:repeat(3, 1fr);margin-bottom:3rem">
+        <div class="item">
+          <span class="label">Current Balance</span>
+          <h2 id="metric-balance" style="font-size:2.5rem;margin:0.5rem 0">$0.00</h2>
+          <p class="muted" style="font-size:0.9rem">Available for withdrawal (Min $20)</p>
+          <div style="margin-top:1rem">
+            <button type="button" id="btn-request-payout" class="btn btn-out" style="width:100%" disabled>Request Payout</button>
+          </div>
+        </div>
+
+        <div class="item">
+          <span class="label">Total Lifetime Earned</span>
+          <h2 id="metric-total" style="font-size:2.5rem;margin:0.5rem 0">$0.00</h2>
+          <p class="muted" style="font-size:0.9rem">Your 40% ad revenue share to date</p>
+        </div>
+
+        <div class="item">
+          <span class="label">Verified Reads</span>
+          <h2 id="metric-reads" style="font-size:2.5rem;margin:0.5rem 0">0</h2>
+          <p class="muted" style="font-size:0.9rem">Human readers with &gt;12s engagement</p>
+        </div>
+      </div>
+
+      <!-- Articles Table -->
+      <div class="sec-head" style="margin-bottom:1rem">
+        <span class="label">Your Articles</span>
+        <h2>Published &amp; Submitted Posts</h2>
+      </div>
+
+      <div class="table-scroll">
+        <table class="spec">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Reads</th>
+              <th>Estimated Earnings</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="posts-tbody">
+            <tr>
+              <td colspan="5" style="text-align:center;color:var(--muted)">Loading your articles…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="services.html#extraction">Data extraction</a>
+        <a href="services.html#automation">AI &amp; automation</a>
+        <a href="services.html#backend">Backend engineering</a>
+        <a href="services.html#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
+        <a href="lead-list-building.html">Lead list building</a>
+        <a href="ai-chatbot-rag.html">AI chatbots &amp; RAG</a>
+        <a href="free-sample.html">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="work.html">Work</a>
+        <a href="blog.html">Blog &amp; Research</a>
+        <a href="write.html">Write for us (40% Cut)</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/muhammad-shahzeb-malik/">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-n8n-automation-ai-agents-and-ai-workflow-automation">Fiverr &mdash; n8n &amp; AI Agents</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-an-ai-chatbot-rag-agent-and-ai-assistant-for-your-data">Fiverr &mdash; AI Chatbot &amp; RAG</a>
+      </div>
+    </div>
+    <div class="ftools">
+      <div class="ftools-head">
+        <h4>Free Browser Tools</h4>
+        <a href="tools.html">Browse all 22 tools &rarr;</a>
+      </div>
+      <div class="ftools-grid">
+        <div class="ftools-group image-group">
+          <h5>Image Tools</h5>
+          <div class="ftools-subgrid">
+            <div>
+              <a href="image-compressor.html">Image compressor</a>
+              <a href="image-resizer.html">Image resizer</a>
+              <a href="image-converter.html">Image converter</a>
+              <a href="image-to-pdf.html">Image to PDF</a>
+              <a href="pdf-to-image.html">PDF to image</a>
+            </div>
+            <div>
+              <a href="image-metadata-remover.html">Metadata remover</a>
+              <a href="image-cropper.html">Image cropper</a>
+              <a href="image-rotator.html">Rotate images</a>
+              <a href="image-watermark.html">Image watermark</a>
+              <a href="meme-generator.html">Meme generator</a>
+            </div>
+          </div>
+        </div>
+        <div class="ftools-group">
+          <h5>PDF Tools</h5>
+          <a href="merge-pdf.html">Merge PDF</a>
+          <a href="split-pdf.html">Split PDF</a>
+          <a href="compress-pdf.html">Compress PDF</a>
+          <a href="extract-text-from-pdf.html">PDF to text &amp; OCR</a>
+          <a href="pdf-organizer.html">Organize PDF pages</a>
+          <a href="watermark-pdf.html">Watermark PDF</a>
+          <a href="pdf-page-numbers.html">Add page numbers</a>
+          <a href="rotate-pdf.html">Rotate PDF</a>
+        </div>
+        <div class="ftools-group">
+          <h5>Developer &amp; Utilities</h5>
+          <a href="qr-code-generator.html">QR code generator</a>
+          <a href="json-formatter.html">JSON formatter</a>
+          <a href="word-counter.html">Word counter</a>
+          <a href="password-generator.html">Password generator</a>
+        </div>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik<span class="tech-mark">.tech</span> &nbsp;&middot;&nbsp; <a href="privacy.html" style="color:inherit;text-decoration:underline;">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="terms.html" style="color:inherit;text-decoration:underline;">Terms of Service</a></div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="blog-config.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+  try {
+    var user = await ZebBlog.getCurrentUser();
+    if (!user) return; // Keep unauth-view visible
+
+    document.getElementById('unauth-view').style.display = 'none';
+    document.getElementById('auth-view').style.display = 'block';
+    var signoutBtn = document.getElementById('btn-signout');
+    signoutBtn.style.display = 'inline-block';
+    signoutBtn.addEventListener('click', function () { ZebBlog.signOut(); });
+
+    // Fetch author profile
+    var profile = await ZebBlog.getAuthorProfile(user.id);
+    var balance = profile ? Number(profile.current_balance || 0) : 0;
+    var total = profile ? Number(profile.total_earned || 0) : 0;
+
+    document.getElementById('metric-balance').textContent = '$' + balance.toFixed(2);
+    document.getElementById('metric-total').textContent = '$' + total.toFixed(2);
+
+    var payoutBtn = document.getElementById('btn-request-payout');
+    if (balance >= 20) {
+      payoutBtn.disabled = false;
+      payoutBtn.className = 'btn';
+      payoutBtn.addEventListener('click', async function () {
+        var details = prompt('Enter your Wise email, Payoneer account, or Bank IBAN for payout:');
+        if (details) {
+          await ZebBlog.requestPayout(user.id, balance, details);
+          alert('Payout request submitted! Our finance team reviews requests every Friday.');
+        }
+      });
+    }
+
+    // Fetch author posts
+    var posts = await ZebBlog.fetchAuthorPosts(user.id);
+    var tbody = document.getElementById('posts-tbody');
+    tbody.innerHTML = '';
+
+    var totalReads = 0;
+    if (posts && posts.length > 0) {
+      posts.forEach(function (p) {
+        totalReads += (p.view_count || 0);
+        var tr = document.createElement('tr');
+        var statusBadge = '<span class="chip" style="text-transform:uppercase;font-size:0.75rem">' + p.status + '</span>';
+        var linkTitle = p.status === 'published' ? '<a href="post.html?slug=' + encodeURIComponent(p.slug) + '" style="color:inherit;font-weight:600">' + p.title + '</a>' : '<strong>' + p.title + '</strong>';
+        var created = new Date(p.created_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+
+        tr.innerHTML = '<td>' + linkTitle + '</td>' +
+          '<td>' + statusBadge + '</td>' +
+          '<td>' + (p.view_count || 0) + '</td>' +
+          '<td>$' + Number(p.estimated_earnings || 0).toFixed(2) + '</td>' +
+          '<td>' + created + '</td>';
+        tbody.appendChild(tr);
+      });
+    } else {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">No articles submitted yet. <a href="write.html">Write your first article &rarr;</a></td></tr>';
+    }
+
+    document.getElementById('metric-reads').textContent = totalReads.toLocaleString();
+
+  } catch (err) {
+    console.error('Error loading author dashboard:', err);
+  }
+});
+</script>
+</body>
+</html>
