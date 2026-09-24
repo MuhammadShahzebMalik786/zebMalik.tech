@@ -232,11 +232,14 @@ document.addEventListener('DOMContentLoaded', async function () {
       if (post.profiles.bio) document.getElementById('author-bio').textContent = post.profiles.bio;
     }
 
-    // Render Markdown
-    if (window.marked) {
-      document.getElementById('post-content').innerHTML = window.marked.parse(post.content_markdown || '');
+    // Render Article Content (supports rich visual HTML with multiple inline images or Markdown)
+    var rawContent = post.content_markdown || '';
+    if (rawContent.trim().startsWith('<')) {
+      document.getElementById('post-content').innerHTML = rawContent;
+    } else if (window.marked) {
+      document.getElementById('post-content').innerHTML = window.marked.parse(rawContent);
     } else {
-      document.getElementById('post-content').textContent = post.content_markdown;
+      document.getElementById('post-content').textContent = rawContent;
     }
 
     // Author Shield: Protect AdSense from self-clicks and disable self-views

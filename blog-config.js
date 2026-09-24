@@ -42,12 +42,28 @@
     return res.data;
   }
 
+  async function signInWithPassword(email, password) {
+    var sb = getClient();
+    if (!sb) return { error: { message: 'Database client not ready' } };
+    return await sb.auth.signInWithPassword({ email: email, password: password });
+  }
+
+  async function signUpWithPassword(email, password, fullName) {
+    var sb = getClient();
+    if (!sb) return { error: { message: 'Database client not ready' } };
+    return await sb.auth.signUp({
+      email: email,
+      password: password,
+      options: { data: { full_name: fullName || email.split('@')[0] } }
+    });
+  }
+
   async function signInWithEmail(email) {
     var sb = getClient();
     if (!sb) return { error: 'Client not loaded' };
     return await sb.auth.signInWithOtp({
       email: email,
-      options: { emailRedirectTo: window.location.origin + '/author-dashboard.html' }
+      options: { emailRedirectTo: window.location.origin + '/author-dashboard' }
     });
   }
 
@@ -56,7 +72,7 @@
     if (!sb) return { error: 'Client not loaded' };
     return await sb.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/author-dashboard.html' }
+      options: { redirectTo: window.location.origin + '/author-dashboard' }
     });
   }
 
@@ -172,6 +188,8 @@
     getClient: getClient,
     getCurrentUser: getCurrentUser,
     getAuthorProfile: getAuthorProfile,
+    signInWithPassword: signInWithPassword,
+    signUpWithPassword: signUpWithPassword,
     signInWithEmail: signInWithEmail,
     signInWithGoogle: signInWithGoogle,
     signOut: signOut,
