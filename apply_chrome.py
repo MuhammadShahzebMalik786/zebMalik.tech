@@ -267,3 +267,29 @@ for path in sorted(glob.glob(os.path.join(SITE, "*.html"))):
 
     open(path, "w", encoding="utf-8").write(src)
     print("updated", fname)
+
+def generate_sitemap():
+    from datetime import date
+    today = date.today().isoformat()
+    html_files = [os.path.basename(p) for p in glob.glob(os.path.join(SITE, "*.html"))]
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for fname in sorted(html_files):
+        if fname == "404.html":
+            continue
+        url = page_url(fname)
+        if fname == "index.html":
+            prio = "1.0"
+        elif fname in ("services.html", "tools.html", "free-sample.html", "ecommerce-price-monitoring.html", "lead-list-building.html", "ai-chatbot-rag.html"):
+            prio = "0.9"
+        elif fname in ("privacy.html", "terms.html"):
+            prio = "0.5"
+        else:
+            prio = "0.8"
+        lines.append(f'  <url><loc>{url}</loc><lastmod>{today}</lastmod><priority>{prio}</priority></url>')
+    lines.append('</urlset>\n')
+    sitemap_path = os.path.join(SITE, "sitemap.xml")
+    open(sitemap_path, "w", encoding="utf-8").write("\n".join(lines))
+    print("generated sitemap.xml with", len(lines) - 3, "URLs")
+
+generate_sitemap()
+
