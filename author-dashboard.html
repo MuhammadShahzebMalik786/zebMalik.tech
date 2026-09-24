@@ -223,7 +223,7 @@
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="blog-config.js"></script>
+<script src="blog-config.js?v=3"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   try {
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Automated $600 Annual Reporting Compliance Threshold Check
     if (total >= 600 && !isTaxVerified) {
       var complianceBox = document.createElement('div');
-      complianceBox.style.cssText = 'background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);padding:1rem 1.25rem;border-radius:8px;margin-bottom:2rem;color:var(--fg);font-size:0.95rem;line-height:1.5';
+      complianceBox.style.cssText = 'background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.3);padding:1rem 1.25rem;border-radius:8px;margin-bottom:2rem;color:var(--ink);font-size:0.95rem;line-height:1.5';
       complianceBox.innerHTML = '<strong>⚠️ $600 Annual Compliance Notice:</strong> Congratulations on crossing $600 in earnings! Under freelance reporting regulations, please submit a standard freelancer tax declaration (W-8BEN for international writers or local invoice) to <a href="mailto:hello@zebmalik.tech" style="color:#eab308;text-decoration:underline">hello@zebmalik.tech</a> for uninterrupted disbursements.';
       var cardsEl = document.querySelector('.cards');
       if (cardsEl) cardsEl.parentNode.insertBefore(complianceBox, cardsEl);

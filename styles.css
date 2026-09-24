@@ -19,6 +19,8 @@
   --narrow:760px;
   --sans:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --fg:var(--ink);
+  --bg-soft:var(--paper-2);
 }
 
 *{box-sizing:border-box}

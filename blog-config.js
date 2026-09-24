@@ -207,6 +207,16 @@
     return res.data || [];
   }
 
+  async function requestPayout(authorId, amount, details) {
+    var sb = getClient();
+    if (!sb || !authorId) throw new Error('Unauthorized');
+    return await sb.from('payout_requests').insert({
+      author_id: authorId,
+      amount: amount,
+      notes: details
+    });
+  }
+
   // --- Client-side Image Optimization to WebP ---
   function convertToWebP(file, maxDimension, quality) {
     return new Promise(function (resolve, reject) {

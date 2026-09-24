@@ -10,15 +10,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=2">
 <style>
-  .article-body { font-size: 1.125rem; line-height: 1.8; color: var(--fg); margin-top: 2rem; }
+  .article-body { font-size: 1.125rem; line-height: 1.8; color: var(--ink); margin-top: 2rem; }
   .article-body h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-size: 1.75rem; }
   .article-body h3 { margin-top: 2rem; margin-bottom: 0.75rem; font-size: 1.35rem; }
   .article-body p { margin-bottom: 1.5rem; }
-  .article-body pre { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 1.25rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; margin-bottom: 1.5rem; }
-  .article-body code { font-family: 'JetBrains Mono', monospace; background: var(--card); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+  .article-body pre { background: var(--paper-2); border: 1px solid var(--line); border-radius: 6px; padding: 1.25rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; margin-bottom: 1.5rem; }
+  .article-body code { font-family: 'JetBrains Mono', monospace; background: var(--paper-2); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
   .article-body pre code { background: none; padding: 0; }
   .article-body img { max-width: 100%; border-radius: 6px; margin: 1.5rem 0; }
-  .article-body blockquote { border-left: 3px solid var(--accent, #6366f1); margin-left: 0; padding-left: 1.25rem; color: var(--muted); font-style: italic; }
+  .article-body blockquote { border-left: 3px solid var(--accent); margin-left: 0; padding-left: 1.25rem; color: var(--ink-2); font-style: italic; }
 </style>
 <!-- SEO-META -->
 <link rel="canonical" href="https://zebmalik.tech/post">
@@ -195,7 +195,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="blog-config.js"></script>
+<script src="blog-config.js?v=3"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   var params = new URLSearchParams(window.location.search);
@@ -243,7 +243,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Author Shield: Protect AdSense from self-clicks and disable self-views
-    var currentUser = await ZebBlog.getCurrentUser();
+    var currentUser = null;
+    try {
+      if (typeof ZebBlog !== 'undefined' && ZebBlog.getCurrentUser) {
+        currentUser = await ZebBlog.getCurrentUser();
+      }
+    } catch(e){}
     var isAuthor = currentUser && (currentUser.id === post.author_id);
 
     if (isAuthor) {
@@ -251,8 +256,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         el.style.display = 'none';
       });
       var previewNotice = document.createElement('div');
-      previewNotice.style.cssText = 'background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);color:var(--fg);padding:0.75rem 1.25rem;border-radius:6px;margin-bottom:1.5rem;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem';
-      previewNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="author-dashboard.html" style="color:inherit;font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
+      previewNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:0.75rem 1.25rem;border-radius:6px;margin-bottom:1.5rem;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:gap:0.5rem';
+      previewNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="author-dashboard.html" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
       document.getElementById('post-content').parentNode.insertBefore(previewNotice, document.getElementById('post-content'));
     } else {
       // Trigger Anti-Bot Verified Read for legitimate public readers
