@@ -727,7 +727,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="blog-config.js?v=6"></script>
+<script src="blog-config.js?v=7"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   var params = new URLSearchParams(window.location.search);
@@ -775,10 +775,10 @@ document.addEventListener('DOMContentLoaded', async function () {
       }
     }
 
-    if (rawContent.trim().startsWith('<')) {
-      document.getElementById('post-content').innerHTML = rawContent;
-    } else if (window.marked) {
-      document.getElementById('post-content').innerHTML = window.marked.parse(rawContent);
+    var parsedHtml = rawContent.trim().startsWith('<') ? rawContent : (window.marked ? window.marked.parse(rawContent) : '');
+    var safeHtml = (typeof ZebBlog !== 'undefined' && ZebBlog.sanitizeHtml) ? ZebBlog.sanitizeHtml(parsedHtml) : parsedHtml;
+    if (safeHtml) {
+      document.getElementById('post-content').innerHTML = safeHtml;
     } else {
       document.getElementById('post-content').textContent = rawContent;
     }

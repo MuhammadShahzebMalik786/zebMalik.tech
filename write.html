@@ -57,6 +57,216 @@
     border-radius: 4px;
     margin: 1.5rem 0;
     box-shadow: 0 4px 15px rgba(18,19,22,0.08);
+    cursor: pointer;
+    transition: outline 0.1s ease;
+  }
+  .ql-editor img:hover {
+    outline: 2px dashed rgba(37, 99, 235, 0.4);
+  }
+
+  /* Interactive Image Resizer Overlay (Google Docs / Word Style) */
+  #img-resize-overlay {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9000;
+    border: 2px solid #2563eb;
+    box-sizing: border-box;
+    display: none;
+  }
+  .img-resize-handle {
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border: 1.5px solid #2563eb;
+    border-radius: 2px;
+    position: absolute;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    pointer-events: auto;
+    z-index: 9001;
+  }
+  .img-handle-nw { top: -6px; left: -6px; cursor: nwse-resize; }
+  .img-handle-ne { top: -6px; right: -6px; cursor: nesw-resize; }
+  .img-handle-se { bottom: -6px; right: -6px; cursor: nwse-resize; }
+  .img-handle-sw { bottom: -6px; left: -6px; cursor: nesw-resize; }
+  .img-handle-n  { top: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  .img-handle-s  { bottom: -6px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  .img-handle-e  { top: 50%; right: -6px; transform: translateY(-50%); cursor: ew-resize; }
+  .img-handle-w  { top: 50%; left: -6px; transform: translateY(-50%); cursor: ew-resize; }
+
+  #img-resize-toolbar {
+    position: absolute;
+    top: -46px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;
+    border: 1px solid var(--line-2);
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(18,19,22,0.14);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 6px;
+    pointer-events: auto;
+    white-space: nowrap;
+    z-index: 9002;
+    font-family: var(--sans);
+    font-size: 12px;
+  }
+  .img-tb-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s ease;
+  }
+  .img-tb-btn:hover {
+    background: var(--paper-2);
+    border-color: var(--line);
+  }
+  .img-tb-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--line);
+    margin: 0 3px;
+  }
+  #img-dimension-badge {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: #ffffff;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 9002;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  /* Right-Click Context Menu (Google Docs / Word Style) */
+  #editor-context-menu {
+    position: fixed;
+    display: none;
+    background: #ffffff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 14px 40px rgba(18,19,22,0.18), 0 2px 6px rgba(18,19,22,0.06);
+    z-index: 10005;
+    min-width: 220px;
+    padding: 6px 0;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink);
+  }
+  .ctx-row-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 4px 10px 8px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .ctx-format-btn {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #ffffff;
+    color: var(--ink);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: var(--sans);
+    transition: all 0.12s;
+  }
+  .ctx-format-btn:hover {
+    background: var(--paper-2);
+    border-color: var(--line-2);
+  }
+  .ctx-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+    font-size: 13px;
+  }
+  .ctx-item:hover {
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+  .ctx-item .ctx-icon {
+    margin-right: 10px;
+    display: inline-flex;
+    width: 16px;
+    justify-content: center;
+  }
+  .ctx-item .ctx-shortcut {
+    color: var(--ink-3);
+    font-size: 11px;
+    font-family: var(--mono);
+    margin-left: 12px;
+  }
+  .ctx-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 4px 0;
+  }
+
+  /* Double-Click Quick Format Pill (Docs / Word Mini-Bar) */
+  #editor-quick-pill {
+    position: fixed;
+    display: none;
+    background: #1e293b;
+    color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 8px 26px rgba(0,0,0,0.28);
+    z-index: 10004;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    transform: translateX(-50%) translateY(-100%);
+  }
+  #editor-quick-pill::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #1e293b;
+  }
+  .pill-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    padding: 4px 7px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.12s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pill-btn:hover {
+    background: rgba(255,255,255,0.22);
   }
   .ql-editor pre.ql-syntax {
     background: var(--paper-3);
@@ -487,9 +697,112 @@
 
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 
+<!-- Interactive Image Resizer Overlay (Google Docs / Word Style) -->
+<div id="img-resize-overlay">
+  <!-- 8 Draggable Corner & Edge Handles -->
+  <div class="img-resize-handle img-handle-nw" data-handle="nw" title="Drag to resize"></div>
+  <div class="img-resize-handle img-handle-ne" data-handle="ne" title="Drag to resize"></div>
+  <div class="img-resize-handle img-handle-se" data-handle="se" title="Drag to resize"></div>
+  <div class="img-resize-handle img-handle-sw" data-handle="sw" title="Drag to resize"></div>
+  <div class="img-resize-handle img-handle-n"  data-handle="n"  title="Drag to resize height"></div>
+  <div class="img-resize-handle img-handle-s"  data-handle="s"  title="Drag to resize height"></div>
+  <div class="img-resize-handle img-handle-e"  data-handle="e"  title="Drag to resize width"></div>
+  <div class="img-resize-handle img-handle-w"  data-handle="w"  title="Drag to resize width"></div>
+
+  <!-- Image Action Floating Toolbar -->
+  <div id="img-resize-toolbar">
+    <button type="button" class="img-tb-btn" data-img-align="left" title="Align Left">⫷ Left</button>
+    <button type="button" class="img-tb-btn" data-img-align="center" title="Align Center">≡ Center</button>
+    <button type="button" class="img-tb-btn" data-img-align="right" title="Align Right">⫸ Right</button>
+    <span class="img-tb-divider"></span>
+    <button type="button" class="img-tb-btn" data-img-size="25%" title="25% width">25%</button>
+    <button type="button" class="img-tb-btn" data-img-size="50%" title="50% width">50%</button>
+    <button type="button" class="img-tb-btn" data-img-size="75%" title="75% width">75%</button>
+    <button type="button" class="img-tb-btn" data-img-size="100%" title="Full width">100%</button>
+    <span class="img-tb-divider"></span>
+    <button type="button" class="img-tb-btn" data-img-crop="auto" title="Original Aspect Ratio">Auto</button>
+    <button type="button" class="img-tb-btn" data-img-crop="16-9" title="Crop to 16:9 Widescreen">16:9</button>
+    <button type="button" class="img-tb-btn" data-img-crop="4-3" title="Crop to 4:3 Standard">4:3</button>
+    <button type="button" class="img-tb-btn" data-img-crop="1-1" title="Crop to 1:1 Square">1:1</button>
+    <button type="button" class="img-tb-btn" data-img-crop="round" title="Circular / Avatar">Round</button>
+    <span class="img-tb-divider"></span>
+    <button type="button" class="img-tb-btn" id="btn-img-delete" title="Delete Image" style="color:#ef4444">🗑️</button>
+  </div>
+
+  <!-- Live Dimension Pill -->
+  <div id="img-dimension-badge">0 × 0 px</div>
+</div>
+
+<!-- Google Docs / Word Style Right-Click Context Menu -->
+<div id="editor-context-menu">
+  <!-- Top Quick Format Icons Row -->
+  <div class="ctx-row-btns">
+    <button type="button" class="ctx-format-btn" data-fmt="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+    <button type="button" class="ctx-format-btn" data-fmt="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+    <button type="button" class="ctx-format-btn" data-fmt="underline" title="Underline (Ctrl+U)"><u>U</u></button>
+    <button type="button" class="ctx-format-btn" data-fmt="strike" title="Strikethrough"><s>S</s></button>
+    <button type="button" class="ctx-format-btn" data-fmt="link" title="Insert Link (Ctrl+K)">🔗</button>
+    <button type="button" class="ctx-format-btn" data-fmt="clean" title="Clear Formatting">⌫</button>
+  </div>
+
+  <!-- Structure / Headings -->
+  <div class="ctx-item" data-fmt="header" data-val="2">
+    <span><span class="ctx-icon">📌</span> Heading 2</span>
+    <span class="ctx-shortcut">H2</span>
+  </div>
+  <div class="ctx-item" data-fmt="header" data-val="3">
+    <span><span class="ctx-icon">📎</span> Heading 3</span>
+    <span class="ctx-shortcut">H3</span>
+  </div>
+  <div class="ctx-item" data-fmt="header" data-val="false">
+    <span><span class="ctx-icon">📄</span> Normal Text</span>
+    <span class="ctx-shortcut">P</span>
+  </div>
+
+  <div class="ctx-divider"></div>
+
+  <!-- Lists & Blocks -->
+  <div class="ctx-item" data-fmt="list" data-val="bullet">
+    <span><span class="ctx-icon">•</span> Bulleted List</span>
+  </div>
+  <div class="ctx-item" data-fmt="list" data-val="ordered">
+    <span><span class="ctx-icon">1.</span> Numbered List</span>
+  </div>
+  <div class="ctx-item" data-fmt="blockquote">
+    <span><span class="ctx-icon">❝</span> Quote Block</span>
+  </div>
+  <div class="ctx-item" data-fmt="code-block">
+    <span><span class="ctx-icon">&lt;/&gt;</span> Code Block</span>
+  </div>
+
+  <div class="ctx-divider"></div>
+
+  <!-- Standard Clipboard Actions -->
+  <div class="ctx-item" id="ctx-action-copy">
+    <span><span class="ctx-icon">📋</span> Copy</span>
+    <span class="ctx-shortcut">Ctrl+C</span>
+  </div>
+  <div class="ctx-item" id="ctx-action-selectall">
+    <span><span class="ctx-icon">📑</span> Select All</span>
+    <span class="ctx-shortcut">Ctrl+A</span>
+  </div>
+</div>
+
+<!-- Double-Click Mini Formatting Pill (Google Docs / Word Smart Tag) -->
+<div id="editor-quick-pill">
+  <button type="button" class="pill-btn" data-fmt="bold" data-keep="true" title="Bold"><b>B</b></button>
+  <button type="button" class="pill-btn" data-fmt="italic" data-keep="true" title="Italic"><i>I</i></button>
+  <button type="button" class="pill-btn" data-fmt="underline" data-keep="true" title="Underline"><u>U</u></button>
+  <button type="button" class="pill-btn" data-fmt="link" title="Link">🔗</button>
+  <button type="button" class="pill-btn" data-fmt="header" data-val="2" title="Heading 2">H2</button>
+  <button type="button" class="pill-btn" data-fmt="header" data-val="3" title="Heading 3">H3</button>
+  <button type="button" class="pill-btn" data-fmt="blockquote" title="Quote">❝</button>
+  <button type="button" class="pill-btn" onclick="document.getElementById('editor-quick-pill').style.display='none'" title="Close">×</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-<script src="blog-config.js?v=6"></script>
+<script src="blog-config.js?v=7"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   // 1. Initialize Quill 2.0 Visual Editor (Blogger/Medium Toolbar)
@@ -832,6 +1145,337 @@ document.addEventListener('DOMContentLoaded', async function () {
   });
   slugInput.addEventListener('input', function () { slugInput.dataset.manual = 'true'; });
 
+  // ==============================================================================
+  // 4b. GOOGLE DOCS / WORD STYLE: INTERACTIVE IMAGE RESIZER & ASPECT-RATIO CROP
+  // ==============================================================================
+  var imgOverlay = document.getElementById('img-resize-overlay');
+  var imgBadge = document.getElementById('img-dimension-badge');
+  var activeImg = null;
+
+  function repositionImgOverlay() {
+    if (!activeImg || !activeImg.isConnected) {
+      hideImgOverlay();
+      return;
+    }
+    var rect = activeImg.getBoundingClientRect();
+    var scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+    imgOverlay.style.top = (rect.top + scrollY) + 'px';
+    imgOverlay.style.left = (rect.left + scrollX) + 'px';
+    imgOverlay.style.width = rect.width + 'px';
+    imgOverlay.style.height = rect.height + 'px';
+    imgOverlay.style.display = 'block';
+
+    var curW = Math.round(rect.width);
+    var curH = Math.round(rect.height);
+    var editorEl = document.querySelector('.ql-editor');
+    var editorW = editorEl ? editorEl.clientWidth : 800;
+    var pct = Math.min(100, Math.round((curW / editorW) * 100));
+    imgBadge.textContent = curW + ' × ' + curH + ' px (' + pct + '%)';
+  }
+
+  function showImgOverlay(img) {
+    activeImg = img;
+    repositionImgOverlay();
+  }
+
+  function hideImgOverlay() {
+    activeImg = null;
+    if (imgOverlay) imgOverlay.style.display = 'none';
+  }
+
+  // Handle Dragging with mouse
+  var handles = document.querySelectorAll('.img-resize-handle');
+  handles.forEach(function (h) {
+    h.addEventListener('mousedown', function (e) {
+      if (!activeImg) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      var type = this.getAttribute('data-handle');
+      var startX = e.clientX;
+      var startY = e.clientY;
+      var startRect = activeImg.getBoundingClientRect();
+      var startW = startRect.width;
+      var startH = startRect.height;
+      var editorEl = document.querySelector('.ql-editor');
+      var maxW = editorEl ? editorEl.clientWidth - 40 : 1000;
+
+      function onMouseMove(ev) {
+        ev.preventDefault();
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        var newW = startW;
+
+        if (type === 'se') {
+          newW = startW + dx;
+        } else if (type === 'sw') {
+          newW = startW - dx;
+        } else if (type === 'ne') {
+          newW = startW + dx;
+        } else if (type === 'nw') {
+          newW = startW - dx;
+        } else if (type === 'e') {
+          newW = startW + dx;
+        } else if (type === 'w') {
+          newW = startW - dx;
+        } else if (type === 's' || type === 'n') {
+          var deltaY = (type === 's') ? dy : -dy;
+          var newH = startH + deltaY;
+          newW = (newH / startH) * startW;
+        }
+
+        newW = Math.max(80, Math.min(newW, maxW));
+        activeImg.style.width = Math.round(newW) + 'px';
+        activeImg.style.maxWidth = '100%';
+        if (!activeImg.style.aspectRatio) {
+          activeImg.style.height = 'auto';
+        }
+        repositionImgOverlay();
+      }
+
+      function onMouseUp() {
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
+        repositionImgOverlay();
+      }
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseup', onMouseUp);
+    });
+  });
+
+  // Image Toolbar Button Actions
+  document.querySelectorAll('[data-img-align]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (!activeImg) return;
+      var align = this.getAttribute('data-img-align');
+      activeImg.style.display = 'block';
+      if (align === 'left') {
+        activeImg.style.marginLeft = '0';
+        activeImg.style.marginRight = 'auto';
+      } else if (align === 'center') {
+        activeImg.style.marginLeft = 'auto';
+        activeImg.style.marginRight = 'auto';
+      } else if (align === 'right') {
+        activeImg.style.marginLeft = 'auto';
+        activeImg.style.marginRight = '0';
+      }
+      repositionImgOverlay();
+    });
+  });
+
+  document.querySelectorAll('[data-img-size]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (!activeImg) return;
+      var size = this.getAttribute('data-img-size');
+      activeImg.style.width = size;
+      activeImg.style.maxWidth = '100%';
+      if (!activeImg.style.aspectRatio) activeImg.style.height = 'auto';
+      repositionImgOverlay();
+    });
+  });
+
+  document.querySelectorAll('[data-img-crop]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (!activeImg) return;
+      var crop = this.getAttribute('data-img-crop');
+      if (crop === 'auto') {
+        activeImg.style.aspectRatio = '';
+        activeImg.style.objectFit = '';
+        activeImg.style.borderRadius = '4px';
+      } else if (crop === '16-9') {
+        activeImg.style.aspectRatio = '16 / 9';
+        activeImg.style.objectFit = 'cover';
+        activeImg.style.borderRadius = '6px';
+      } else if (crop === '4-3') {
+        activeImg.style.aspectRatio = '4 / 3';
+        activeImg.style.objectFit = 'cover';
+        activeImg.style.borderRadius = '6px';
+      } else if (crop === '1-1') {
+        activeImg.style.aspectRatio = '1 / 1';
+        activeImg.style.objectFit = 'cover';
+        activeImg.style.borderRadius = '6px';
+      } else if (crop === 'round') {
+        activeImg.style.aspectRatio = '1 / 1';
+        activeImg.style.objectFit = 'cover';
+        activeImg.style.borderRadius = '50%';
+      }
+      repositionImgOverlay();
+    });
+  });
+
+  var btnImgDelete = document.getElementById('btn-img-delete');
+  if (btnImgDelete) {
+    btnImgDelete.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (!activeImg) return;
+      if (confirm('Delete this image from article?')) {
+        var toRemove = activeImg;
+        hideImgOverlay();
+        toRemove.remove();
+      }
+    });
+  }
+
+  // Detect clicks on editor images
+  var editorEl = document.querySelector('.ql-editor');
+  if (editorEl) {
+    editorEl.addEventListener('click', function (e) {
+      if (e.target.tagName === 'IMG') {
+        e.stopPropagation();
+        showImgOverlay(e.target);
+      } else {
+        hideImgOverlay();
+      }
+    });
+  }
+
+  window.addEventListener('scroll', function () {
+    if (activeImg) repositionImgOverlay();
+  });
+  window.addEventListener('resize', function () {
+    if (activeImg) repositionImgOverlay();
+  });
+
+  // ==============================================================================
+  // 4c. GOOGLE DOCS / WORD STYLE: RIGHT-CLICK CONTEXT MENU & DOUBLE-CLICK QUICK PILL
+  // ==============================================================================
+  var ctxMenu = document.getElementById('editor-context-menu');
+  var quickPill = document.getElementById('editor-quick-pill');
+
+  function hideMenus() {
+    if (ctxMenu) ctxMenu.style.display = 'none';
+    if (quickPill) quickPill.style.display = 'none';
+  }
+
+  // Double-Click: Shows Google Docs / Word smart floating mini-tag
+  if (editorEl) {
+    editorEl.addEventListener('dblclick', function (e) {
+      if (e.target.tagName === 'IMG') return;
+      setTimeout(function () {
+        var sel = window.getSelection();
+        if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+        var range = sel.getRangeAt(0);
+        var rect = range.getBoundingClientRect();
+        if (!rect || rect.width === 0) return;
+
+        quickPill.style.left = (rect.left + (rect.width / 2)) + 'px';
+        quickPill.style.top = (rect.top - 8) + 'px';
+        quickPill.style.display = 'flex';
+      }, 20);
+    });
+
+    // Right-Click Context Menu (Google Docs / Word Style)
+    editorEl.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      hideMenus();
+
+      if (e.target.tagName === 'IMG') {
+        showImgOverlay(e.target);
+      }
+
+      var menuW = 230;
+      var menuH = 340;
+      var posX = e.clientX;
+      var posY = e.clientY;
+
+      if (posX + menuW > window.innerWidth) posX = window.innerWidth - menuW - 10;
+      if (posY + menuH > window.innerHeight) posY = window.innerHeight - menuH - 10;
+
+      ctxMenu.style.left = posX + 'px';
+      ctxMenu.style.top = posY + 'px';
+      ctxMenu.style.display = 'block';
+    });
+  }
+
+  // Dismiss on click outside or Escape
+  document.addEventListener('mousedown', function (e) {
+    if (ctxMenu && !ctxMenu.contains(e.target)) ctxMenu.style.display = 'none';
+    if (quickPill && !quickPill.contains(e.target)) quickPill.style.display = 'none';
+    if (imgOverlay && !imgOverlay.contains(e.target) && e.target.tagName !== 'IMG') {
+      hideImgOverlay();
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      hideMenus();
+      hideImgOverlay();
+    }
+  });
+
+  // Formatting Engine
+  function execFormat(type, value) {
+    var format = quill.getFormat();
+    if (type === 'bold') {
+      quill.format('bold', !format.bold);
+    } else if (type === 'italic') {
+      quill.format('italic', !format.italic);
+    } else if (type === 'underline') {
+      quill.format('underline', !format.underline);
+    } else if (type === 'strike') {
+      quill.format('strike', !format.strike);
+    } else if (type === 'link') {
+      var currentLink = format.link;
+      var url = prompt('Enter link URL:', currentLink || 'https://');
+      if (url !== null) {
+        if (url.trim()) {
+          if (!/^https?:\/\//i.test(url) && !url.startsWith('/') && !url.startsWith('#') && !url.startsWith('mailto:')) {
+            url = 'https://' + url;
+          }
+          quill.format('link', url);
+        } else {
+          quill.format('link', false);
+        }
+      }
+    } else if (type === 'header') {
+      quill.format('header', value);
+    } else if (type === 'list') {
+      quill.format('list', value);
+    } else if (type === 'blockquote') {
+      quill.format('blockquote', !format.blockquote);
+    } else if (type === 'code-block') {
+      quill.format('code-block', !format['code-block']);
+    } else if (type === 'clean') {
+      var selRange = quill.getSelection();
+      if (selRange) quill.removeFormat(selRange.index, selRange.length);
+    }
+  }
+
+  document.querySelectorAll('[data-fmt]').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var fmt = this.getAttribute('data-fmt');
+      var val = this.getAttribute('data-val');
+      if (val === 'false') val = false;
+      else if (val && !isNaN(val)) val = parseInt(val, 10);
+      execFormat(fmt, val);
+      if (this.getAttribute('data-keep') !== 'true') {
+        hideMenus();
+      }
+    });
+  });
+
+  var ctxCopy = document.getElementById('ctx-action-copy');
+  if (ctxCopy) {
+    ctxCopy.addEventListener('click', function () {
+      document.execCommand('copy');
+      hideMenus();
+    });
+  }
+  var ctxSelectAll = document.getElementById('ctx-action-selectall');
+  if (ctxSelectAll) {
+    ctxSelectAll.addEventListener('click', function () {
+      quill.setSelection(0, quill.getLength());
+      hideMenus();
+    });
+  }
+
   // 5. Save & Publish Actions
   var saveStatus = document.getElementById('save-status');
 
@@ -851,7 +1495,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     var title = titleInput.value.trim();
     var slug = slugInput.value.trim();
-    var htmlContent = isHtmlMode ? rawHtmlEditor.value : (quill.getSemanticHTML ? quill.getSemanticHTML() : quill.root.innerHTML);
+    var rawContent = isHtmlMode ? rawHtmlEditor.value : quill.root.innerHTML;
+    var htmlContent = (typeof ZebBlog !== 'undefined' && ZebBlog.sanitizeHtml) ? ZebBlog.sanitizeHtml(rawContent) : rawContent;
     var plainText = isHtmlMode ? rawHtmlEditor.value.replace(/<[^>]+>/g, '').trim() : quill.getText().trim();
 
     if (!title || !slug || plainText.length < 20) {

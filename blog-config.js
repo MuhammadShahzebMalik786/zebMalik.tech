@@ -375,6 +375,49 @@
     return publicUrlRes.data.publicUrl;
   }
 
+  // --- Zero-Trust HTML Sanitizer (Anti-XSS & Script Injection Shield) ---
+  function sanitizeHtml(dirtyHtml) {
+    if (!dirtyHtml || typeof dirtyHtml !== 'string') return '';
+    try {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(dirtyHtml, 'text/html');
+
+      // 1. Remove dangerous script and embedding tags
+      var forbiddenTags = ['script', 'style', 'iframe', 'embed', 'object', 'applet', 'meta', 'link', 'form', 'input', 'textarea', 'button', 'noscript'];
+      forbiddenTags.forEach(function (tag) {
+        var els = doc.querySelectorAll(tag);
+        els.forEach(function (el) { el.remove(); });
+      });
+
+      // 2. Strip dangerous event attributes and unsafe URL protocols
+      var allEls = doc.querySelectorAll('*');
+      allEls.forEach(function (el) {
+        var attrs = Array.from(el.attributes);
+        attrs.forEach(function (attr) {
+          var name = attr.name.toLowerCase();
+          var val = (attr.value || '').trim().toLowerCase();
+
+          // Remove all inline event handlers (onclick, onerror, onload, etc.)
+          if (name.startsWith('on')) {
+            el.removeAttribute(attr.name);
+          }
+
+          // Block unsafe URI protocols in links and media sources
+          if (name === 'href' || name === 'src' || name === 'action' || name === 'xlink:href') {
+            if (val.startsWith('javascript:') || val.startsWith('vbscript:') || val.startsWith('data:text/html')) {
+              el.removeAttribute(attr.name);
+            }
+          }
+        });
+      });
+
+      return doc.body.innerHTML;
+    } catch (e) {
+      console.warn('HTML Sanitization error:', e);
+      return '';
+    }
+  }
+
   return {
     getClient: getClient,
     getCurrentUser: getCurrentUser,
@@ -399,6 +442,7 @@
     adminApprovePost: adminApprovePost,
     adminRejectPost: adminRejectPost,
     fetchAdminPayoutRequests: fetchAdminPayoutRequests,
-    adminUpdatePayoutStatus: adminUpdatePayoutStatus
+    adminUpdatePayoutStatus: adminUpdatePayoutStatus,
+    sanitizeHtml: sanitizeHtml
   };
 }));
