@@ -10,9 +10,9 @@
 }(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
-  // REPLACE THESE WITH YOUR SUPABASE PROJECT CREDENTIALS (from Settings > API)
-  var SUPABASE_URL = window.ZEBMALIK_SUPABASE_URL || 'https://YOUR_SUPABASE_PROJECT_ID.supabase.co';
-  var SUPABASE_ANON_KEY = window.ZEBMALIK_SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
+  // Supabase Project Credentials
+  var SUPABASE_URL = window.ZEBMALIK_SUPABASE_URL || 'https://qfsmwivvcfpkutqszlhd.supabase.co';
+  var SUPABASE_ANON_KEY = window.ZEBMALIK_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmc213aXZ2Y2Zwa3V0cXN6bGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNjI5NTUsImV4cCI6MjEwNTgzODk1NX0.rWln2NStaO3DNTNZzrJOk_F7FkG4hqijwPvm1aP199M';
 
   var client = null;
 
