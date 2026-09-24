@@ -48,13 +48,46 @@
     return await sb.auth.signInWithPassword({ email: email, password: password });
   }
 
+  // Blacklist of disposable and temporary email domains
+  var DISPOSABLE_DOMAINS = [
+    'mailinator.com', 'tempmail.com', 'temp-mail.org', '10minutemail.com',
+    'guerrillamail.com', 'throwawaymail.com', 'yopmail.com', 'dispostable.com',
+    'sharklasers.com', 'trashmail.com', 'getairmail.com', 'fakeinbox.com',
+    'maildrop.cc', 'inboxkitten.com', 'crazymailing.com', 'mohmal.com',
+    'generator.email', 'emailondeck.com', 'mytemp.email', 'tempail.com',
+    'burnermail.io', 'nada.ltd', 'getnada.com', 'fakemailgenerator.com',
+    'tempmail.net', 'disposablemail.com', 'temp-mail.io', 'dropmail.me',
+    'tempmailo.com', 'trashmail.net', 'throwawaymail.org', 'mytempemail.com'
+  ];
+
+  function isDisposableEmail(email) {
+    if (!email || !email.includes('@')) return false;
+    var domain = email.split('@')[1].toLowerCase().trim();
+    return DISPOSABLE_DOMAINS.indexOf(domain) !== -1;
+  }
+
   async function signUpWithPassword(email, password, fullName) {
     var sb = getClient();
     if (!sb) return { error: { message: 'Database client not ready' } };
+
+    var cleanName = (fullName || '').trim();
+    if (cleanName.length < 3) {
+      return { error: { message: 'Full legal name is required (minimum 3 letters) to ensure payout eligibility.' } };
+    }
+
+    var cleanEmail = (email || '').toLowerCase().trim();
+    if (isDisposableEmail(cleanEmail)) {
+      return { error: { message: 'Temporary / disposable emails are not permitted. Please register with a permanent personal or business email.' } };
+    }
+
+    if (!password || password.length < 8 || !/\d/.test(password)) {
+      return { error: { message: 'Password must be at least 8 characters long and contain at least one number.' } };
+    }
+
     return await sb.auth.signUp({
-      email: email,
+      email: cleanEmail,
       password: password,
-      options: { data: { full_name: fullName || email.split('@')[0] } }
+      options: { data: { full_name: cleanName } }
     });
   }
 

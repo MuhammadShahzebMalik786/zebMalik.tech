@@ -80,13 +80,22 @@ CREATE POLICY "Users can update own profile" ON public.profiles
 -- Profiles: Auto-create profile trigger on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
+DECLARE
+  extracted_name TEXT;
 BEGIN
+  extracted_name := NULLIF(TRIM(COALESCE(new.raw_user_meta_data->>'full_name', '')), '');
+  IF extracted_name IS NULL OR length(extracted_name) < 2 THEN
+    extracted_name := split_part(new.email, '@', 1);
+  END IF;
+
   INSERT INTO public.profiles (id, full_name, username)
   VALUES (
     new.id,
-    COALESCE(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
+    extracted_name,
     LOWER(REGEXP_REPLACE(split_part(new.email, '@', 1) || '_' || SUBSTRING(new.id::text, 1, 4), '[^a-zA-Z0-9_]', '', 'g'))
-  );
+  )
+  ON CONFLICT (id) DO UPDATE
+  SET full_name = EXCLUDED.full_name;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

@@ -257,18 +257,19 @@
     <!-- Sign Up Form (hidden by default) -->
     <form id="form-signup" style="display:none">
       <div class="frm-group" style="margin-bottom:1rem">
-        <label for="signup-name">Full Name</label>
-        <input type="text" id="signup-name" class="frm-input" placeholder="e.g. John Doe" required />
+        <label for="signup-name">Full Legal Name <span style="color:#ef4444">*</span> (Required for verified payouts)</label>
+        <input type="text" id="signup-name" class="frm-input" placeholder="e.g. Muhammad Shahzeb Malik" minlength="3" required />
       </div>
       <div class="frm-group" style="margin-bottom:1rem">
-        <label for="signup-email">Email Address</label>
-        <input type="email" id="signup-email" class="frm-input" placeholder="you@domain.com" required />
+        <label for="signup-email">Personal or Business Email <span style="color:#ef4444">*</span></label>
+        <input type="email" id="signup-email" class="frm-input" placeholder="you@gmail.com (no temp emails)" required />
+        <small style="color:var(--muted);font-size:0.8rem">Disposable / temporary email services are blocked.</small>
       </div>
       <div class="frm-group" style="margin-bottom:1.5rem">
-        <label for="signup-password">Create Password (at least 6 characters)</label>
-        <input type="password" id="signup-password" class="frm-input" placeholder="••••••••" minlength="6" required />
+        <label for="signup-password">Strong Password <span style="color:#ef4444">*</span> (Min 8 characters, at least 1 number)</label>
+        <input type="password" id="signup-password" class="frm-input" placeholder="••••••••" minlength="8" required />
       </div>
-      <button type="submit" class="btn" style="width:100%">Create Author Account</button>
+      <button type="submit" class="btn" style="width:100%">Create Verified Author Account</button>
     </form>
 
     <p id="modal-status" class="tool-status" style="margin-top:1rem;margin-bottom:0"></p>
