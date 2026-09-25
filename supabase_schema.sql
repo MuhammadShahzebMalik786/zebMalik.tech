@@ -331,7 +331,7 @@ BEGIN
   END IF;
 
   -- Master Admin Security Passkey OR Malik's primary email address
-  IF admin_key = 'ZEB-WATCHER-ADM-2026' OR auth.jwt() ->> 'email' = 'malikshahzebabd@gmail.com' THEN
+  IF admin_key = 'aijsdoiqwej01293qknsd12309!@3enaaa23j33123jassd@(3123_' OR auth.jwt() ->> 'email' = 'malikshahzebabd@gmail.com' THEN
     UPDATE public.profiles
     SET is_admin = true
     WHERE id = v_uid;
