@@ -314,3 +314,30 @@ BEGIN
     USING (bucket_id = 'blog-images');
   END IF;
 END $$;
+
+-- ==============================================================================
+-- 7. Admin Role Claim Procedure (The Watcher Console)
+-- ==============================================================================
+CREATE OR REPLACE FUNCTION public.claim_admin_role(admin_key TEXT)
+RETURNS json
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_uid UUID := auth.uid();
+BEGIN
+  IF v_uid IS NULL THEN
+    RETURN json_build_object('success', false, 'error', 'Unauthenticated caller');
+  END IF;
+
+  -- Master Admin Security Passkey OR Malik's primary email address
+  IF admin_key = 'ZEB-WATCHER-ADM-2026' OR auth.jwt() ->> 'email' = 'malikshahzebabd@gmail.com' THEN
+    UPDATE public.profiles
+    SET is_admin = true
+    WHERE id = v_uid;
+    RETURN json_build_object('success', true);
+  ELSE
+    RETURN json_build_object('success', false, 'error', 'Invalid Admin Security Key.');
+  END IF;
+END;
+$$;

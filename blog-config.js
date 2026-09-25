@@ -362,6 +362,34 @@
       .eq('id', requestId);
   }
 
+  async function adminDeletePost(postId) {
+    var sb = getClient();
+    if (!sb || !postId) throw new Error('Missing parameter');
+    return await sb
+      .from('posts')
+      .delete()
+      .eq('id', postId);
+  }
+
+  async function adminToggleUserAdmin(userId, makeAdmin) {
+    var sb = getClient();
+    if (!sb || !userId) throw new Error('Missing parameter');
+    return await sb
+      .from('profiles')
+      .update({ is_admin: makeAdmin })
+      .eq('id', userId);
+  }
+
+  async function claimAdminRole(adminKey) {
+    var sb = getClient();
+    if (!sb) return { error: { message: 'Database client not ready' } };
+    try {
+      return await sb.rpc('claim_admin_role', { admin_key: adminKey });
+    } catch (e) {
+      return { error: e };
+    }
+  }
+
   // --- Client-side Image Optimization to WebP ---
   function convertToWebP(file, maxDimension, quality) {
     return new Promise(function (resolve, reject) {
@@ -509,6 +537,9 @@
     adminUnpublishPost: adminUnpublishPost,
     fetchAdminPayoutRequests: fetchAdminPayoutRequests,
     adminUpdatePayoutStatus: adminUpdatePayoutStatus,
+    adminDeletePost: adminDeletePost,
+    adminToggleUserAdmin: adminToggleUserAdmin,
+    claimAdminRole: claimAdminRole,
     sanitizeHtml: sanitizeHtml
   };
 }));
