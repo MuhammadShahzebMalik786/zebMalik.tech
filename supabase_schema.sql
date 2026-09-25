@@ -264,16 +264,16 @@ BEGIN
   IF FOUND THEN
     -- Increment post view_count and post estimated_earnings
     UPDATE public.posts
-    SET view_count = view_count + 1,
-        estimated_earnings = estimated_earnings + author_rate_per_view
+    SET view_count = COALESCE(view_count, 0) + 1,
+        estimated_earnings = COALESCE(estimated_earnings, 0) + author_rate_per_view
     WHERE id = target_post_id
     RETURNING author_id INTO post_author_id;
 
     -- Credit the author's current_balance and total_earned
     IF post_author_id IS NOT NULL THEN
       UPDATE public.profiles
-      SET current_balance = current_balance + author_rate_per_view,
-          total_earned = total_earned + author_rate_per_view
+      SET current_balance = COALESCE(current_balance, 0) + author_rate_per_view,
+          total_earned = COALESCE(total_earned, 0) + author_rate_per_view
       WHERE id = post_author_id;
     END IF;
 
