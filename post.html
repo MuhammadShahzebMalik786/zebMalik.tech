@@ -486,23 +486,31 @@
   }
 </style>
 <!-- SEO-META -->
-<link rel="canonical" href="https://zebmalik.tech/post">
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var slug = params.get('slug');
+    var canonicalUrl = slug ? ('https://zebmalik.tech/post?slug=' + encodeURIComponent(slug)) : 'https://zebmalik.tech/post';
+    var link = document.createElement('link');
+    link.rel = 'canonical';
+    link.href = canonicalUrl;
+    document.head.appendChild(link);
+  })();
+</script>
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="zebMalik.tech">
 <meta name="theme-color" content="#121316">
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:site_name" content="zebMalik.tech">
-<meta property="og:title" content="Article — zebMalik.tech Blog">
-<meta property="og:description" content="Read in-depth engineering research on zebMalik.tech.">
-<meta property="og:url" content="https://zebmalik.tech/post">
+<meta property="og:title" content="Engineering Article — zebMalik.tech Blog">
+<meta property="og:description" content="In-depth technical research, architecture patterns, and engineering systems.">
 <meta property="og:image" content="https://zebmalik.tech/android-chrome-512x512.png">
 <meta property="og:image:alt" content="zebMalik.tech">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Article — zebMalik.tech Blog">
-<meta name="twitter:description" content="Read in-depth engineering research on zebMalik.tech.">
+<meta name="twitter:title" content="Engineering Article — zebMalik.tech Blog">
+<meta name="twitter:description" content="In-depth technical research, architecture patterns, and engineering systems.">
 <meta name="twitter:image" content="https://zebmalik.tech/android-chrome-512x512.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebPage", "@id": "https://zebmalik.tech/post#webpage", "url": "https://zebmalik.tech/post", "name": "Article \u2014 zebMalik.tech Blog", "description": "Read in-depth engineering research on zebMalik.tech.", "isPartOf": {"@id": "https://zebmalik.tech/#website"}, "inLanguage": "en"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://zebmalik.tech/"}, {"@type": "ListItem", "position": 2, "name": "Article", "item": "https://zebmalik.tech/post"}]}]}</script>
 <meta name="google-adsense-account" content="ca-pub-9522829065676411">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9522829065676411" crossorigin="anonymous"></script>
 <!-- /SEO-META -->
@@ -780,6 +788,55 @@ document.addEventListener('DOMContentLoaded', async function () {
     
     var authorName = post.profiles ? post.profiles.full_name : 'Author';
     var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'long', day:'numeric', year:'numeric'}) : '';
+    
+    // Dynamic SEO Metadata for Search Engines (Googlebot & Bing)
+    try {
+      var metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && post.excerpt) metaDesc.content = post.excerpt;
+
+      var ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.content = post.title + ' — zebMalik.tech Blog';
+
+      var ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc && post.excerpt) ogDesc.content = post.excerpt;
+
+      var ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl) ogUrl.content = 'https://zebmalik.tech/post?slug=' + encodeURIComponent(post.slug);
+
+      var twTitle = document.querySelector('meta[name="twitter:title"]');
+      if (twTitle) twTitle.content = post.title + ' — zebMalik.tech Blog';
+
+      var twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc && post.excerpt) twDesc.content = post.excerpt;
+
+      // Inject Google BlogPosting JSON-LD Schema
+      var schemaScript = document.createElement('script');
+      schemaScript.type = 'application/ld+json';
+      schemaScript.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.excerpt || post.title,
+        "image": post.cover_image_url ? [post.cover_image_url] : ["https://zebmalik.tech/android-chrome-512x512.png"],
+        "datePublished": post.published_at,
+        "dateModified": post.updated_at || post.published_at,
+        "author": [{
+          "@type": "Person",
+          "name": authorName,
+          "url": "https://zebmalik.tech/about"
+        }],
+        "publisher": {
+          "@type": "Organization",
+          "name": "zebMalik.tech",
+          "url": "https://zebmalik.tech"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://zebmalik.tech/post?slug=" + encodeURIComponent(post.slug)
+        }
+      });
+      document.head.appendChild(schemaScript);
+    } catch (_) {}
     
     // Render Article Content (supports rich visual HTML with multiple inline images or Markdown)
     var rawContent = post.content_markdown || '';
