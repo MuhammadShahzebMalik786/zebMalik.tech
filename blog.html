@@ -184,9 +184,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     var posts = await ZebBlog.fetchPublishedPosts(30);
     if (posts && posts.length > 0) {
       posts.forEach(function (post) {
-        var card = document.createElement('div');
-        card.className = 'item';
-        var coverHtml = post.cover_image_url ? '<div style="margin:-24px -24px 16px -24px;overflow:hidden;border-radius:6px 6px 0 0;max-height:180px"><img src="' + post.cover_image_url + '" alt="' + post.title + '" style="width:100%;height:100%;object-fit:cover"></div>' : '';
+        var imgUrl = post.cover_image_url;
+        if (post.slug === 'building-production-rag-systems-python' && (!imgUrl || imgUrl.includes('1677442136019-21780efad99a'))) {
+          imgUrl = 'rag-systems-architecture.webp';
+        }
+        var coverHtml = imgUrl ? '<div style="margin:-24px -24px 16px -24px;overflow:hidden;border-radius:6px 6px 0 0;max-height:180px"><img src="' + imgUrl + '" alt="' + post.title + '" onerror="this.onerror=null;this.src=\'rag-systems-architecture.webp\';" style="width:100%;height:100%;object-fit:cover"></div>' : '';
         var authorName = post.profiles ? post.profiles.full_name : 'Contributor';
         var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : '';
         

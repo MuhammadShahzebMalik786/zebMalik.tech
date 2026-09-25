@@ -789,9 +789,27 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('post-meta').textContent = (post.tags && post.tags.length ? post.tags.join(' · ') : 'Research');
     document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorName + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + readMinutes + ' min read</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span>';
 
-    if (post.cover_image_url) {
+    var coverUrl = post.cover_image_url;
+    if (post.slug === 'building-production-rag-systems-python' && (!coverUrl || coverUrl.includes('1677442136019-21780efad99a'))) {
+      coverUrl = '/rag-systems-architecture.webp';
+    }
+    if (coverUrl) {
       document.getElementById('post-cover-wrapper').style.display = 'block';
-      document.getElementById('post-cover').innerHTML = '<img class="post-cover-img" src="' + post.cover_image_url + '" alt="' + post.title + '">';
+      document.getElementById('post-cover').innerHTML = '<img class="post-cover-img" src="' + coverUrl + '" alt="' + post.title + '" onerror="this.onerror=null;this.src=\'/rag-systems-architecture.webp\';">';
+    }
+
+    // Auto-sync fix to Supabase database if logged-in author or admin views the article
+    if (post.slug === 'building-production-rag-systems-python' && post.cover_image_url !== 'https://zebmalik.tech/rag-systems-architecture.webp') {
+      try {
+        var sb = ZebBlog.getClient();
+        ZebBlog.getCurrentUser().then(function(user) {
+          if (user && (user.id === post.author_id || user.email === 'malikshahzebabd@gmail.com' || user.id === 'c3735295-8408-44ea-a4d8-b5f4b5077358')) {
+            sb.from('posts').update({ cover_image_url: 'https://zebmalik.tech/rag-systems-architecture.webp' }).eq('id', post.id).then(function() {
+              console.log('[ZebBlog] Cover image database record auto-updated to rag-systems-architecture.webp');
+            });
+          }
+        });
+      } catch (_) {}
     }
 
     if (post.profiles) {

@@ -130,6 +130,16 @@
     return await sb.auth.updateUser({ password: newPassword });
   }
 
+  function normalizePost(post) {
+    if (!post) return post;
+    if (post.slug === 'building-production-rag-systems-python') {
+      if (!post.cover_image_url || post.cover_image_url.includes('1677442136019-21780efad99a')) {
+        post.cover_image_url = 'https://zebmalik.tech/rag-systems-architecture.webp';
+      }
+    }
+    return post;
+  }
+
   // --- Posts & Feed Utilities ---
   async function fetchPublishedPosts(limit, tag) {
     var sb = getClient();
@@ -146,7 +156,7 @@
     }
 
     var res = await query;
-    return res.data || [];
+    return (res.data || []).map(normalizePost);
   }
 
   async function fetchPostBySlug(slug) {
@@ -161,7 +171,7 @@
       .eq('status', 'published')
       .maybeSingle();
 
-    if (res && res.data) return res.data;
+    if (res && res.data) return normalizePost(res.data);
 
     // 2. If not published, check if user is logged in (author or admin preview)
     try {
@@ -172,7 +182,7 @@
           .select('*, profiles(full_name, username, bio, avatar_url)')
           .eq('slug', slug)
           .maybeSingle();
-        if (previewRes && previewRes.data) return previewRes.data;
+        if (previewRes && previewRes.data) return normalizePost(previewRes.data);
       }
     } catch (e) {
       console.warn('Preview fetch error:', e);
@@ -189,7 +199,7 @@
       .select('*')
       .eq('id', id)
       .maybeSingle();
-    return res.data || null;
+    return normalizePost(res.data) || null;
   }
 
   // --- View Tracking with Anti-Bot & Retention Verification ---
