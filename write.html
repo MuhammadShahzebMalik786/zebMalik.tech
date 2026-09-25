@@ -490,6 +490,22 @@
 </div>
 
 <main class="wrap" style="margin-top:1rem;margin-bottom:4rem">
+  <!-- Anti-Bot Honeypot Field (invisible to humans, catches automated form-filler bots) -->
+  <input type="text" id="hp-website-guard" name="hp_website_guard" style="display:none!important;position:absolute;left:-9999px" tabindex="-1" autocomplete="off" />
+
+  <!-- Dynamic Rejection Feedback Banner (Shows when editing a rejected article) -->
+  <div id="editorial-feedback-box" style="display:none;background:#fff8e6;border:1px solid #ffe082;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:1.75rem;box-shadow:0 4px 14px rgba(255,152,0,0.1)">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span style="font-size:20px">💡</span>
+      <strong style="color:#795548;font-size:1.05rem">Editorial Feedback from Review Team</strong>
+      <span class="chip" style="background:#ff9800;color:#fff;font-weight:700;font-size:11px;text-transform:uppercase;padding:2px 8px;border-radius:4px">Revisions Requested</span>
+    </div>
+    <p id="editorial-feedback-text" style="margin:6px 0 0 30px;font-size:0.95rem;color:#5d4037;line-height:1.5"></p>
+    <div style="margin:10px 0 0 30px;font-size:0.85rem;color:#8d6e63">
+      Great job on the initial draft! Address the suggestions above and click <strong>Submit &amp; Start Earning &rarr;</strong> below to resubmit for review.
+    </div>
+  </div>
+
   <div class="editor-wrapper">
     <!-- Big Title Input -->
     <input type="text" id="post-title" class="title-input" placeholder="Title of your story or research..." required />
@@ -828,7 +844,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-<script src="blog-config.js?v=8"></script>
+<script src="blog-config.js?v=9"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   // 1. Initialize Quill 2.0 Visual Editor (Blogger/Medium Toolbar)
@@ -1171,6 +1187,44 @@ document.addEventListener('DOMContentLoaded', async function () {
   });
   slugInput.addEventListener('input', function () { slugInput.dataset.manual = 'true'; });
 
+  // 4a. Edit Mode Loader (e.g. write.html?edit=<postId>)
+  var pageLoadedAt = Date.now();
+  var editingPostId = null;
+  var urlParams = new URLSearchParams(window.location.search);
+  var editPostId = urlParams.get('edit') || urlParams.get('id');
+
+  if (editPostId) {
+    (async function loadPostForEdit() {
+      try {
+        var post = await ZebBlog.fetchPostById(editPostId);
+        if (post) {
+          editingPostId = post.id;
+          titleInput.value = post.title || '';
+          slugInput.value = post.slug || '';
+          slugInput.dataset.manual = 'true';
+          document.getElementById('post-tags').value = (post.tags || []).join(', ');
+          document.getElementById('post-cover').value = post.cover_image_url || '';
+          document.getElementById('post-excerpt').value = post.excerpt || '';
+          if (post.content_markdown) {
+            quill.root.innerHTML = post.content_markdown;
+            rawHtmlEditor.value = post.content_markdown;
+          }
+          if (post.status === 'rejected' && post.rejection_reason) {
+            var fbBox = document.getElementById('editorial-feedback-box');
+            var fbText = document.getElementById('editorial-feedback-text');
+            if (fbBox && fbText) {
+              fbText.textContent = post.rejection_reason;
+              fbBox.style.display = 'block';
+              fbBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load post for edit:', err);
+      }
+    })();
+  }
+
   // ==============================================================================
   // 4b. GOOGLE DOCS / WORD STYLE: INTERACTIVE IMAGE RESIZER & ASPECT-RATIO CROP
   // ==============================================================================
@@ -1509,6 +1563,22 @@ document.addEventListener('DOMContentLoaded', async function () {
     saveStatus.textContent = 'Validating…';
     saveStatus.className = 'tool-status';
 
+    // 1. Anti-Bot Honeypot verification
+    var hp = document.getElementById('hp-website-guard');
+    if (hp && hp.value.trim().length > 0) {
+      console.warn('Spam bot submission blocked via honeypot.');
+      saveStatus.textContent = 'Spam detected. Submission blocked.';
+      saveStatus.className = 'tool-status is-error';
+      return;
+    }
+
+    // 2. Minimum human dwell time verification (prevents instant bot form filling)
+    if (!editingPostId && (Date.now() - pageLoadedAt < 4000)) {
+      saveStatus.textContent = 'Please take at least a few seconds to write your article.';
+      saveStatus.className = 'tool-status is-error';
+      return;
+    }
+
     currentUser = await ZebBlog.getCurrentUser();
     if (!currentUser) {
       authModal.style.display = 'flex';
@@ -1540,6 +1610,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     saveStatus.textContent = 'Publishing to database…';
     try {
       var payload = {
+        id: editingPostId,
         title: title,
         slug: slug,
         tags: document.getElementById('post-tags').value.split(',').map(function(s){return s.trim();}).filter(Boolean),

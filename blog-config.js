@@ -181,12 +181,38 @@
     return null;
   }
 
+  async function fetchPostById(id) {
+    var sb = getClient();
+    if (!sb || !id) return null;
+    var res = await sb
+      .from('posts')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
+    return res.data || null;
+  }
+
   // --- View Tracking with Anti-Bot & Retention Verification ---
   async function trackVerifiedView(postId) {
     var sb = getClient();
     if (!sb || !postId) return;
 
-    // Wait 8 seconds on the page before counting a legitimate read
+    // 1. Anti-Bot Shields: Verify real human browser
+    if (navigator.webdriver) {
+      console.warn('[ZebBlog] Automated browser detected (webdriver=true). View rejected.');
+      return;
+    }
+    var botPatterns = /bot|spider|crawl|slurp|headless|phantom|selenium|puppeteer|playwright|curl|wget|python-requests|archive\.org/i;
+    if (botPatterns.test(navigator.userAgent || '')) {
+      console.warn('[ZebBlog] Automated bot/crawler detected. View rejected.');
+      return;
+    }
+    if (!window.screen || window.screen.width === 0 || window.screen.height === 0) {
+      console.warn('[ZebBlog] Zero-dimension display detected. View rejected.');
+      return;
+    }
+
+    // 2. Wait 8 seconds on the page before counting a legitimate read
     setTimeout(async function () {
       try {
         var rawId = navigator.userAgent + '|' + (screen.width + 'x' + screen.height) + '|' + (new Date().getTimezoneOffset());
@@ -437,6 +463,7 @@
     signOut: signOut,
     fetchPublishedPosts: fetchPublishedPosts,
     fetchPostBySlug: fetchPostBySlug,
+    fetchPostById: fetchPostById,
     trackVerifiedView: trackVerifiedView,
     savePostDraft: savePostDraft,
     fetchAuthorPosts: fetchAuthorPosts,

@@ -307,7 +307,7 @@
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="blog-config.js?v=8"></script>
+<script src="blog-config.js?v=9"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   // Direct Google Sign In
@@ -403,11 +403,28 @@ document.addEventListener('DOMContentLoaded', async function () {
       posts.forEach(function (p) {
         totalReads += (p.view_count || 0);
         var tr = document.createElement('tr');
-        var statusBadge = '<span class="chip" style="text-transform:uppercase;font-size:0.75rem">' + p.status + '</span>';
+        var statusBadge = '';
+        var extraAction = '';
+
+        if (p.status === 'published') {
+          statusBadge = '<span class="chip" style="background:#dcfce7;color:#15803d;font-weight:600;font-size:0.75rem">LIVE</span>';
+        } else if (p.status === 'pending') {
+          statusBadge = '<span class="chip" style="background:#fef3c7;color:#b45309;font-weight:600;font-size:0.75rem">UNDER REVIEW</span>';
+        } else if (p.status === 'rejected') {
+          statusBadge = '<span class="chip" style="background:#fee2e2;color:#b91c1c;font-weight:600;font-size:0.75rem">REVISIONS REQUESTED</span>';
+          extraAction = '<div style="margin-top:8px;padding:10px 14px;background:var(--paper-2);border-left:3px solid #ef4444;border-radius:4px;font-size:12px">' +
+            '<strong>💡 Editorial Feedback:</strong> ' + (p.rejection_reason || 'Please refine structure/subheadings and resubmit.') +
+            '<div style="margin-top:6px"><a href="write.html?edit=' + p.id + '" class="btn" style="padding:4px 12px;font-size:11px">✏️ Edit &amp; Resubmit Article</a></div>' +
+            '</div>';
+        } else {
+          statusBadge = '<span class="chip" style="font-size:0.75rem">DRAFT</span>';
+          extraAction = '<div style="margin-top:4px"><a href="write.html?edit=' + p.id + '" style="font-size:12px;color:var(--accent);text-decoration:underline">Continue editing &rarr;</a></div>';
+        }
+
         var linkTitle = p.status === 'published' ? '<a href="post.html?slug=' + encodeURIComponent(p.slug) + '" style="color:inherit;font-weight:600">' + p.title + '</a>' : '<strong>' + p.title + '</strong>';
         var created = new Date(p.created_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
 
-        tr.innerHTML = '<td>' + linkTitle + '</td>' +
+        tr.innerHTML = '<td>' + linkTitle + extraAction + '</td>' +
           '<td>' + statusBadge + '</td>' +
           '<td>' + (p.view_count || 0) + '</td>' +
           '<td>$' + Number(p.estimated_earnings || 0).toFixed(2) + '</td>' +
@@ -436,12 +453,18 @@ document.addEventListener('DOMContentLoaded', async function () {
             pendingPosts.forEach(function (post) {
               var tr = document.createElement('tr');
               var authorName = post.profiles ? post.profiles.full_name : 'Author';
+              var authorEmail = (post.profiles && post.profiles.email) ? post.profiles.email : '';
               var dateStr = new Date(post.created_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+              var emailBtn = authorEmail
+                ? '<a href="mailto:' + encodeURIComponent(authorEmail) + '?subject=' + encodeURIComponent('Regarding your article on zebMalik.tech: ' + post.title) + '" class="btn btn-out" style="padding:4px 8px;font-size:12px;margin-right:6px" title="Email Author">✉️ Email</a>'
+                : '';
+
               tr.innerHTML = '<td><strong>' + post.title + '</strong><br><small style="color:var(--muted)">slug: ' + post.slug + '</small></td>' +
-                '<td>' + authorName + '</td>' +
+                '<td>' + authorName + (authorEmail ? '<br><small style="color:var(--muted)">' + authorEmail + '</small>' : '') + '</td>' +
                 '<td>' + dateStr + '</td>' +
                 '<td style="text-align:right;white-space:nowrap">' +
                   '<a href="post.html?slug=' + encodeURIComponent(post.slug) + '" target="_blank" class="btn btn-out" style="padding:4px 8px;font-size:12px;margin-right:6px">👁️ Preview</a>' +
+                  emailBtn +
                   '<button type="button" class="btn" style="padding:4px 10px;font-size:12px;background:var(--accent);border-color:var(--accent);margin-right:6px" data-approve="' + post.id + '">✓ Approve</button>' +
                   '<button type="button" class="btn btn-out" style="padding:4px 8px;font-size:12px;color:#ef4444;border-color:#ef4444" data-reject="' + post.id + '">✕ Reject</button>' +
                 '</td>';
@@ -457,7 +480,6 @@ document.addEventListener('DOMContentLoaded', async function () {
                   await ZebBlog.adminApprovePost(pid);
                   alert('✓ Post approved and published live to /blog!');
                   loadAdminData();
-                  // Also refresh personal table if it's the admin's post
                   setTimeout(function(){ window.location.reload(); }, 600);
                 } catch(e) {
                   alert('Error approving post: ' + e.message);
@@ -470,7 +492,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             pendingTbody.querySelectorAll('[data-reject]').forEach(function (btn) {
               btn.addEventListener('click', async function () {
                 var pid = this.getAttribute('data-reject');
-                var reason = prompt('Optional rejection reason / editorial feedback for author:');
+                var reason = prompt('Provide encouraging editorial feedback for author (e.g. "Great topic! Please add subheadings and code examples before publishing"):');
                 if (reason !== null) {
                   this.textContent = 'Rejecting…';
                   this.disabled = true;

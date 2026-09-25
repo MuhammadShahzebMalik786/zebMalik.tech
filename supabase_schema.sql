@@ -81,6 +81,8 @@ CREATE POLICY "Public profiles are readable" ON public.profiles
 CREATE POLICY "Users can update own profile" ON public.profiles
   FOR UPDATE USING (auth.uid() = id);
 
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS email TEXT;
+
 -- Profiles: Auto-create profile trigger on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -92,14 +94,16 @@ BEGIN
     extracted_name := split_part(new.email, '@', 1);
   END IF;
 
-  INSERT INTO public.profiles (id, full_name, username)
+  INSERT INTO public.profiles (id, full_name, username, email)
   VALUES (
     new.id,
     extracted_name,
-    LOWER(REGEXP_REPLACE(split_part(new.email, '@', 1) || '_' || SUBSTRING(new.id::text, 1, 4), '[^a-zA-Z0-9_]', '', 'g'))
+    LOWER(REGEXP_REPLACE(split_part(new.email, '@', 1) || '_' || SUBSTRING(new.id::text, 1, 4), '[^a-zA-Z0-9_]', '', 'g')),
+    new.email
   )
   ON CONFLICT (id) DO UPDATE
-  SET full_name = EXCLUDED.full_name;
+  SET full_name = EXCLUDED.full_name,
+      email = EXCLUDED.email;
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
