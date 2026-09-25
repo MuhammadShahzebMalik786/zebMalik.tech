@@ -97,6 +97,44 @@ async function updateSitemap() {
   const sitemapPath = path.join(__dirname, '..', 'sitemap.xml');
   fs.writeFileSync(sitemapPath, xml, 'utf8');
   console.log(`Successfully generated sitemap.xml with ${STATIC_PAGES.length + posts.length} total URLs.`);
+
+  // Submit all post URLs to IndexNow (instant Bingbot, Yandex crawling)
+  const postUrls = posts.map(p => `https://zebmalik.tech/post?slug=${encodeURIComponent(p.slug)}`);
+  try {
+    await submitToIndexNow(postUrls);
+  } catch (_) {}
+}
+
+function submitToIndexNow(urls) {
+  return new Promise((resolve) => {
+    const payload = JSON.stringify({
+      host: 'zebmalik.tech',
+      key: '9f8e7d6c5b4a392817263544abcdef01',
+      keyLocation: 'https://zebmalik.tech/9f8e7d6c5b4a392817263544abcdef01.txt',
+      urlList: urls
+    });
+
+    const req = https.request({
+      hostname: 'api.indexnow.org',
+      path: '/indexnow',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Length': Buffer.byteLength(payload)
+      }
+    }, (res) => {
+      console.log(`IndexNow ping to Bing/Search Engines: HTTP ${res.statusCode}`);
+      resolve();
+    });
+
+    req.on('error', (err) => {
+      console.warn('IndexNow notice:', err.message);
+      resolve();
+    });
+
+    req.write(payload);
+    req.end();
+  });
 }
 
 updateSitemap().catch(err => {

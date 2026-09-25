@@ -1,0 +1,36 @@
+name: Auto-Sync Sitemap
+
+on:
+  schedule:
+    # Runs daily at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-sitemap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run Sitemap Generator
+        run: node scripts/update-sitemap.js
+
+      - name: Commit and Push Changes if Sitemap Updated
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          if git diff --staged --quiet; then
+            echo "No new articles found. Sitemap is up to date."
+          else
+            git commit -m "chore(seo): auto-sync sitemap with newly published articles [skip ci]"
+            git push origin main
+          fi
