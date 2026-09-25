@@ -76,16 +76,46 @@
   .reader-grid {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr) 290px;
+    grid-template-areas: "toc main info";
     gap: 36px;
     align-items: start;
     margin-top: 2rem;
     margin-bottom: 4rem;
   }
 
+  .reader-grid.no-toc {
+    grid-template-columns: minmax(0, 1fr) 290px;
+    grid-template-areas: "main info";
+  }
+
+  .reader-left-col {
+    grid-area: toc;
+    position: sticky;
+    top: 92px;
+  }
+
+  .reader-center-col {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  .reader-right-col {
+    grid-area: info;
+    position: sticky;
+    top: 92px;
+    width: 100%;
+    max-width: 290px;
+  }
+
   @media (max-width: 1320px) {
     .reader-grid {
       grid-template-columns: 230px minmax(0, 1fr);
+      grid-template-areas: "toc main";
       gap: 32px;
+    }
+    .reader-grid.no-toc {
+      grid-template-columns: 1fr;
+      grid-template-areas: "main";
     }
     .reader-right-col {
       display: none;
@@ -93,12 +123,15 @@
   }
 
   @media (max-width: 980px) {
-    .reader-grid {
+    .reader-grid,
+    .reader-grid.no-toc {
       grid-template-columns: 1fr;
+      grid-template-areas: "main";
       gap: 24px;
     }
     .reader-left-col {
       position: static;
+      grid-area: auto;
     }
     .toc-card {
       position: static;
@@ -107,10 +140,6 @@
   }
 
   /* Left Column: Wikipedia-style Table of Contents */
-  .reader-left-col {
-    position: sticky;
-    top: 92px;
-  }
   .toc-card {
     background: var(--paper-2);
     border: 1px solid var(--line);
@@ -830,21 +859,29 @@ document.addEventListener('DOMContentLoaded', async function () {
       if (isAdmin) {
         var adminNotice = document.createElement('div');
         adminNotice.className = 'admin-review-banner';
-        adminNotice.style.cssText = 'background:#fff8e6;border:1px solid #ffe082;border-radius:8px;padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem';
-        adminNotice.innerHTML = '<div>' +
-          '<div style="display:flex;align-items:center;gap:8px">' +
-            '<span style="font-size:18px">🛡️</span>' +
-            '<strong style="color:#795548;font-size:1.05rem">Admin Moderation View</strong>' +
-            '<span class="chip" style="background:#ff9800;color:#fff;font-weight:600;font-size:11px;text-transform:uppercase">' + post.status + '</span>' +
+        adminNotice.style.cssText = 'background:#fff8e6;border:1px solid #ffe082;border-radius:8px;padding:1.25rem 1.75rem;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.25rem;box-shadow:0 4px 16px rgba(255,152,0,0.12)';
+        adminNotice.innerHTML = '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">' +
+          '<div style="font-size:26px;line-height:1">🛡️</div>' +
+          '<div>' +
+            '<div style="display:flex;align-items:center;gap:10px">' +
+              '<strong style="color:#795548;font-size:1.15rem">Admin Moderation View</strong>' +
+              '<span class="chip" style="background:#ff9800;color:#fff;font-weight:700;font-size:11px;text-transform:uppercase;padding:2px 8px;border-radius:4px">' + post.status + '</span>' +
+            '</div>' +
+            '<p style="margin:4px 0 0 0;font-size:0.92rem;color:#6d4c41">You are previewing this pending article submitted by <strong>' + (post.author ? post.author.full_name : 'Contributor') + '</strong>. Ads &amp; tracking are paused.</p>' +
           '</div>' +
-          '<p style="margin:4px 0 0 26px;font-size:0.9rem;color:#6d4c41">You are previewing this pending article as an Administrator. Ads &amp; tracking are paused.</p>' +
         '</div>' +
-        '<div style="display:flex;align-items:center;gap:0.75rem">' +
-          '<button id="admin-bar-approve" class="btn" style="background:#2e7d32;border-color:#2e7d32;padding:8px 16px;font-size:13px">✓ Approve &amp; Publish</button>' +
-          '<button id="admin-bar-reject" class="btn btn-out" style="color:#c62828;border-color:#c62828;padding:8px 14px;font-size:13px">✕ Reject</button>' +
-          '<a href="author-dashboard.html" class="arrow-link" style="font-size:13px;margin-left:6px">Dashboard &rarr;</a>' +
+        '<div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">' +
+          '<button id="admin-bar-approve" class="btn" style="background:#2e7d32;border-color:#2e7d32;color:#fff;padding:10px 22px;font-size:14px;font-weight:600;border-radius:6px;cursor:pointer">✓ Approve &amp; Publish</button>' +
+          '<button id="admin-bar-reject" class="btn btn-out" style="color:#c62828;border-color:#c62828;padding:10px 18px;font-size:14px;border-radius:6px;cursor:pointer">✕ Reject</button>' +
+          '<a href="author-dashboard.html" class="arrow-link" style="font-size:14px;margin-left:8px;font-weight:600;white-space:nowrap">Dashboard &rarr;</a>' +
         '</div>';
-        document.getElementById('post-content').parentNode.insertBefore(adminNotice, document.getElementById('post-content'));
+
+        var grid = document.querySelector('.reader-grid');
+        if (grid && grid.parentNode) {
+          grid.parentNode.insertBefore(adminNotice, grid);
+        } else {
+          document.getElementById('post-content').parentNode.insertBefore(adminNotice, document.getElementById('post-content'));
+        }
 
         document.getElementById('admin-bar-approve').onclick = async function() {
           if (!confirm('Approve this article and publish it live to /blog?')) return;
@@ -879,17 +916,27 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       } else if (isAuthor) {
         var authorNotice = document.createElement('div');
-        authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:0.75rem 1.25rem;border-radius:6px;margin-bottom:1.5rem;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem';
+        authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:1rem 1.5rem;border-radius:8px;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem';
         authorNotice.innerHTML = '<span>🔒 <strong>Author Draft Preview:</strong> This article is <code>' + post.status.toUpperCase() + '</code> and not yet public.</span> <a href="author-dashboard.html" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
-        document.getElementById('post-content').parentNode.insertBefore(authorNotice, document.getElementById('post-content'));
+        var grid = document.querySelector('.reader-grid');
+        if (grid && grid.parentNode) {
+          grid.parentNode.insertBefore(authorNotice, grid);
+        } else {
+          document.getElementById('post-content').parentNode.insertBefore(authorNotice, document.getElementById('post-content'));
+        }
       }
     } else if (isAuthor) {
       // Author viewing their own published article: pause ads and view counting
       document.querySelectorAll('.ad-slot').forEach(function(el) { el.style.display = 'none'; });
       var authorNotice = document.createElement('div');
-      authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:0.75rem 1.25rem;border-radius:6px;margin-bottom:1.5rem;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem';
+      authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:1rem 1.5rem;border-radius:8px;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem';
       authorNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="author-dashboard.html" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
-      document.getElementById('post-content').parentNode.insertBefore(authorNotice, document.getElementById('post-content'));
+      var grid = document.querySelector('.reader-grid');
+      if (grid && grid.parentNode) {
+        grid.parentNode.insertBefore(authorNotice, grid);
+      } else {
+        document.getElementById('post-content').parentNode.insertBefore(authorNotice, document.getElementById('post-content'));
+      }
     } else {
       // Legitimate public reader viewing published post
       ZebBlog.trackVerifiedView(post.id);
@@ -936,14 +983,17 @@ function buildTableOfContents() {
   var headings = content.querySelectorAll('h2, h3');
   var tocList = document.getElementById('toc-list');
   var tocContainer = document.getElementById('toc-container');
+  var grid = document.querySelector('.reader-grid');
   if (!tocList) return;
   tocList.innerHTML = '';
 
   if (!headings.length) {
     if (tocContainer) tocContainer.style.display = 'none';
+    if (grid) grid.classList.add('no-toc');
     return;
   }
   if (tocContainer) tocContainer.style.display = 'block';
+  if (grid) grid.classList.remove('no-toc');
 
   // Add (Top) item like Wikipedia
   var topLink = document.createElement('a');
