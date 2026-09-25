@@ -184,6 +184,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     var posts = await ZebBlog.fetchPublishedPosts(30);
     if (posts && posts.length > 0) {
       posts.forEach(function (post) {
+        var card = document.createElement('div');
+        card.className = 'item';
         var imgUrl = post.cover_image_url;
         if (post.slug === 'building-production-rag-systems-python' && (!imgUrl || imgUrl.includes('1677442136019-21780efad99a'))) {
           imgUrl = 'rag-systems-architecture.webp';
