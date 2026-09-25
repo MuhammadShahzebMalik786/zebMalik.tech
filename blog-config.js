@@ -290,8 +290,28 @@
     if (!sb) return [];
     var res = await sb
       .from('posts')
-      .select('*, profiles(full_name, username, avatar_url)')
+      .select('*, profiles(full_name, username, avatar_url, email)')
       .eq('status', 'pending')
+      .order('created_at', { ascending: false });
+    return res.data || [];
+  }
+
+  async function fetchAdminAllPosts() {
+    var sb = getClient();
+    if (!sb) return [];
+    var res = await sb
+      .from('posts')
+      .select('*, profiles(full_name, username, avatar_url, email)')
+      .order('created_at', { ascending: false });
+    return res.data || [];
+  }
+
+  async function fetchAdminAllAuthors() {
+    var sb = getClient();
+    if (!sb) return [];
+    var res = await sb
+      .from('profiles')
+      .select('*')
       .order('created_at', { ascending: false });
     return res.data || [];
   }
@@ -311,6 +331,15 @@
     return await sb
       .from('posts')
       .update({ status: 'rejected', rejection_reason: reason || '' })
+      .eq('id', postId);
+  }
+
+  async function adminUnpublishPost(postId) {
+    var sb = getClient();
+    if (!sb || !postId) throw new Error('Missing parameter');
+    return await sb
+      .from('posts')
+      .update({ status: 'draft' })
       .eq('id', postId);
   }
 
@@ -473,8 +502,11 @@
     resetPasswordForEmail: resetPasswordForEmail,
     updateUserPassword: updateUserPassword,
     fetchAdminPendingPosts: fetchAdminPendingPosts,
+    fetchAdminAllPosts: fetchAdminAllPosts,
+    fetchAdminAllAuthors: fetchAdminAllAuthors,
     adminApprovePost: adminApprovePost,
     adminRejectPost: adminRejectPost,
+    adminUnpublishPost: adminUnpublishPost,
     fetchAdminPayoutRequests: fetchAdminPayoutRequests,
     adminUpdatePayoutStatus: adminUpdatePayoutStatus,
     sanitizeHtml: sanitizeHtml
