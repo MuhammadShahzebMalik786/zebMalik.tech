@@ -177,7 +177,7 @@ FOOTER = '''<footer class="site-footer">
         <a href="about.html">About</a>
         <a href="work.html">Work</a>
         <a href="blog.html">Blog &amp; Research</a>
-        <a href="write.html">Write for us (40% Cut)</a>
+        <a href="write.html">Write &amp; Get Paid</a>
         <a href="pricing.html">Pricing</a>
         <a href="contact.html">Contact</a>
       </div>
