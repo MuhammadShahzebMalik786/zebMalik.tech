@@ -186,7 +186,7 @@
     var sb = getClient();
     if (!sb || !postId) return;
 
-    // Wait at least 12 seconds on the page before counting a legitimate read
+    // Wait 8 seconds on the page before counting a legitimate read
     setTimeout(async function () {
       try {
         var rawId = navigator.userAgent + '|' + (screen.width + 'x' + screen.height) + '|' + (new Date().getTimezoneOffset());
@@ -195,14 +195,21 @@
         var hashArray = Array.from(new Uint8Array(hashBuffer));
         var ipHash = hashArray.map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
 
-        await sb.rpc('record_verified_view', {
+        var res = await sb.rpc('record_verified_view', {
           target_post_id: postId,
           client_ip_hash: ipHash
         });
+        if (res && res.error) {
+          console.warn('[ZebBlog] Verified view note:', res.error.message || res.error);
+        } else if (res && res.data === true) {
+          console.log('[ZebBlog] ✓ Verified read recorded and author balance credited.');
+        } else {
+          console.log('[ZebBlog] Read noted (daily IP limit reached for this article).');
+        }
       } catch (e) {
-        console.warn('View tracking non-fatal note:', e);
+        console.warn('[ZebBlog] View tracking note:', e);
       }
-    }, 12000);
+    }, 8000);
   }
 
   // --- Author Publishing & Dashboard Utilities ---

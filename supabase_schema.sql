@@ -163,6 +163,11 @@ RETURNS TRIGGER AS $$
 DECLARE
   caller_is_admin BOOLEAN := FALSE;
 BEGIN
+  -- Allow verified view procedure to credit earnings
+  IF current_setting('zebblog.internal_proc', true) = 'true' THEN
+    RETURN NEW;
+  END IF;
+
   -- Check if caller is admin
   SELECT (is_admin IS TRUE OR id = 'c3735295-8408-44ea-a4d8-b5f4b5077358') INTO caller_is_admin FROM public.profiles WHERE id = auth.uid();
   
@@ -194,14 +199,19 @@ RETURNS TRIGGER AS $$
 DECLARE
   caller_is_admin BOOLEAN := FALSE;
 BEGIN
+  -- Allow verified view procedure to increment views & earnings
+  IF current_setting('zebblog.internal_proc', true) = 'true' THEN
+    RETURN NEW;
+  END IF;
+
   SELECT (is_admin IS TRUE OR id = 'c3735295-8408-44ea-a4d8-b5f4b5077358') INTO caller_is_admin FROM public.profiles WHERE id = auth.uid();
 
   -- If NOT admin, authors can ONLY set status to 'draft' or 'pending'
   IF caller_is_admin IS NOT TRUE THEN
-    IF NEW.status NOT IN ('draft', 'pending') THEN
+    IF NEW.status IS DISTINCT FROM OLD.status AND NEW.status NOT IN ('draft', 'pending') THEN
       RAISE EXCEPTION 'Security Violation: Authors can only submit posts as draft or pending review.';
     END IF;
-    -- Authors cannot manually inflate views or earnings
+    -- Authors cannot manually inflate views or earnings via REST
     NEW.view_count := OLD.view_count;
     NEW.estimated_earnings := OLD.estimated_earnings;
     NEW.published_at := OLD.published_at;
@@ -232,8 +242,8 @@ CREATE POLICY "Authors can view own payout requests" ON public.payout_requests
 
 
 -- ==============================================================================
--- Stored Procedures: Record Verified View & Credit Author Earnings (40% Rev-Share)
--- Baseline RPM: $2.50 per 1,000 views => Author cut (40%) = $1.00 per 1,000 views ($0.001 per view)
+-- Stored Procedures: Record Verified View & Credit Author Earnings (Creator Partner)
+-- Baseline RPM: $2.50 per 1,000 views => Author cut = $1.00 per 1,000 views ($0.001 per view)
 -- ==============================================================================
 
 CREATE OR REPLACE FUNCTION public.record_verified_view(target_post_id UUID, client_ip_hash TEXT)
@@ -243,7 +253,10 @@ DECLARE
   post_author_id UUID;
   author_rate_per_view NUMERIC := 0.001; -- $1.00 per 1,000 views
 BEGIN
-  -- Insert into post_views ledger (unique daily view)
+  -- Mark transaction as internal authorized procedure to bypass anti-tamper triggers
+  PERFORM set_config('zebblog.internal_proc', 'true', true);
+
+  -- Insert into post_views ledger (unique daily view per IP hash)
   INSERT INTO public.post_views (post_id, ip_hash, viewed_at)
   VALUES (target_post_id, client_ip_hash, CURRENT_DATE)
   ON CONFLICT (post_id, ip_hash, viewed_at) DO NOTHING;
