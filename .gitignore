@@ -4,3 +4,5 @@ node_modules/
 *.log
 .wrangler/
 *.py
+all_urls.*
+email_to_bodla.html
