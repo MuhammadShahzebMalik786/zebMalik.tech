@@ -42,7 +42,15 @@
     .site-footer .wrap,
     .reader-container {
       width: 100%;
-      padding: 0 20px;
+      padding: 0 16px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .site-header .hdr,
+    .site-footer .wrap,
+    .reader-container {
+      padding: 0 12px;
     }
   }
 
@@ -54,22 +62,41 @@
   .pagehead-reader h1,
   .reader-title {
     margin-top: 0.75rem;
-    font-size: clamp(32px, 3.8vw, 50px);
-    line-height: 1.15;
+    font-size: clamp(26px, 4.2vw, 48px);
+    line-height: 1.2;
     letter-spacing: -0.025em;
     font-weight: 600;
     color: var(--ink);
     max-width: 100% !important;
     width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
   .reader-byline {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.75rem 1.25rem;
-    margin-top: 1.25rem;
+    gap: 0.6rem 1.15rem;
+    margin-top: 1.15rem;
     color: var(--ink-2);
     font-size: 0.95rem;
+  }
+
+  @media (max-width: 640px) {
+    .pagehead-reader {
+      padding: 1.35rem 0 0.85rem 0;
+    }
+    .pagehead-reader h1,
+    .reader-title {
+      font-size: clamp(22px, 6.2vw, 32px);
+      line-height: 1.25;
+      margin-top: 0.5rem;
+    }
+    .reader-byline {
+      font-size: 0.84rem;
+      gap: 4px 10px;
+      margin-top: 0.75rem;
+    }
   }
 
   /* 3-Column Responsive Grid */
@@ -127,15 +154,50 @@
     .reader-grid.no-toc {
       grid-template-columns: 1fr;
       grid-template-areas: "main";
-      gap: 24px;
+      gap: 18px;
+      margin-top: 1.25rem;
+      margin-bottom: 2.5rem;
     }
     .reader-left-col {
       position: static;
       grid-area: auto;
+      width: 100%;
     }
     .toc-card {
       position: static;
       max-height: none;
+      padding: 0.85rem 1rem;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .toc-header {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+      cursor: pointer;
+    }
+    .toc-header.open {
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .toc-toggle {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+    .toc-links {
+      display: none;
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .toc-footer {
+      display: none;
     }
   }
 
@@ -275,12 +337,12 @@
     font-size: 1.18rem;
     line-height: 1.85;
     color: var(--ink);
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
-  @media (max-width: 640px) {
-    .article-body {
-      font-size: 1.05rem;
-      line-height: 1.75;
-    }
+  .article-body h1, .article-body h2, .article-body h3, .article-body h4 {
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .article-body h1 {
@@ -324,6 +386,8 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.95rem;
     margin: 2rem 0;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
   }
   .article-body code {
     font-family: 'JetBrains Mono', monospace;
@@ -332,11 +396,16 @@
     border-radius: 4px;
     font-size: 0.9em;
     border: 1px solid var(--line);
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
   .article-body pre code {
     background: none;
     padding: 0;
     border: none;
+    word-break: normal;
+    white-space: pre;
+    font-size: 1em;
   }
   .article-body img {
     max-width: 100%;
@@ -345,6 +414,7 @@
     border: 1px solid var(--line);
     margin: 2rem 0;
     box-shadow: 0 6px 24px rgba(18, 19, 22, 0.05);
+    display: block;
   }
   .article-body blockquote {
     border-left: 4px solid var(--accent);
@@ -362,6 +432,7 @@
     font-size: 1rem;
     display: block;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .article-body th, .article-body td {
     padding: 10px 14px;
@@ -371,6 +442,151 @@
   .article-body th {
     background: var(--paper-2);
     font-weight: 600;
+  }
+
+  @media (max-width: 640px) {
+    .article-body {
+      font-size: 1.04rem;
+      line-height: 1.72;
+    }
+    .article-body h1 {
+      font-size: clamp(23px, 5.5vw, 30px);
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .article-body h2 {
+      font-size: clamp(20px, 4.8vw, 25px);
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem;
+      scroll-margin-top: 75px;
+    }
+    .article-body h3 {
+      font-size: clamp(17px, 4vw, 20px);
+      margin-top: 1.6rem;
+      margin-bottom: 0.5rem;
+      scroll-margin-top: 75px;
+    }
+    .article-body p {
+      margin-bottom: 1.35rem;
+    }
+    .article-body ul, .article-body ol {
+      margin-bottom: 1.35rem;
+      padding-left: 1.25rem;
+    }
+    .article-body li {
+      margin-bottom: 0.45rem;
+      line-height: 1.65;
+    }
+    .article-body pre {
+      padding: 0.85rem 1rem;
+      font-size: 0.82rem;
+      margin: 1.25rem 0;
+      border-radius: 6px;
+    }
+    .article-body code {
+      font-size: 0.85em;
+    }
+    .article-body table {
+      font-size: 0.85rem;
+      margin: 1.25rem 0;
+    }
+    .article-body th, .article-body td {
+      padding: 8px 10px;
+    }
+    .article-body blockquote {
+      margin: 1.35rem 0;
+      padding: 0.85rem 1rem;
+      font-size: 0.98rem;
+    }
+    .article-body img {
+      margin: 1.25rem 0;
+      border-radius: 6px;
+    }
+    .post-cover-wrapper {
+      margin-bottom: 1.25rem;
+    }
+    .post-cover-img {
+      max-height: 240px;
+      border-radius: 6px;
+    }
+    .ad-slot {
+      min-height: 60px;
+      font-size: 9px;
+      margin: 1.25rem 0 !important;
+    }
+  }
+
+  /* Author Card & Mobile Explore Tools Card */
+  .article-author-card {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .author-card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .author-card-bio-group {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .author-avatar-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--paper-3);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--ink-2);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .mobile-tools-card {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  @media (max-width: 1320px) {
+    .mobile-tools-card {
+      display: block;
+    }
+  }
+  @media (max-width: 640px) {
+    .article-author-card {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1rem;
+    }
+    .author-card-inner {
+      gap: 1rem;
+    }
+    .author-card-bio-group {
+      gap: 0.85rem;
+    }
+    .author-avatar-box {
+      width: 48px;
+      height: 48px;
+      font-size: 1.15rem;
+    }
+    #author-name {
+      font-size: 1.15rem !important;
+    }
+    #author-bio {
+      font-size: 0.88rem !important;
+    }
   }
 
   /* Article Hyperlinks (Blue with small link icon like Wikipedia/Google) */
@@ -516,6 +732,7 @@
 <!-- /SEO-META -->
 </head>
 <body>
+<div id="read-top-progress" style="position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0%;z-index:99999;transition:width 0.08s ease;pointer-events:none"></div>
 <header class="site-header">
   <div class="wrap hdr">
     <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
@@ -550,9 +767,9 @@
     <!-- Left Column: Wikipedia-style Sticky Table of Contents -->
     <aside id="toc-container" class="reader-left-col">
       <div class="toc-card">
-        <div class="toc-header">
+        <div class="toc-header" onclick="toggleToc(document.querySelector('.toc-toggle'))">
           <span class="toc-title">Contents</span>
-          <span class="toc-toggle" onclick="toggleToc(this)">[hide]</span>
+          <span class="toc-toggle" onclick="event.stopPropagation();toggleToc(this)">[hide]</span>
         </div>
         <nav id="toc-list" class="toc-links">
           <span class="muted" style="font-size:0.85rem">Loading sections...</span>
@@ -587,10 +804,10 @@
       <div class="ad-slot" aria-label="Advertisement" style="margin-top:3.5rem"><span>Advertisement</span></div>
 
       <!-- Author Box -->
-      <div id="author-box" class="article-author-card" style="margin-top:4rem;padding:2rem;background:var(--paper-2);border:1px solid var(--line);border-radius:8px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:1.25rem">
-            <div id="author-avatar" style="width:64px;height:64px;border-radius:50%;background:var(--paper-3);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:1.4rem;color:var(--ink-2);overflow:hidden;flex-shrink:0">
+      <div id="author-box" class="article-author-card">
+        <div class="author-card-inner">
+          <div class="author-card-bio-group">
+            <div id="author-avatar" class="author-avatar-box">
               ✍️
             </div>
             <div>
@@ -602,6 +819,20 @@
           <div style="display:flex;gap:0.75rem;align-items:center">
             <a href="write.html" class="btn">Write &amp; Get Paid &rarr;</a>
           </div>
+        </div>
+      </div>
+
+      <!-- Mobile/Tablet Tools Strip (Visible on smaller viewports where sidebar is hidden) -->
+      <div class="mobile-tools-card">
+        <span class="label">Explore Tools</span>
+        <h4 style="margin:4px 0 10px 0;font-size:1.05rem">Free In-Browser Developer &amp; PDF Tools</h4>
+        <p class="muted" style="font-size:0.88rem;margin-bottom:12px">100% private, client-side browser utilities built by zebMalik.tech.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <a href="image-compressor.html" class="chip" style="text-decoration:none">Image Compressor</a>
+          <a href="merge-pdf.html" class="chip" style="text-decoration:none">Merge PDF</a>
+          <a href="qr-code-generator.html" class="chip" style="text-decoration:none">QR Code</a>
+          <a href="json-formatter.html" class="chip" style="text-decoration:none">JSON Formatter</a>
+          <a href="tools.html" class="chip" style="text-decoration:none;background:var(--accent);color:#fff;font-weight:600">All 22 Tools &rarr;</a>
         </div>
       </div>
     </main>
@@ -1027,13 +1258,17 @@ document.addEventListener('DOMContentLoaded', async function () {
 /* Wikipedia-style TOC & Interactive Features */
 function toggleToc(btn) {
   var list = document.getElementById('toc-list');
+  var header = document.querySelector('.toc-header');
   if (!list) return;
-  if (list.style.display === 'none') {
+  var isHidden = (list.style.display === 'none' || getComputedStyle(list).display === 'none');
+  if (isHidden) {
     list.style.display = 'flex';
-    btn.textContent = '[hide]';
+    if (btn) btn.textContent = '[hide]';
+    if (header) header.classList.add('open');
   } else {
     list.style.display = 'none';
-    btn.textContent = '[show]';
+    if (btn) btn.textContent = '[show]';
+    if (header) header.classList.remove('open');
   }
 }
 
@@ -1071,6 +1306,20 @@ function buildTableOfContents() {
   if (tocContainer) tocContainer.style.display = 'block';
   if (grid) grid.classList.remove('no-toc');
 
+  // On mobile screens (<= 980px), collapse by default so user can read directly
+  var isMobile = window.innerWidth <= 980;
+  var header = document.querySelector('.toc-header');
+  var toggleBtn = document.querySelector('.toc-toggle');
+  if (isMobile) {
+    tocList.style.display = 'none';
+    if (toggleBtn) toggleBtn.textContent = '[show]';
+    if (header) header.classList.remove('open');
+  } else {
+    tocList.style.display = 'flex';
+    if (toggleBtn) toggleBtn.textContent = '[hide]';
+    if (header) header.classList.add('open');
+  }
+
   // Add (Top) item like Wikipedia
   var topLink = document.createElement('a');
   topLink.href = '#post-title';
@@ -1079,6 +1328,9 @@ function buildTableOfContents() {
   topLink.onclick = function(e) {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.innerWidth <= 980) {
+      toggleToc(document.querySelector('.toc-toggle'));
+    }
   };
   tocList.appendChild(topLink);
 
@@ -1094,9 +1346,13 @@ function buildTableOfContents() {
       e.preventDefault();
       var target = document.getElementById(h.id);
       if (target) {
-        var yOffset = -90;
+        var isMobile = window.innerWidth <= 980;
+        var yOffset = isMobile ? -75 : -90;
         var y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: 'smooth' });
+        if (isMobile) {
+          toggleToc(document.querySelector('.toc-toggle'));
+        }
       }
     };
     tocList.appendChild(a);
@@ -1110,6 +1366,8 @@ window.addEventListener('scroll', function() {
   var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
   var prog = document.getElementById('read-progress-fill');
   if (prog) prog.style.width = scrolled + '%';
+  var topProg = document.getElementById('read-top-progress');
+  if (topProg) topProg.style.width = scrolled + '%';
 
   // Scroll Spy for TOC
   var content = document.getElementById('post-content');

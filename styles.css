@@ -197,7 +197,7 @@ section{padding:96px 0}
 .cards .item h3{margin-bottom:12px}
 .cards .item p{color:var(--ink-2);font-size:16px}
 @media(max-width:900px){.cards{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.cards{grid-template-columns:1fr}}
+@media(max-width:620px){.cards{grid-template-columns:1fr}.cards .item{padding:22px 18px}}
 
 .worklist{border-top:1px solid var(--line)}
 .workrow{

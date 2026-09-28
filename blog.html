@@ -30,6 +30,93 @@
 <meta name="google-adsense-account" content="ca-pub-9522829065676411">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9522829065676411" crossorigin="anonymous"></script>
 <!-- /SEO-META -->
+<style>
+  .blog-head-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .blog-cta-group {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    background: transparent;
+    border: none;
+  }
+  .blog-grid .item {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 26px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .blog-grid .item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(18, 19, 22, 0.05);
+  }
+  .blog-grid .item h3 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.35;
+  }
+  .blog-cover-wrap {
+    margin: -26px -26px 16px -26px;
+    overflow: hidden;
+    border-radius: 7px 7px 0 0;
+    max-height: 190px;
+    aspect-ratio: 16 / 9;
+  }
+  .blog-cover-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .blog-grid .item .arrow-link {
+    margin-top: auto;
+    padding-top: 8px;
+  }
+  @media (max-width: 768px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .blog-grid .item {
+      padding: 20px 18px;
+    }
+    .blog-cover-wrap {
+      margin: -20px -18px 14px -18px;
+      max-height: 180px;
+    }
+    .blog-cta-group {
+      width: 100%;
+    }
+    .blog-cta-group .btn {
+      flex: 1 1 auto;
+      text-align: center;
+      justify-content: center;
+      padding: 11px 16px;
+      font-size: 14px;
+    }
+  }
+  @media (max-width: 480px) {
+    .blog-cta-group {
+      flex-direction: column;
+    }
+    .blog-cta-group .btn {
+      width: 100%;
+    }
+  }
+</style>
 </head>
 <body>
 <header class="site-header">
@@ -51,13 +138,13 @@
 </header>
 
 <div class="pagehead">
-  <div class="wrap" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem">
+  <div class="wrap blog-head-wrap">
     <div>
       <span class="label">Engineering &amp; Research</span>
       <h1>Ideas, systems, and open research.</h1>
       <p class="lead">Deep dives into data pipelines, automation, AI agents, and systems engineering. Written by practitioners.</p>
     </div>
-    <div style="display:flex;gap:0.75rem">
+    <div class="blog-cta-group">
       <a href="write.html" class="btn">Write &amp; Get Paid &rarr;</a>
       <a href="author-dashboard.html" class="btn btn-out">Author Portal</a>
     </div>
@@ -68,7 +155,7 @@
 
 <section>
   <div class="wrap">
-    <div id="posts-container" class="cards" style="grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:1.5rem">
+    <div id="posts-container" class="cards blog-grid">
       <!-- Loading placeholder -->
       <div class="item" style="border-style:dashed">
         <span class="label">Creator Partner Program</span>
@@ -191,14 +278,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (post.slug === 'building-production-rag-systems-python' && (!imgUrl || imgUrl.includes('1677442136019-21780efad99a'))) {
           imgUrl = 'rag-systems-architecture.webp';
         }
-        var coverHtml = imgUrl ? '<div style="margin:-24px -24px 16px -24px;overflow:hidden;border-radius:6px 6px 0 0;max-height:180px"><img src="' + imgUrl + '" alt="' + post.title + '" onerror="this.onerror=null;this.src=\'rag-systems-architecture.webp\';" style="width:100%;height:100%;object-fit:cover"></div>' : '';
+        var coverHtml = imgUrl ? '<div class="blog-cover-wrap"><img src="' + imgUrl + '" alt="' + post.title + '" onerror="this.onerror=null;this.src=\'rag-systems-architecture.webp\';"></div>' : '';
         var authorName = post.profiles ? post.profiles.full_name : 'Contributor';
         var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : '';
         
         card.innerHTML = coverHtml +
           '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">' + authorName + ' · ' + readDate + ' · ' + (post.view_count || 0) + ' reads</div>' +
           '<h3><a href="post?slug=' + encodeURIComponent(post.slug) + '" style="color:inherit;text-decoration:none">' + post.title + '</a></h3>' +
-          '<p style="margin:12px 0 16px 0;color:var(--muted);font-size:0.95rem">' + (post.excerpt || 'Read the full article...') + '</p>' +
+          '<p style="margin:10px 0 16px 0;color:var(--muted);font-size:0.95rem;line-height:1.6">' + (post.excerpt || 'Read the full article...') + '</p>' +
           '<a class="arrow-link" href="post?slug=' + encodeURIComponent(post.slug) + '">Read article &rarr;</a>';
         container.appendChild(card);
       });
