@@ -42,6 +42,77 @@
     return res.data;
   }
 
+  async function fetchPublicAuthor(identifier) {
+    var sb = getClient();
+    if (!sb || !identifier) return null;
+    identifier = identifier.trim();
+
+    // 1. Try finding by username
+    var res = await sb
+      .from('profiles')
+      .select('id, full_name, username, bio, avatar_url, created_at')
+      .eq('username', identifier)
+      .maybeSingle();
+
+    if (res && res.data) return res.data;
+
+    // 2. If not found and identifier looks like a UUID, try finding by id
+    var uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (uuidPattern.test(identifier)) {
+      var idRes = await sb
+        .from('profiles')
+        .select('id, full_name, username, bio, avatar_url, created_at')
+        .eq('id', identifier)
+        .maybeSingle();
+      if (idRes && idRes.data) return idRes.data;
+    }
+
+    return null;
+  }
+
+  async function fetchAuthorPublishedPosts(authorId) {
+    var sb = getClient();
+    if (!sb || !authorId) return [];
+    var res = await sb
+      .from('posts')
+      .select('id, title, slug, excerpt, cover_image_url, tags, view_count, published_at, profiles(full_name, username, avatar_url)')
+      .eq('author_id', authorId)
+      .eq('status', 'published')
+      .order('published_at', { ascending: false });
+
+    return (res.data || []).map(normalizePost);
+  }
+
+  async function updateAuthorProfile(profileData) {
+    var sb = getClient();
+    var user = await getCurrentUser();
+    if (!sb || !user) throw new Error('Must be logged in to update profile.');
+
+    var payload = {};
+    if (profileData.full_name !== undefined) payload.full_name = profileData.full_name.trim();
+    if (profileData.username !== undefined) {
+      payload.username = profileData.username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+    }
+    if (profileData.bio !== undefined) payload.bio = profileData.bio.trim();
+    if (profileData.avatar_url !== undefined) payload.avatar_url = profileData.avatar_url.trim();
+    if (profileData.payout_method !== undefined) payload.payout_method = profileData.payout_method;
+    if (profileData.payout_details !== undefined) payload.payout_details = profileData.payout_details.trim();
+    if (profileData.website !== undefined) payload.website = profileData.website.trim();
+    if (profileData.github_url !== undefined) payload.github_url = profileData.github_url.trim();
+    if (profileData.twitter_url !== undefined) payload.twitter_url = profileData.twitter_url.trim();
+    if (profileData.linkedin_url !== undefined) payload.linkedin_url = profileData.linkedin_url.trim();
+
+    var res = await sb.from('profiles').update(payload).eq('id', user.id).select().single();
+    if (res.error && res.error.code === '42703') {
+      delete payload.website;
+      delete payload.github_url;
+      delete payload.twitter_url;
+      delete payload.linkedin_url;
+      res = await sb.from('profiles').update(payload).eq('id', user.id).select().single();
+    }
+    return res;
+  }
+
   async function signInWithPassword(email, password) {
     var sb = getClient();
     if (!sb) return { error: { message: 'Database client not ready' } };
@@ -675,6 +746,9 @@
     CATEGORIES: CATEGORIES,
     inferCategory: inferCategory,
     calculateReadTime: calculateReadTime,
-    filterPosts: filterPosts
+    filterPosts: filterPosts,
+    fetchPublicAuthor: fetchPublicAuthor,
+    fetchAuthorPublishedPosts: fetchAuthorPublishedPosts,
+    updateAuthorProfile: updateAuthorProfile
   };
 }));

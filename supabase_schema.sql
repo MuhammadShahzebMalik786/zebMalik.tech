@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 
 -- Safe migration if table already exists
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS tax_verified BOOLEAN DEFAULT FALSE;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS website TEXT DEFAULT '';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS github_url TEXT DEFAULT '';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS twitter_url TEXT DEFAULT '';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS linkedin_url TEXT DEFAULT '';
 
 -- 3. Posts Table
 CREATE TABLE IF NOT EXISTS public.posts (

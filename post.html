@@ -1115,7 +1115,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     var readMinutes = Math.max(1, Math.round(wordCount / 200));
 
     document.getElementById('post-meta').textContent = (post.tags && post.tags.length ? post.tags.join(' · ') : 'Research');
-    document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorName + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + readMinutes + ' min read</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span>';
+    var authorBylineHtml = (post.profiles && post.profiles.username) ? '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--line-2)" title="View Author Profile">' + authorName + '</a>' : authorName;
+    document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorBylineHtml + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + readMinutes + ' min read</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span>';
 
     var coverUrl = post.cover_image_url;
     if (post.slug === 'building-production-rag-systems-python' && (!coverUrl || coverUrl.includes('1677442136019-21780efad99a'))) {
@@ -1141,7 +1142,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     if (post.profiles) {
-      document.getElementById('author-name').textContent = post.profiles.full_name || 'Engineering Contributor';
+      var authorNameEl = document.getElementById('author-name');
+      if (authorNameEl) {
+        if (post.profiles.username) {
+          authorNameEl.innerHTML = '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--line-2)" title="View Author Profile">' + (post.profiles.full_name || 'Engineering Contributor') + '</a>';
+        } else {
+          authorNameEl.textContent = post.profiles.full_name || 'Engineering Contributor';
+        }
+      }
       if (post.profiles.bio) document.getElementById('author-bio').textContent = post.profiles.bio;
       if (post.profiles.avatar_url) {
         document.getElementById('author-avatar').innerHTML = '<img src="' + post.profiles.avatar_url + '" alt="' + (post.profiles.full_name || 'Author') + '" style="width:100%;height:100%;object-fit:cover">';
@@ -1254,7 +1262,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     var infoTitle = document.getElementById('info-card-title');
     if (infoTitle) infoTitle.textContent = post.title.length > 34 ? post.title.substring(0, 32) + '...' : post.title;
     var infoAuth = document.getElementById('info-author');
-    if (infoAuth) infoAuth.textContent = authorName;
+    if (infoAuth) {
+      if (post.profiles && post.profiles.username) {
+        infoAuth.innerHTML = '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:underline" title="View Author Profile">' + authorName + '</a>';
+      } else {
+        infoAuth.textContent = authorName;
+      }
+    }
     var infoDate = document.getElementById('info-date');
     if (infoDate) infoDate.textContent = readDate || 'Recent';
     var infoTime = document.getElementById('info-readtime');

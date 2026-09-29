@@ -834,7 +834,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           '<div class="blog-row-footer">' +
             '<div class="blog-row-tags">' + tagsHtml + '</div>' +
             '<div class="blog-row-byline">' +
-              '<span>by <strong>' + authorName + '</strong></span>' +
+              '<span>by ' + (post.profiles && post.profiles.username ? '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:none;font-weight:600;border-bottom:1px dotted var(--line-2)" title="View ' + authorName + '\'s Profile">' + authorName + '</a>' : '<strong>' + authorName + '</strong>') + '</span>' +
               '<span class="meta-dot" aria-hidden="true">&middot;</span>' +
               '<span class="views-txt" title="Verified human reads"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:2px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' + (post.view_count || 0).toLocaleString() + ' reads</span>' +
             '</div>' +

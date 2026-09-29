@@ -161,6 +161,66 @@
         </table>
       </div>
 
+      <!-- Public Creator Profile Card -->
+      <div class="tool-card" style="margin-top:2.5rem;padding:2rem;background:var(--paper);border:1px solid var(--line);border-radius:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+          <div>
+            <span class="label" style="margin-bottom:4px">Public Identity</span>
+            <h2 style="font-size:1.5rem;margin:0">Your Public Author Profile</h2>
+            <p class="muted" style="font-size:0.92rem;margin:4px 0 0 0">Customise how you appear to readers across all your articles on zebMalik.tech.</p>
+          </div>
+          <div>
+            <a id="btn-view-public-profile" href="/author" target="_blank" class="btn btn-out" style="padding:8px 16px;font-size:14px">
+              🌐 View Your Live Profile &rarr;
+            </a>
+          </div>
+        </div>
+
+        <form id="profile-edit-form" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.25rem">
+          <div>
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Display Name</label>
+            <input type="text" id="prof-fullname" class="input" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px" required />
+          </div>
+          <div>
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Username / Handle</label>
+            <input type="text" id="prof-username" class="input" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px" placeholder="your_handle" required />
+            <div style="font-size:12px;color:var(--muted);margin-top:4px">Your profile link: <code id="prof-link-preview" style="font-family:var(--mono)">https://zebmalik.tech/author?u=...</code></div>
+          </div>
+          <div style="grid-column: 1 / -1">
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Bio / Professional Headline (1-2 sentences)</label>
+            <input type="text" id="prof-bio" class="input" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px" placeholder="Systems Engineer building automation pipelines & AI agents." />
+          </div>
+          <div style="grid-column: 1 / -1">
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Avatar Image URL (or upload below)</label>
+            <div style="display:flex;gap:10px">
+              <input type="url" id="prof-avatar" class="input" style="flex:1;padding:10px 12px;border:1px solid var(--line);border-radius:4px" placeholder="https://example.com/avatar.jpg" />
+              <button type="button" id="btn-upload-avatar" class="btn btn-out" style="padding:10px 16px;font-size:13px;white-space:nowrap">📁 Upload Image</button>
+              <input type="file" id="avatar-file-input" accept="image/*" style="display:none" />
+            </div>
+          </div>
+          <div>
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Website / Portfolio URL</label>
+            <input type="url" id="prof-website" class="input" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px" placeholder="https://yourportfolio.dev" />
+          </div>
+          <div>
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">GitHub Profile</label>
+            <input type="url" id="prof-github" class="input" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px" placeholder="https://github.com/yourusername" />
+          </div>
+          <div>
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">LinkedIn Profile</label>
+            <input type="url" id="prof-linkedin" class="input" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px" placeholder="https://linkedin.com/in/yourusername" />
+          </div>
+          <div>
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px">Twitter / X Profile</label>
+            <input type="url" id="prof-twitter" class="input" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:4px" placeholder="https://x.com/yourusername" />
+          </div>
+          <div style="grid-column: 1 / -1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:0.5rem">
+            <button type="submit" id="btn-save-profile" class="btn" style="padding:10px 22px">Save Profile Changes</button>
+            <span id="prof-save-status" class="tool-status" style="margin:0;font-size:13px"></span>
+          </div>
+        </form>
+      </div>
+
       <!-- Admin Moderation & Operations Panel (Visible ONLY to Admins) -->
       <div id="admin-panel" style="display:none;margin-top:3.5rem;padding-top:2.5rem;border-top:2px dashed var(--line)">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
@@ -398,6 +458,77 @@ document.addEventListener('DOMContentLoaded', async function () {
       });
     } else {
       payoutBtn.textContent = 'Request Payout ($5 Min)';
+    }
+
+    // Populate Public Profile Editor Form
+    if (profile) {
+      if (document.getElementById('prof-fullname')) document.getElementById('prof-fullname').value = profile.full_name || '';
+      if (document.getElementById('prof-username')) document.getElementById('prof-username').value = profile.username || '';
+      if (document.getElementById('prof-bio')) document.getElementById('prof-bio').value = profile.bio || '';
+      if (document.getElementById('prof-avatar')) document.getElementById('prof-avatar').value = profile.avatar_url || '';
+      if (document.getElementById('prof-website')) document.getElementById('prof-website').value = profile.website || '';
+      if (document.getElementById('prof-github')) document.getElementById('prof-github').value = profile.github_url || '';
+      if (document.getElementById('prof-linkedin')) document.getElementById('prof-linkedin').value = profile.linkedin_url || '';
+      if (document.getElementById('prof-twitter')) document.getElementById('prof-twitter').value = profile.twitter_url || '';
+
+      var userHandle = profile.username || user.id;
+      if (document.getElementById('prof-link-preview')) document.getElementById('prof-link-preview').textContent = 'https://zebmalik.tech/author?u=' + userHandle;
+      if (document.getElementById('btn-view-public-profile')) document.getElementById('btn-view-public-profile').href = '/author?u=' + encodeURIComponent(userHandle);
+    }
+
+    // Public Profile Form Submit Handler
+    var profileForm = document.getElementById('profile-edit-form');
+    var profStatus = document.getElementById('prof-save-status');
+    if (profileForm) {
+      profileForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        profStatus.textContent = 'Saving changes…';
+        profStatus.className = 'tool-status';
+        try {
+          var res = await ZebBlog.updateAuthorProfile({
+            full_name: document.getElementById('prof-fullname').value,
+            username: document.getElementById('prof-username').value,
+            bio: document.getElementById('prof-bio').value,
+            avatar_url: document.getElementById('prof-avatar').value,
+            website: document.getElementById('prof-website').value,
+            github_url: document.getElementById('prof-github').value,
+            linkedin_url: document.getElementById('prof-linkedin').value,
+            twitter_url: document.getElementById('prof-twitter').value
+          });
+          if (res.error) throw res.error;
+          profStatus.textContent = '✓ Profile updated successfully!';
+          var newHandle = document.getElementById('prof-username').value.trim();
+          document.getElementById('prof-link-preview').textContent = 'https://zebmalik.tech/author?u=' + newHandle;
+          document.getElementById('btn-view-public-profile').href = '/author?u=' + encodeURIComponent(newHandle);
+        } catch (err) {
+          profStatus.textContent = 'Error: ' + (err.message || 'Could not update profile.');
+          profStatus.className = 'tool-status is-error';
+        }
+      });
+    }
+
+    // Avatar Upload Handler
+    var btnUploadAvatar = document.getElementById('btn-upload-avatar');
+    var avatarFileInput = document.getElementById('avatar-file-input');
+    if (btnUploadAvatar && avatarFileInput) {
+      btnUploadAvatar.addEventListener('click', function () { avatarFileInput.click(); });
+      avatarFileInput.addEventListener('change', async function () {
+        var file = this.files[0];
+        if (!file) return;
+        profStatus.textContent = 'Optimising & uploading avatar…';
+        profStatus.className = 'tool-status';
+        try {
+          var webpFile = await ZebBlog.convertToWebP(file, 400, 400, 0.85);
+          var uploadRes = await ZebBlog.uploadBlogImage(webpFile);
+          if (uploadRes && uploadRes.url) {
+            document.getElementById('prof-avatar').value = uploadRes.url;
+            profStatus.textContent = '✓ Avatar uploaded! Click Save to apply.';
+          }
+        } catch (err) {
+          profStatus.textContent = 'Upload failed: ' + (err.message || err);
+          profStatus.className = 'tool-status is-error';
+        }
+      });
     }
 
     // Fetch author posts
