@@ -5,3 +5,7 @@ Disallow: /404.html
 
 # Sitemaps
 Sitemap: https://zebmalik.tech/sitemap.xml
+
+# AI & LLM crawler friendly content index
+# See: https://llmstxt.org
+LLMs: https://zebmalik.tech/llms.txt
