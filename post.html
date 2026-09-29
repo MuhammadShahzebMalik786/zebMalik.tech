@@ -765,7 +765,7 @@
 <!-- /SEO-META -->
 </head>
 <body>
-<div id="read-top-progress" style="position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0%;z-index:99999;transition:width 0.08s ease;pointer-events:none"></div>
+<div id="reading-progress-bar"></div>
 <header class="site-header">
   <div class="wrap hdr">
     <a class="brand" href="/">zebMalik<em>.tech</em></a>
@@ -781,6 +781,10 @@
       <a href="/free-sample" class="navcta">Free sample</a>
     </nav>
     <div class="hdr-actions">
+      <button class="cmd-trigger-btn" type="button" aria-label="Open command palette" title="Search articles, tools, and actions (Ctrl+K)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="cmd-trigger-kbd">⌘K</span>
+      </button>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle dark/light mode">
         <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -860,6 +864,18 @@
           </div>
         </div>
       </div>
+
+      <!-- Recommended Next Reads (Related Articles) -->
+      <section id="related-articles-section" class="related-articles-section" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+          <div>
+            <span class="label" style="margin-bottom:4px">Continue Reading</span>
+            <h3 style="margin:0;font-size:1.35rem">Recommended Next Reads</h3>
+          </div>
+          <a href="/blog" class="arrow-link" style="font-size:13.5px">Explore all &rarr;</a>
+        </div>
+        <div id="related-cards-grid" class="related-cards-grid"></div>
+      </section>
 
       <!-- Mobile/Tablet Tools Strip (Visible on smaller viewports where sidebar is hidden) -->
       <div class="mobile-tools-card">
@@ -1035,7 +1051,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="blog-config.js?v=9"></script>
+<script src="blog-config.js?v=10"></script>
+<script src="cmd-palette.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   var params = new URLSearchParams(window.location.search);
@@ -1113,10 +1130,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     var rawContent = post.content_markdown || '';
     var wordCount = rawContent.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
     var readMinutes = Math.max(1, Math.round(wordCount / 200));
+    window.currentPostReadMinutes = readMinutes;
 
     document.getElementById('post-meta').textContent = (post.tags && post.tags.length ? post.tags.join(' · ') : 'Research');
     var authorBylineHtml = (post.profiles && post.profiles.username) ? '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--line-2)" title="View Author Profile">' + authorName + '</a>' : authorName;
-    document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorBylineHtml + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + readMinutes + ' min read</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span>';
+    var isBm = (typeof ZebBlog !== 'undefined' && ZebBlog.isBookmarked) ? ZebBlog.isBookmarked(post.slug) : false;
+    var bmBtnHtml = '<button type="button" id="post-byline-bm" class="btn-bookmark' + (isBm ? ' is-bookmarked' : '') + '" title="' + (isBm ? 'Remove bookmark' : 'Save article for later') + '" aria-label="Bookmark article">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+      '<span>' + (isBm ? 'Saved' : 'Save') + '</span>' +
+    '</button>';
+    document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorBylineHtml + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + readMinutes + ' min read</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span><span>•</span>' + bmBtnHtml;
 
     var coverUrl = post.cover_image_url;
     if (post.slug === 'building-production-rag-systems-python' && (!coverUrl || coverUrl.includes('1677442136019-21780efad99a'))) {
@@ -1386,6 +1409,136 @@ document.addEventListener('DOMContentLoaded', async function () {
       ZebBlog.trackVerifiedView(post.id);
     }
 
+    // 1. Sync Bookmarking & Attach Listeners
+    var floatingBmBtn = document.getElementById('reader-btn-bookmark');
+    if (floatingBmBtn && isBm) {
+      floatingBmBtn.classList.add('is-bookmarked');
+      floatingBmBtn.setAttribute('title', 'Remove bookmark');
+    }
+
+    function syncBookmarkState(added) {
+      var inlineBm = document.getElementById('post-byline-bm');
+      if (inlineBm) {
+        if (added) {
+          inlineBm.classList.add('is-bookmarked');
+          inlineBm.querySelector('span').textContent = 'Saved';
+          inlineBm.setAttribute('title', 'Remove bookmark');
+        } else {
+          inlineBm.classList.remove('is-bookmarked');
+          inlineBm.querySelector('span').textContent = 'Save';
+          inlineBm.setAttribute('title', 'Save article for later');
+        }
+      }
+      if (floatingBmBtn) {
+        if (added) {
+          floatingBmBtn.classList.add('is-bookmarked');
+          floatingBmBtn.setAttribute('title', 'Remove bookmark');
+        } else {
+          floatingBmBtn.classList.remove('is-bookmarked');
+          floatingBmBtn.setAttribute('title', 'Save article for later');
+        }
+      }
+    }
+
+    var inlineBmBtn = document.getElementById('post-byline-bm');
+    if (inlineBmBtn) {
+      inlineBmBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (typeof ZebBlog !== 'undefined' && ZebBlog.toggleBookmark) {
+          var added = ZebBlog.toggleBookmark(post.slug);
+          syncBookmarkState(added);
+        }
+      });
+    }
+
+    if (floatingBmBtn) {
+      floatingBmBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (typeof ZebBlog !== 'undefined' && ZebBlog.toggleBookmark) {
+          var added = ZebBlog.toggleBookmark(post.slug);
+          syncBookmarkState(added);
+        }
+      });
+    }
+
+    // 2. Font Size Adjuster Mode
+    var savedFontSize = 'md';
+    try { savedFontSize = localStorage.getItem('zebmalik_reader_fontsize') || 'md'; } catch(_) {}
+    document.body.classList.remove('reading-size-sm', 'reading-size-md', 'reading-size-lg');
+    document.body.classList.add('reading-size-' + savedFontSize);
+
+    var fontBtn = document.getElementById('reader-btn-font');
+    if (fontBtn) {
+      fontBtn.addEventListener('click', function () {
+        var current = 'md';
+        if (document.body.classList.contains('reading-size-sm')) current = 'sm';
+        else if (document.body.classList.contains('reading-size-lg')) current = 'lg';
+
+        var next = (current === 'md') ? 'lg' : (current === 'lg' ? 'sm' : 'md');
+        document.body.classList.remove('reading-size-sm', 'reading-size-md', 'reading-size-lg');
+        document.body.classList.add('reading-size-' + next);
+        try { localStorage.setItem('zebmalik_reader_fontsize', next); } catch(_) {}
+      });
+    }
+
+    // 3. Floating Bar Share & Scroll-to-Top Handlers
+    var floatingShareBtn = document.getElementById('reader-btn-share');
+    if (floatingShareBtn) {
+      floatingShareBtn.addEventListener('click', function () {
+        if (navigator.share) {
+          navigator.share({
+            title: post.title,
+            text: post.excerpt || post.title,
+            url: window.location.href
+          }).catch(function () {});
+        } else {
+          shareArticle('copy');
+        }
+      });
+    }
+
+    var floatingTopBtn = document.getElementById('reader-btn-top');
+    if (floatingTopBtn) {
+      floatingTopBtn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // 4. Load Recommended Next Reads (Related Articles)
+    try {
+      if (typeof ZebBlog !== 'undefined' && ZebBlog.fetchPublishedPosts && ZebBlog.getRelatedPosts) {
+        ZebBlog.fetchPublishedPosts(20).then(function (allPosts) {
+          var related = ZebBlog.getRelatedPosts(post, allPosts, 3);
+          if (related && related.length) {
+            var grid = document.getElementById('related-cards-grid');
+            if (grid) {
+              grid.innerHTML = '';
+              related.forEach(function (rel) {
+                var card = document.createElement('a');
+                card.href = '/post?slug=' + encodeURIComponent(rel.slug);
+                card.className = 'related-card';
+                card.innerHTML = 
+                  '<div class="related-card-meta">' +
+                    '<span>' + (rel.category_icon || '📚') + ' ' + (rel.category_label || 'Engineering') + '</span>' +
+                    '<span>&middot;</span>' +
+                    '<span>' + (rel.read_minutes || 5) + ' min</span>' +
+                  '</div>' +
+                  '<h4 class="related-card-title">' + rel.title + '</h4>' +
+                  '<p class="related-card-excerpt">' + (rel.excerpt || 'Read the full engineering deep dive...') + '</p>' +
+                  '<div class="related-card-footer">' +
+                    '<span>By ' + (rel.profiles ? rel.profiles.full_name : 'Contributor') + '</span>' +
+                    '<span style="color:var(--accent);font-weight:600">Read &rarr;</span>' +
+                  '</div>';
+                grid.appendChild(card);
+              });
+              var sec = document.getElementById('related-articles-section');
+              if (sec) sec.style.display = 'block';
+            }
+          }
+        });
+      }
+    } catch (_) {}
+
   } catch (err) {
     console.error('Error loading article:', err);
     document.getElementById('post-content').innerHTML = '<p class="is-error">Unable to connect to database. Please check your Supabase credentials in blog-config.js.</p>';
@@ -1503,8 +1656,35 @@ window.addEventListener('scroll', function() {
   var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
   var prog = document.getElementById('read-progress-fill');
   if (prog) prog.style.width = scrolled + '%';
-  var topProg = document.getElementById('read-top-progress');
+  var topProg = document.getElementById('reading-progress-bar') || document.getElementById('read-top-progress');
   if (topProg) topProg.style.width = scrolled + '%';
+
+  // Dynamic Time Left & Floating Reader Bar Visibility
+  var floatingBar = document.getElementById('floating-reader-bar');
+  var barTimeEl = document.getElementById('reader-bar-time');
+  var topBtn = document.getElementById('reader-btn-top');
+
+  if (floatingBar) {
+    if (winScroll > 220) {
+      floatingBar.style.display = 'flex';
+    } else {
+      floatingBar.style.display = 'none';
+    }
+  }
+
+  if (topBtn) {
+    topBtn.style.display = (winScroll > 450) ? 'inline-flex' : 'none';
+  }
+
+  if (barTimeEl) {
+    var totalM = window.currentPostReadMinutes || 5;
+    var rem = Math.max(1, Math.ceil(totalM * (1 - (scrolled / 100))));
+    if (scrolled >= 95) {
+      barTimeEl.textContent = 'Finished 🎉';
+    } else {
+      barTimeEl.textContent = rem + ' min left';
+    }
+  }
 
   // Scroll Spy for TOC
   var content = document.getElementById('post-content');
@@ -1534,5 +1714,23 @@ window.addEventListener('scroll', function() {
   });
 }, { passive: true });
 </script>
+
+<!-- Floating Reader Quick Actions Bar -->
+<div id="floating-reader-bar" class="floating-reader-bar" style="display:none" role="toolbar" aria-label="Reader quick actions">
+  <span class="reader-time-left" id="reader-bar-time">5 min left</span>
+  <span class="reader-bar-sep"></span>
+  <button class="reader-action-btn" id="reader-btn-font" type="button" title="Cycle font size (Default / Medium / Large)" aria-label="Cycle font size">
+    <span style="font-weight:700;font-size:12px;font-family:var(--sans)">A<sup style="font-size:9px">+</sup></span>
+  </button>
+  <button class="reader-action-btn btn-bookmark" id="reader-btn-bookmark" type="button" title="Save article for later" aria-label="Bookmark article">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+  </button>
+  <button class="reader-action-btn" id="reader-btn-share" type="button" title="Share article link" aria-label="Share article">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  </button>
+  <button class="reader-action-btn" id="reader-btn-top" type="button" title="Back to top" aria-label="Scroll to top" style="display:none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+</div>
 </body>
 </html>

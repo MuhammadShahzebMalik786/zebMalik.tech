@@ -481,6 +481,10 @@
       <a href="/free-sample" class="navcta">Free sample</a>
     </nav>
     <div class="hdr-actions">
+      <button class="cmd-trigger-btn" type="button" aria-label="Open command palette" title="Search articles, tools, and actions (Ctrl+K)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="cmd-trigger-kbd">⌘K</span>
+      </button>
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle dark/light mode">
         <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
@@ -653,6 +657,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="blog-config.js?v=10"></script>
+<script src="cmd-palette.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   var container = document.getElementById('posts-container');
@@ -669,13 +674,16 @@ document.addEventListener('DOMContentLoaded', async function () {
   var currentTag = '';
   var currentSearchQuery = '';
 
-  // Check URL query parameters for initial filter (e.g. ?category=ai-agents or ?tag=python or ?q=duckdb)
+  // Check URL query parameters for initial filter (e.g. ?category=ai-agents or ?tag=python or ?q=duckdb or ?filter=bookmarks)
   var urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('category')) currentCatId = urlParams.get('category');
   if (urlParams.get('tag')) currentTag = urlParams.get('tag');
   if (urlParams.get('q')) {
     currentSearchQuery = urlParams.get('q');
     if (searchInput) searchInput.value = currentSearchQuery;
+  }
+  if (urlParams.get('bookmarks') === '1' || urlParams.get('filter') === 'bookmarks' || urlParams.get('category') === '__bookmarks__') {
+    currentCatId = '__bookmarks__';
   }
 
   function renderCategoryPills() {
@@ -695,6 +703,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       btn.className = 'cat-pill-btn' + (currentCatId === cat.id ? ' is-active' : '');
       btn.setAttribute('role', 'tab');
       btn.setAttribute('aria-selected', currentCatId === cat.id ? 'true' : 'false');
+      btn.dataset.category = cat.id;
       btn.innerHTML = '<span>' + cat.icon + ' ' + cat.label + '</span><span class="cat-pill-count">' + count + '</span>';
       
       btn.addEventListener('click', function () {
@@ -704,21 +713,33 @@ document.addEventListener('DOMContentLoaded', async function () {
 
       catPillsContainer.appendChild(btn);
     });
+
+    // Dedicated Saved / Bookmarks Tab
+    var savedCount = (typeof ZebBlog !== 'undefined' && ZebBlog.getBookmarks) ? ZebBlog.getBookmarks().length : 0;
+    var bmBtn = document.createElement('button');
+    bmBtn.type = 'button';
+    bmBtn.className = 'cat-pill-btn' + (currentCatId === '__bookmarks__' ? ' is-active' : '');
+    bmBtn.setAttribute('role', 'tab');
+    bmBtn.setAttribute('aria-selected', currentCatId === '__bookmarks__' ? 'true' : 'false');
+    bmBtn.dataset.category = '__bookmarks__';
+    bmBtn.innerHTML = '<span>🔖 Saved</span><span class="cat-pill-count">' + savedCount + '</span>';
+    bmBtn.addEventListener('click', function () {
+      currentCatId = '__bookmarks__';
+      updateView();
+    });
+    catPillsContainer.appendChild(bmBtn);
   }
 
   function updateView() {
     // 1. Update Active Category Buttons
     var buttons = catPillsContainer.querySelectorAll('.cat-pill-btn');
-    buttons.forEach(function (btn, idx) {
-      var cat = ZebBlog.CATEGORIES[idx];
-      if (cat) {
-        if (cat.id === currentCatId) {
-          btn.classList.add('is-active');
-          btn.setAttribute('aria-selected', 'true');
-        } else {
-          btn.classList.remove('is-active');
-          btn.setAttribute('aria-selected', 'false');
-        }
+    buttons.forEach(function (btn) {
+      if (btn.dataset.category === currentCatId) {
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected', 'true');
+      } else {
+        btn.classList.remove('is-active');
+        btn.setAttribute('aria-selected', 'false');
       }
     });
 
@@ -738,16 +759,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // 4. Filter Posts (Instant in-memory 0ms response)
+    var isBookmarksView = (currentCatId === '__bookmarks__');
     var filtered = ZebBlog.filterPosts(allPosts, {
       query: currentSearchQuery,
-      categoryId: currentCatId,
+      categoryId: isBookmarksView ? 'all' : currentCatId,
+      onlyBookmarks: isBookmarksView,
       tag: currentTag
     });
 
     // 5. Update Status Count
     if (resultsCountEl) {
       var totalText = 'Showing ' + filtered.length + ' of ' + allPosts.length + ' articles';
-      if (currentSearchQuery) {
+      if (isBookmarksView) {
+        totalText = filtered.length + ' saved article' + (filtered.length === 1 ? '' : 's');
+      } else if (currentSearchQuery) {
         totalText = 'Found ' + filtered.length + ' article' + (filtered.length === 1 ? '' : 's') + ' for "' + currentSearchQuery + '"';
       } else if (currentCatId !== 'all') {
         var catObj = ZebBlog.CATEGORIES.find(function(c){return c.id === currentCatId;});
@@ -766,22 +791,42 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (!posts || posts.length === 0) {
       var emptyDiv = document.createElement('div');
       emptyDiv.className = 'blog-empty-state';
-      emptyDiv.innerHTML = 
-        '<div class="empty-icon">🔍</div>' +
-        '<h3>No matching articles found</h3>' +
-        '<p>Try adjusting your search terms, clearing filters, or exploring another category.</p>' +
-        '<button type="button" class="btn btn-out" id="btn-reset-filters">Reset All Filters</button>';
-      container.appendChild(emptyDiv);
+      if (currentCatId === '__bookmarks__') {
+        emptyDiv.innerHTML = 
+          '<div class="empty-icon">🔖</div>' +
+          '<h3>No saved articles yet</h3>' +
+          '<p>Click the "Save" ribbon on any article to add it to your personal reading list.</p>' +
+          '<button type="button" class="btn btn-out" id="btn-browse-all">Browse All Articles</button>';
+        container.appendChild(emptyDiv);
 
-      var resetBtn = document.getElementById('btn-reset-filters');
-      if (resetBtn) {
-        resetBtn.addEventListener('click', function () {
-          currentCatId = 'all';
-          currentTag = '';
-          currentSearchQuery = '';
-          if (searchInput) searchInput.value = '';
-          updateView();
-        });
+        var browseBtn = document.getElementById('btn-browse-all');
+        if (browseBtn) {
+          browseBtn.addEventListener('click', function () {
+            currentCatId = 'all';
+            currentTag = '';
+            currentSearchQuery = '';
+            if (searchInput) searchInput.value = '';
+            updateView();
+          });
+        }
+      } else {
+        emptyDiv.innerHTML = 
+          '<div class="empty-icon">🔍</div>' +
+          '<h3>No matching articles found</h3>' +
+          '<p>Try adjusting your search terms, clearing filters, or exploring another category.</p>' +
+          '<button type="button" class="btn btn-out" id="btn-reset-filters">Reset All Filters</button>';
+        container.appendChild(emptyDiv);
+
+        var resetBtn = document.getElementById('btn-reset-filters');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', function () {
+            currentCatId = 'all';
+            currentTag = '';
+            currentSearchQuery = '';
+            if (searchInput) searchInput.value = '';
+            updateView();
+          });
+        }
       }
       return;
     }
@@ -794,6 +839,13 @@ document.addEventListener('DOMContentLoaded', async function () {
       var authorName = post.profiles ? post.profiles.full_name : 'Contributor';
       var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : 'Recent';
       var readMinutes = post.read_minutes || 5;
+
+      var isBm = (typeof ZebBlog !== 'undefined' && ZebBlog.isBookmarked) ? ZebBlog.isBookmarked(post.slug) : false;
+      var bmBtnHtml = 
+        '<button type="button" class="btn-bookmark' + (isBm ? ' is-bookmarked' : '') + '" data-slug="' + post.slug + '" title="' + (isBm ? 'Remove bookmark' : 'Save article for later') + '" aria-label="Bookmark article">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+          '<span>' + (isBm ? 'Saved' : 'Save') + '</span>' +
+        '</button>';
 
       var imgUrl = post.cover_image_url;
       if (post.slug === 'building-production-rag-systems-python' && (!imgUrl || imgUrl.includes('1677442136019-21780efad99a'))) {
@@ -837,12 +889,39 @@ document.addEventListener('DOMContentLoaded', async function () {
               '<span>by ' + (post.profiles && post.profiles.username ? '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:none;font-weight:600;border-bottom:1px dotted var(--line-2)" title="View ' + authorName + '\'s Profile">' + authorName + '</a>' : '<strong>' + authorName + '</strong>') + '</span>' +
               '<span class="meta-dot" aria-hidden="true">&middot;</span>' +
               '<span class="views-txt" title="Verified human reads"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:2px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' + (post.view_count || 0).toLocaleString() + ' reads</span>' +
+              '<span class="meta-dot" aria-hidden="true">&middot;</span>' +
+              bmBtnHtml +
             '</div>' +
           '</div>' +
         '</div>' +
         thumbHtml;
 
       container.appendChild(row);
+    });
+
+    // Wire up bookmark ribbons inside rows
+    container.querySelectorAll('.btn-bookmark').forEach(function (bmBtn) {
+      bmBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var slug = this.dataset.slug;
+        if (typeof ZebBlog !== 'undefined' && ZebBlog.toggleBookmark) {
+          var added = ZebBlog.toggleBookmark(slug);
+          if (added) {
+            this.classList.add('is-bookmarked');
+            this.querySelector('span').textContent = 'Saved';
+            this.setAttribute('title', 'Remove bookmark');
+          } else {
+            this.classList.remove('is-bookmarked');
+            this.querySelector('span').textContent = 'Save';
+            this.setAttribute('title', 'Save article for later');
+          }
+          renderCategoryPills();
+          if (currentCatId === '__bookmarks__') {
+            updateView();
+          }
+        }
+      });
     });
 
     // Wire up tag badges inside rows

@@ -257,14 +257,88 @@
     return Math.max(minutes, 3);
   }
 
+  // --- Bookmarks & Read Later (localStorage) ---
+  var BOOKMARKS_KEY = 'zebmalik_blog_bookmarks';
+
+  function getBookmarks() {
+    try {
+      var data = localStorage.getItem(BOOKMARKS_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function isBookmarked(slug) {
+    if (!slug) return false;
+    var list = getBookmarks();
+    return list.indexOf(slug) !== -1;
+  }
+
+  function toggleBookmark(slug) {
+    if (!slug) return false;
+    var list = getBookmarks();
+    var idx = list.indexOf(slug);
+    var added = false;
+    if (idx !== -1) {
+      list.splice(idx, 1);
+      added = false;
+    } else {
+      list.unshift(slug);
+      added = true;
+    }
+    try {
+      localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(list));
+    } catch (_) {}
+    return added;
+  }
+
+  // --- Related Articles Recommender ---
+  function getRelatedPosts(currentPost, allPosts, limit) {
+    limit = limit || 3;
+    if (!currentPost || !allPosts || !allPosts.length) return [];
+    var curTags = (currentPost.tags || []).map(function(t) { return (t || '').toLowerCase(); });
+    var curCat = currentPost.category_id;
+    var curSlug = currentPost.slug;
+
+    var scored = allPosts
+      .filter(function(p) { return p.slug !== curSlug; })
+      .map(function(p) {
+        var score = 0;
+        if (p.category_id === curCat) score += 4;
+        var pTags = (p.tags || []).map(function(t) { return (t || '').toLowerCase(); });
+        pTags.forEach(function(t) {
+          if (curTags.indexOf(t) !== -1) score += 2;
+        });
+        return { post: p, score: score };
+      });
+
+    scored.sort(function(a, b) {
+      if (b.score !== a.score) return b.score - a.score;
+      return (b.post.view_count || 0) - (a.post.view_count || 0);
+    });
+
+    return scored.slice(0, limit).map(function(item) { return item.post; });
+  }
+
   function filterPosts(posts, criteria) {
     if (!posts || !Array.isArray(posts)) return [];
     criteria = criteria || {};
     var query = (criteria.query || '').trim().toLowerCase();
     var catId = criteria.categoryId || 'all';
     var tag = (criteria.tag || '').trim().toLowerCase();
+    var onlyBookmarks = Boolean(criteria.onlyBookmarks);
+
+    var bookmarkedSlugs = onlyBookmarks ? getBookmarks() : [];
 
     return posts.filter(function (post) {
+      // 0. Bookmarks check
+      if (onlyBookmarks) {
+        if (bookmarkedSlugs.indexOf(post.slug) === -1) {
+          return false;
+        }
+      }
+
       // 1. Category check
       if (catId && catId !== 'all') {
         if (post.category_id !== catId) {
@@ -749,6 +823,10 @@
     filterPosts: filterPosts,
     fetchPublicAuthor: fetchPublicAuthor,
     fetchAuthorPublishedPosts: fetchAuthorPublishedPosts,
-    updateAuthorProfile: updateAuthorProfile
+    updateAuthorProfile: updateAuthorProfile,
+    getBookmarks: getBookmarks,
+    isBookmarked: isBookmarked,
+    toggleBookmark: toggleBookmark,
+    getRelatedPosts: getRelatedPosts
   };
 }));
