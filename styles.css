@@ -947,3 +947,37 @@ body[data-tool] .tool-grid .item:nth-child(5){animation-delay:.24s}
   }
 }
 
+/* Floating Instant Feedback Toast */
+.reader-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 20px;
+  border-radius: 40px;
+  font-size: 13.5px;
+  font-family: var(--sans);
+  font-weight: 500;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
+  z-index: 10006;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+[data-theme="dark"] .reader-toast {
+  background: #232730;
+  color: #f0f2f5;
+  border: 1px solid #3b404d;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+}
+.reader-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+

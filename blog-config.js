@@ -257,15 +257,16 @@
     return Math.max(minutes, 3);
   }
 
-  // --- Bookmarks & Read Later (localStorage) ---
+  // --- Bookmarks & Read Later (localStorage with memory fallback) ---
   var BOOKMARKS_KEY = 'zebmalik_blog_bookmarks';
+  var _memBookmarks = [];
 
   function getBookmarks() {
     try {
       var data = localStorage.getItem(BOOKMARKS_KEY);
-      return data ? JSON.parse(data) : [];
+      return data ? JSON.parse(data) : _memBookmarks;
     } catch (_) {
-      return [];
+      return _memBookmarks;
     }
   }
 
@@ -287,6 +288,7 @@
       list.unshift(slug);
       added = true;
     }
+    _memBookmarks = list;
     try {
       localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(list));
     } catch (_) {}

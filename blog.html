@@ -656,7 +656,7 @@
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="blog-config.js?v=10"></script>
+<script src="blog-config.js?v=12"></script>
 <script src="cmd-palette.js?v=2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
@@ -668,6 +668,43 @@ document.addEventListener('DOMContentLoaded', async function () {
   var activeTagBadge = document.getElementById('active-tag-badge');
   var activeTagText = document.getElementById('active-tag-text');
   var btnClearTag = document.getElementById('btn-clear-tag');
+
+  // Robust Bookmark Storage Engine with local fallback
+  function getBookmarksSafe() {
+    if (typeof ZebBlog !== 'undefined' && ZebBlog.getBookmarks) return ZebBlog.getBookmarks();
+    try { return JSON.parse(localStorage.getItem('zebmalik_blog_bookmarks') || '[]'); } catch (_) { return []; }
+  }
+  function isBookmarkedSafe(slug) {
+    if (typeof ZebBlog !== 'undefined' && ZebBlog.isBookmarked) return ZebBlog.isBookmarked(slug);
+    return getBookmarksSafe().indexOf(slug) !== -1;
+  }
+  function toggleBookmarkSafe(slug) {
+    if (typeof ZebBlog !== 'undefined' && ZebBlog.toggleBookmark) return ZebBlog.toggleBookmark(slug);
+    if (!slug) return false;
+    var list = getBookmarksSafe();
+    var idx = list.indexOf(slug);
+    var added = false;
+    if (idx !== -1) { list.splice(idx, 1); added = false; }
+    else { list.unshift(slug); added = true; }
+    try { localStorage.setItem('zebmalik_blog_bookmarks', JSON.stringify(list)); } catch (_) {}
+    return added;
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById('reader-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'reader-toast';
+      toast.className = 'reader-toast';
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = msg;
+    toast.classList.add('is-visible');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(function () {
+      toast.classList.remove('is-visible');
+    }, 2800);
+  }
 
   var allPosts = [];
   var currentCatId = 'all';
@@ -715,7 +752,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     // Dedicated Saved / Bookmarks Tab
-    var savedCount = (typeof ZebBlog !== 'undefined' && ZebBlog.getBookmarks) ? ZebBlog.getBookmarks().length : 0;
+    var savedCount = getBookmarksSafe().length;
     var bmBtn = document.createElement('button');
     bmBtn.type = 'button';
     bmBtn.className = 'cat-pill-btn' + (currentCatId === '__bookmarks__' ? ' is-active' : '');
@@ -760,12 +797,21 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // 4. Filter Posts (Instant in-memory 0ms response)
     var isBookmarksView = (currentCatId === '__bookmarks__');
-    var filtered = ZebBlog.filterPosts(allPosts, {
-      query: currentSearchQuery,
-      categoryId: isBookmarksView ? 'all' : currentCatId,
-      onlyBookmarks: isBookmarksView,
-      tag: currentTag
-    });
+    var filtered = [];
+    if (typeof ZebBlog !== 'undefined' && ZebBlog.filterPosts) {
+      filtered = ZebBlog.filterPosts(allPosts, {
+        query: currentSearchQuery,
+        categoryId: isBookmarksView ? 'all' : currentCatId,
+        onlyBookmarks: isBookmarksView,
+        tag: currentTag
+      });
+    } else {
+      var bms = getBookmarksSafe();
+      filtered = allPosts.filter(function (p) {
+        if (isBookmarksView && bms.indexOf(p.slug) === -1) return false;
+        return true;
+      });
+    }
 
     // 5. Update Status Count
     if (resultsCountEl) {
@@ -840,7 +886,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : 'Recent';
       var readMinutes = post.read_minutes || 5;
 
-      var isBm = (typeof ZebBlog !== 'undefined' && ZebBlog.isBookmarked) ? ZebBlog.isBookmarked(post.slug) : false;
+      var isBm = isBookmarkedSafe(post.slug);
       var bmBtnHtml = 
         '<button type="button" class="btn-bookmark' + (isBm ? ' is-bookmarked' : '') + '" data-slug="' + post.slug + '" title="' + (isBm ? 'Remove bookmark' : 'Save article for later') + '" aria-label="Bookmark article">' +
           '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
@@ -899,31 +945,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       container.appendChild(row);
     });
 
-    // Wire up bookmark ribbons inside rows
-    container.querySelectorAll('.btn-bookmark').forEach(function (bmBtn) {
-      bmBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var slug = this.dataset.slug;
-        if (typeof ZebBlog !== 'undefined' && ZebBlog.toggleBookmark) {
-          var added = ZebBlog.toggleBookmark(slug);
-          if (added) {
-            this.classList.add('is-bookmarked');
-            this.querySelector('span').textContent = 'Saved';
-            this.setAttribute('title', 'Remove bookmark');
-          } else {
-            this.classList.remove('is-bookmarked');
-            this.querySelector('span').textContent = 'Save';
-            this.setAttribute('title', 'Save article for later');
-          }
-          renderCategoryPills();
-          if (currentCatId === '__bookmarks__') {
-            updateView();
-          }
-        }
-      });
-    });
-
     // Wire up tag badges inside rows
     container.querySelectorAll('.blog-tag-badge').forEach(function (tagBtn) {
       tagBtn.addEventListener('click', function (e) {
@@ -978,6 +999,44 @@ document.addEventListener('DOMContentLoaded', async function () {
       updateView();
     });
   }
+
+  // Global Event Delegation for Bookmark Buttons & Instant Toast Feedback
+  document.addEventListener('click', function (e) {
+    var bmBtn = e.target.closest('.btn-bookmark');
+    if (!bmBtn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    var slug = bmBtn.dataset.slug;
+    if (!slug) return;
+
+    var added = toggleBookmarkSafe(slug);
+
+    // Sync all bookmark buttons on the page with this slug
+    document.querySelectorAll('.btn-bookmark[data-slug="' + slug + '"]').forEach(function (btn) {
+      var span = btn.querySelector('span');
+      if (added) {
+        btn.classList.add('is-bookmarked');
+        if (span) span.textContent = 'Saved';
+        btn.setAttribute('title', 'Remove bookmark');
+      } else {
+        btn.classList.remove('is-bookmarked');
+        if (span) span.textContent = 'Save';
+        btn.setAttribute('title', 'Save article for later');
+      }
+    });
+
+    if (added) {
+      showToast('🔖 Article saved! View it anytime in the <strong>Saved tab</strong>');
+    } else {
+      showToast('Article removed from saved reading list.');
+    }
+
+    renderCategoryPills();
+    if (currentCatId === '__bookmarks__') {
+      updateView();
+    }
+  });
 
   // Load Posts from Supabase
   try {
