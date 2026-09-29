@@ -87,11 +87,85 @@
     } catch (_) {}
   }
 
+  function injectStyles() {
+    if (document.getElementById('cmd-palette-injected-styles')) return;
+    var style = document.createElement('style');
+    style.id = 'cmd-palette-injected-styles';
+    style.textContent = 
+      '#cmd-palette-backdrop{' +
+        'position:fixed;inset:0;background:rgba(18,19,22,0.72);' +
+        'backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);' +
+        'z-index:10005;display:none;align-items:flex-start;justify-content:center;' +
+        'padding-top:12vh;padding-left:16px;padding-right:16px;box-sizing:border-box;' +
+      '}' +
+      '#cmd-palette-box{' +
+        'background:var(--paper,#fff);border:1px solid var(--line,#e2e4e8);' +
+        'border-radius:12px;width:100%;max-width:600px;' +
+        'box-shadow:0 24px 60px rgba(0,0,0,0.35);overflow:hidden;' +
+        'display:flex;flex-direction:column;max-height:70vh;box-sizing:border-box;' +
+      '}' +
+      '[data-theme="dark"] #cmd-palette-box{' +
+        'background:#181a1f;border-color:#2e323b;box-shadow:0 24px 60px rgba(0,0,0,0.65);' +
+      '}' +
+      '.cmd-input-wrap{' +
+        'display:flex;align-items:center;padding:0 18px;border-bottom:1px solid var(--line,#e2e4e8);' +
+        'gap:12px;background:transparent;' +
+      '}' +
+      '[data-theme="dark"] .cmd-input-wrap{border-bottom-color:#2e323b;}' +
+      '.cmd-input-wrap svg{color:var(--ink-3,#8a919e);flex-shrink:0;}' +
+      '#cmd-search-input{' +
+        'flex:1;border:none;outline:none;background:transparent;' +
+        'font-family:inherit;font-size:15.5px;color:var(--ink,#121316);padding:16px 0;' +
+      '}' +
+      '[data-theme="dark"] #cmd-search-input{color:#f0f2f5;}' +
+      '#cmd-search-input::placeholder{color:var(--ink-3,#8a919e);}' +
+      '.cmd-results-list{' +
+        'overflow-y:auto;padding:8px;display:flex;flex-direction:column;gap:3px;' +
+        'max-height:calc(70vh - 110px);' +
+      '}' +
+      '.cmd-group-title{' +
+        'font-family:var(--mono,monospace);font-size:11px;text-transform:uppercase;' +
+        'letter-spacing:0.08em;color:var(--ink-3,#8a919e);padding:8px 12px 4px 12px;' +
+      '}' +
+      '.cmd-item{' +
+        'display:flex;align-items:center;justify-content:space-between;padding:9px 12px;' +
+        'border-radius:6px;color:var(--ink,#121316);text-decoration:none;font-size:14px;' +
+        'cursor:pointer;transition:background 0.1s ease;' +
+      '}' +
+      '[data-theme="dark"] .cmd-item{color:#e4e7eb;}' +
+      '.cmd-item:hover,.cmd-item.is-selected{background:var(--paper-2,#f5f6f8);}' +
+      '[data-theme="dark"] .cmd-item:hover,[data-theme="dark"] .cmd-item.is-selected{background:#232730;}' +
+      '.cmd-item-left{display:flex;align-items:center;gap:10px;min-width:0;}' +
+      '.cmd-item-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}' +
+      '.cmd-item-badge{' +
+        'font-family:var(--mono,monospace);font-size:11px;color:var(--ink-3,#8a919e);' +
+        'background:var(--paper-3,#ebedf0);padding:1px 6px;border-radius:3px;flex-shrink:0;' +
+      '}' +
+      '[data-theme="dark"] .cmd-item-badge{background:#2b303c;color:#9ba3b0;}' +
+      '.cmd-footer{' +
+        'display:flex;align-items:center;justify-content:space-between;padding:8px 16px;' +
+        'background:var(--paper-2,#f8f9fa);border-top:1px solid var(--line,#e2e4e8);' +
+        'font-size:11.5px;color:var(--ink-3,#8a919e);font-family:var(--mono,monospace);' +
+      '}' +
+      '[data-theme="dark"] .cmd-footer{background:#14161a;border-top-color:#2e323b;}' +
+      '.cmd-footer kbd{' +
+        'background:var(--paper,#fff);border:1px solid var(--line,#e2e4e8);' +
+        'padding:1px 5px;border-radius:3px;font-size:10px;color:var(--ink-2,#555c68);' +
+      '}' +
+      '[data-theme="dark"] .cmd-footer kbd{background:#232730;border-color:#3b404d;color:#adb5c2;}' +
+      '@media(max-width:640px){' +
+        '#cmd-palette-backdrop{padding-top:6vh;padding-left:10px;padding-right:10px;}' +
+      '}';
+    document.head.appendChild(style);
+  }
+
   function createModal() {
+    injectStyles();
     backdropEl = document.getElementById('cmd-palette-backdrop');
     if (!backdropEl) {
       backdropEl = document.createElement('div');
       backdropEl.id = 'cmd-palette-backdrop';
+      backdropEl.style.cssText = 'position:fixed;inset:0;display:none;z-index:10005;';
       backdropEl.setAttribute('role', 'dialog');
       backdropEl.setAttribute('aria-modal', 'true');
       backdropEl.setAttribute('aria-label', 'Command Palette');
@@ -111,6 +185,8 @@
         '</div>';
 
       document.body.appendChild(backdropEl);
+    } else {
+      backdropEl.style.display = 'none';
     }
 
     boxEl = document.getElementById('cmd-palette-box');
