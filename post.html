@@ -732,15 +732,17 @@
   }
 </style>
 <!-- SEO-META -->
+<link rel="canonical" id="canonical-meta" href="https://zebmalik.tech/post">
+
 <script>
   (function() {
     var params = new URLSearchParams(window.location.search);
     var slug = params.get('slug');
-    var canonicalUrl = slug ? ('https://zebmalik.tech/post?slug=' + encodeURIComponent(slug)) : 'https://zebmalik.tech/post';
-    var link = document.createElement('link');
-    link.rel = 'canonical';
-    link.href = canonicalUrl;
-    document.head.appendChild(link);
+    if (slug) {
+      var canonicalUrl = 'https://zebmalik.tech/post?slug=' + encodeURIComponent(slug);
+      var link = document.getElementById('canonical-meta');
+      if (link) link.href = canonicalUrl;
+    }
   })();
 </script>
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -759,30 +761,31 @@
 <meta name="twitter:image" content="https://zebmalik.tech/android-chrome-512x512.png">
 <meta name="google-adsense-account" content="ca-pub-9522829065676411">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9522829065676411" crossorigin="anonymous"></script>
+<script type="application/ld+json" id="post-jsonld">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Engineering Research & Technical Systems — zebMalik.tech", "description": "In-depth technical research, architecture patterns, and engineering systems.", "url": "https://zebmalik.tech/post", "publisher": {"@type": "Organization", "name": "zebMalik.tech", "url": "https://zebmalik.tech/", "logo": {"@type": "ImageObject", "url": "https://zebmalik.tech/android-chrome-512x512.png"}}}</script>
 <!-- /SEO-META -->
 </head>
 <body>
 <div id="read-top-progress" style="position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0%;z-index:99999;transition:width 0.08s ease;pointer-events:none"></div>
 <header class="site-header">
   <div class="wrap hdr">
-    <a class="brand" href="index.html">zebMalik<em>.tech</em></a>
+    <a class="brand" href="/">zebMalik<em>.tech</em></a>
     <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
     <nav class="mainnav">
-      <a href="services.html">Services</a>
-      <a href="tools.html">Tools</a>
-      <a href="blog.html">Blog</a>
-      <a href="work.html">Work</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="free-sample.html" class="navcta">Free sample</a>
+      <a href="/services">Services</a>
+      <a href="/tools">Tools</a>
+      <a href="/blog">Blog</a>
+      <a href="/work">Work</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/free-sample" class="navcta">Free sample</a>
     </nav>
     <div class="hdr-actions">
       <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle dark/light mode">
         <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
         <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
       </button>
-      <a href="free-sample.html" class="btn">Get a free sample</a>
+      <a href="/free-sample" class="btn">Get a free sample</a>
     </div>
   </div>
 </header>
@@ -790,7 +793,7 @@
 <div class="pagehead pagehead-reader">
   <div class="reader-container">
     <div style="margin-bottom:1rem">
-      <a href="blog.html" class="arrow-link">&larr; All Articles</a>
+      <a href="/blog" class="arrow-link">&larr; All Articles</a>
     </div>
     <span id="post-meta" class="label">Loading article...</span>
     <h1 id="post-title" class="reader-title">Loading...</h1>
@@ -853,7 +856,7 @@
             </div>
           </div>
           <div style="display:flex;gap:0.75rem;align-items:center">
-            <a href="write.html" class="btn">Write &amp; Get Paid &rarr;</a>
+            <a href="/write" class="btn">Write &amp; Get Paid &rarr;</a>
           </div>
         </div>
       </div>
@@ -864,11 +867,11 @@
         <h4 style="margin:4px 0 10px 0;font-size:1.05rem">Free In-Browser Developer &amp; PDF Tools</h4>
         <p class="muted" style="font-size:0.88rem;margin-bottom:12px">100% private, client-side browser utilities built by zebMalik.tech.</p>
         <div style="display:flex;flex-wrap:wrap;gap:8px">
-          <a href="image-compressor.html" class="chip" style="text-decoration:none">Image Compressor</a>
-          <a href="merge-pdf.html" class="chip" style="text-decoration:none">Merge PDF</a>
-          <a href="qr-code-generator.html" class="chip" style="text-decoration:none">QR Code</a>
-          <a href="json-formatter.html" class="chip" style="text-decoration:none">JSON Formatter</a>
-          <a href="tools.html" class="chip" style="text-decoration:none;background:var(--accent);color:#fff;font-weight:600">All 22 Tools &rarr;</a>
+          <a href="/image-compressor" class="chip" style="text-decoration:none">Image Compressor</a>
+          <a href="/merge-pdf" class="chip" style="text-decoration:none">Merge PDF</a>
+          <a href="/qr-code-generator" class="chip" style="text-decoration:none">QR Code</a>
+          <a href="/json-formatter" class="chip" style="text-decoration:none">JSON Formatter</a>
+          <a href="/tools" class="chip" style="text-decoration:none;background:var(--accent);color:#fff;font-weight:600">All 22 Tools &rarr;</a>
         </div>
       </div>
     </main>
@@ -913,7 +916,7 @@
           </tbody>
         </table>
         <div style="margin-top:1.25rem;padding-top:0.75rem;border-top:1px solid var(--line)">
-          <a href="write.html" class="btn" style="width:100%;justify-content:center;font-size:13px;padding:9px 12px">Write &amp; Get Paid Monthly &rarr;</a>
+          <a href="/write" class="btn" style="width:100%;justify-content:center;font-size:13px;padding:9px 12px">Write &amp; Get Paid Monthly &rarr;</a>
         </div>
       </div>
 
@@ -925,11 +928,11 @@
           <h4>Run 100% in Browser</h4>
         </div>
         <div class="infobox-links">
-          <a href="image-compressor.html">&rarr; Image Compressor</a>
-          <a href="merge-pdf.html">&rarr; Merge PDF Files</a>
-          <a href="qr-code-generator.html">&rarr; QR Code Generator</a>
-          <a href="ai-chatbot-rag.html">&rarr; AI Chatbot &amp; RAG Systems</a>
-          <a href="tools.html" style="font-weight:600;color:var(--accent);border-bottom:none">&rarr; Browse all 22 tools</a>
+          <a href="/image-compressor">&rarr; Image Compressor</a>
+          <a href="/merge-pdf">&rarr; Merge PDF Files</a>
+          <a href="/qr-code-generator">&rarr; QR Code Generator</a>
+          <a href="/ai-chatbot-rag">&rarr; AI Chatbot &amp; RAG Systems</a>
+          <a href="/tools" style="font-weight:600;color:var(--accent);border-bottom:none">&rarr; Browse all 22 tools</a>
         </div>
       </div>
     </aside>
@@ -945,26 +948,26 @@
       </div>
       <div>
         <h4>Services</h4>
-        <a href="services.html#extraction">Data extraction</a>
-        <a href="services.html#automation">AI &amp; automation</a>
-        <a href="services.html#backend">Backend engineering</a>
-        <a href="services.html#dataops">Data operations</a>
+        <a href="/services#extraction">Data extraction</a>
+        <a href="/services#automation">AI &amp; automation</a>
+        <a href="/services#backend">Backend engineering</a>
+        <a href="/services#dataops">Data operations</a>
       </div>
       <div>
         <h4>Solutions</h4>
-        <a href="ecommerce-price-monitoring.html">Price monitoring</a>
-        <a href="lead-list-building.html">Lead list building</a>
-        <a href="ai-chatbot-rag.html">AI chatbots &amp; RAG</a>
-        <a href="free-sample.html">Free sample</a>
+        <a href="/ecommerce-price-monitoring">Price monitoring</a>
+        <a href="/lead-list-building">Lead list building</a>
+        <a href="/ai-chatbot-rag">AI chatbots &amp; RAG</a>
+        <a href="/free-sample">Free sample</a>
       </div>
       <div>
         <h4>Company</h4>
-        <a href="about.html">About</a>
-        <a href="work.html">Work</a>
-        <a href="blog.html">Blog &amp; Research</a>
-        <a href="write.html">Write &amp; Get Paid</a>
-        <a href="pricing.html">Pricing</a>
-        <a href="contact.html">Contact</a>
+        <a href="/about">About</a>
+        <a href="/work">Work</a>
+        <a href="/blog">Blog &amp; Research</a>
+        <a href="/write">Write &amp; Get Paid</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/contact">Contact</a>
       </div>
       <div>
         <h4>Elsewhere</h4>
@@ -979,50 +982,50 @@
     <div class="ftools">
       <div class="ftools-head">
         <h4>Free Browser Tools</h4>
-        <a href="tools.html">Browse all 22 tools &rarr;</a>
+        <a href="/tools">Browse all 22 tools &rarr;</a>
       </div>
       <div class="ftools-grid">
         <div class="ftools-group image-group">
           <h5>Image Tools</h5>
           <div class="ftools-subgrid">
             <div>
-              <a href="image-compressor.html">Image compressor</a>
-              <a href="image-resizer.html">Image resizer</a>
-              <a href="image-converter.html">Image converter</a>
-              <a href="image-to-pdf.html">Image to PDF</a>
-              <a href="pdf-to-image.html">PDF to image</a>
+              <a href="/image-compressor">Image compressor</a>
+              <a href="/image-resizer">Image resizer</a>
+              <a href="/image-converter">Image converter</a>
+              <a href="/image-to-pdf">Image to PDF</a>
+              <a href="/pdf-to-image">PDF to image</a>
             </div>
             <div>
-              <a href="image-metadata-remover.html">Metadata remover</a>
-              <a href="image-cropper.html">Image cropper</a>
-              <a href="image-rotator.html">Rotate images</a>
-              <a href="image-watermark.html">Image watermark</a>
-              <a href="meme-generator.html">Meme generator</a>
+              <a href="/image-metadata-remover">Metadata remover</a>
+              <a href="/image-cropper">Image cropper</a>
+              <a href="/image-rotator">Rotate images</a>
+              <a href="/image-watermark">Image watermark</a>
+              <a href="/meme-generator">Meme generator</a>
             </div>
           </div>
         </div>
         <div class="ftools-group">
           <h5>PDF Tools</h5>
-          <a href="merge-pdf.html">Merge PDF</a>
-          <a href="split-pdf.html">Split PDF</a>
-          <a href="compress-pdf.html">Compress PDF</a>
-          <a href="extract-text-from-pdf.html">PDF to text &amp; OCR</a>
-          <a href="pdf-organizer.html">Organize PDF pages</a>
-          <a href="watermark-pdf.html">Watermark PDF</a>
-          <a href="pdf-page-numbers.html">Add page numbers</a>
-          <a href="rotate-pdf.html">Rotate PDF</a>
+          <a href="/merge-pdf">Merge PDF</a>
+          <a href="/split-pdf">Split PDF</a>
+          <a href="/compress-pdf">Compress PDF</a>
+          <a href="/extract-text-from-pdf">PDF to text &amp; OCR</a>
+          <a href="/pdf-organizer">Organize PDF pages</a>
+          <a href="/watermark-pdf">Watermark PDF</a>
+          <a href="/pdf-page-numbers">Add page numbers</a>
+          <a href="/rotate-pdf">Rotate PDF</a>
         </div>
         <div class="ftools-group">
           <h5>Developer &amp; Utilities</h5>
-          <a href="qr-code-generator.html">QR code generator</a>
-          <a href="json-formatter.html">JSON formatter</a>
-          <a href="word-counter.html">Word counter</a>
-          <a href="password-generator.html">Password generator</a>
+          <a href="/qr-code-generator">QR code generator</a>
+          <a href="/json-formatter">JSON formatter</a>
+          <a href="/word-counter">Word counter</a>
+          <a href="/password-generator">Password generator</a>
         </div>
       </div>
     </div>
     <div class="fbot">
-      <div>&copy; <span id="yr">2026</span> zebMalik<span class="tech-mark">.tech</span> &nbsp;&middot;&nbsp; <a href="privacy.html" style="color:inherit;text-decoration:underline;">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="terms.html" style="color:inherit;text-decoration:underline;">Terms of Service</a> &nbsp;&middot;&nbsp; <a href="https://www.trustpilot.com/evaluate/zebmalik.tech" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">Review on Trustpilot</a></div>
+      <div>&copy; <span id="yr">2026</span> zebMalik<span class="tech-mark">.tech</span> &nbsp;&middot;&nbsp; <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/terms" style="color:inherit;text-decoration:underline;">Terms of Service</a> &nbsp;&middot;&nbsp; <a href="https://www.trustpilot.com/evaluate/zebmalik.tech" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">Review on Trustpilot</a></div>
       <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
     </div>
   </div>
@@ -1039,7 +1042,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   var slug = params.get('slug');
   if (!slug) {
     document.getElementById('post-title').textContent = 'Article not found';
-    document.getElementById('post-content').innerHTML = '<p>No article specified. <a href="blog.html">Browse all articles</a>.</p>';
+    document.getElementById('post-content').innerHTML = '<p>No article specified. <a href="/blog">Browse all articles</a>.</p>';
     return;
   }
 
@@ -1047,7 +1050,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     var post = await ZebBlog.fetchPostBySlug(slug);
     if (!post) {
       document.getElementById('post-title').textContent = 'Article Not Found';
-      document.getElementById('post-content').innerHTML = '<p>This article does not exist or is pending review. <a href="blog.html">Return to Blog</a>.</p>';
+      document.getElementById('post-content').innerHTML = '<p>This article does not exist or is pending review. <a href="/blog">Return to Blog</a>.</p>';
       return;
     }
 
@@ -1300,7 +1303,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         '<div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">' +
           '<button id="admin-bar-approve" class="btn" style="background:#2e7d32;border-color:#2e7d32;color:#fff;padding:10px 22px;font-size:14px;font-weight:600;border-radius:6px;cursor:pointer">✓ Approve &amp; Publish</button>' +
           '<button id="admin-bar-reject" class="btn btn-out" style="color:#c62828;border-color:#c62828;padding:10px 18px;font-size:14px;border-radius:6px;cursor:pointer">✕ Reject</button>' +
-          '<a href="author-dashboard.html" class="arrow-link" style="font-size:14px;margin-left:8px;font-weight:600;white-space:nowrap">Dashboard &rarr;</a>' +
+          '<a href="/author-dashboard" class="arrow-link" style="font-size:14px;margin-left:8px;font-weight:600;white-space:nowrap">Dashboard &rarr;</a>' +
         '</div>';
 
         var grid = document.querySelector('.reader-grid');
@@ -1344,7 +1347,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       } else if (isAuthor) {
         var authorNotice = document.createElement('div');
         authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:1rem 1.5rem;border-radius:8px;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem';
-        authorNotice.innerHTML = '<span>🔒 <strong>Author Draft Preview:</strong> This article is <code>' + post.status.toUpperCase() + '</code> and not yet public.</span> <a href="author-dashboard.html" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
+        authorNotice.innerHTML = '<span>🔒 <strong>Author Draft Preview:</strong> This article is <code>' + post.status.toUpperCase() + '</code> and not yet public.</span> <a href="/author-dashboard" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
         var grid = document.querySelector('.reader-grid');
         if (grid && grid.parentNode) {
           grid.parentNode.insertBefore(authorNotice, grid);
@@ -1357,7 +1360,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       document.querySelectorAll('.ad-slot').forEach(function(el) { el.style.display = 'none'; });
       var authorNotice = document.createElement('div');
       authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:1rem 1.5rem;border-radius:8px;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem';
-      authorNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="author-dashboard.html" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
+      authorNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="/author-dashboard" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
       var grid = document.querySelector('.reader-grid');
       if (grid && grid.parentNode) {
         grid.parentNode.insertBefore(authorNotice, grid);

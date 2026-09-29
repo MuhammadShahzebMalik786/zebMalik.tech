@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /email_to_bodla.html
+Disallow: /404.html
+
+# Sitemaps
 Sitemap: https://zebmalik.tech/sitemap.xml
