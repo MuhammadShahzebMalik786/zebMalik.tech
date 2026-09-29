@@ -44,59 +44,404 @@
     gap: 0.75rem;
     flex-wrap: wrap;
   }
-  .blog-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-    background: transparent;
-    border: none;
+
+  /* Search & Category Filter Navigation Bar */
+  .blog-controls-area {
+    margin-bottom: 2rem;
   }
-  .blog-grid .item {
+  .blog-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--paper);
     border: 1px solid var(--line);
     border-radius: 8px;
-    padding: 26px;
+    padding: 0 16px;
+    margin-bottom: 14px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .blog-search-box:focus-within {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 2px rgba(18,19,22,0.06);
+  }
+  [data-theme="dark"] .blog-search-box:focus-within {
+    border-color: var(--line-2);
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.08);
+  }
+  .search-icon-wrap {
+    display: flex;
+    align-items: center;
+    color: var(--ink-3);
+    margin-right: 12px;
+  }
+  #blog-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    padding: 14px 0;
+  }
+  #blog-search-input::placeholder {
+    color: var(--ink-3);
+  }
+  .search-clear-btn {
+    background: none;
+    border: none;
+    color: var(--ink-3);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.12s ease;
+  }
+  .search-clear-btn:hover {
+    color: var(--ink);
+  }
+
+  /* Category Filter Pills (Wikipedia Portal Style) */
+  .blog-categories-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 10px 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .blog-categories-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .cat-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
     background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    color: var(--ink-2);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  .cat-pill-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: var(--paper-2);
+  }
+  .cat-pill-btn.is-active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .cat-pill-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--paper-2);
+    color: var(--ink-2);
+    transition: all 0.15s ease;
+  }
+  .cat-pill-btn.is-active .cat-pill-count {
+    background: rgba(255,255,255,0.22);
+    color: var(--paper);
+  }
+
+  /* Filter Status Line */
+  .blog-filter-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-3);
+    margin-top: 4px;
+    padding: 0 4px;
+  }
+  .active-tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 2px 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink);
+  }
+  .active-tag-badge button {
+    background: none;
+    border: none;
+    color: var(--ink-3);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    line-height: 1;
+  }
+  .active-tag-badge button:hover {
+    color: var(--accent);
+  }
+
+  /* Creator Partner Program Pinned Banner */
+  .creator-program-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    background: var(--paper-2);
+    border: 1px dashed var(--line-2);
+    border-radius: 8px;
+    padding: 18px 24px;
+    margin-bottom: 1.5rem;
+  }
+  .creator-program-content h3 {
+    font-size: 1.15rem;
+    margin: 4px 0 6px 0;
+    color: var(--ink);
+  }
+  .creator-program-content p {
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+
+  /* Wikipedia-Style Single-Row Editorial List */
+  .blog-editorial-list {
     display: flex;
     flex-direction: column;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    gap: 16px;
   }
-  .blog-grid .item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(18, 19, 22, 0.05);
+  .blog-editorial-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px 28px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   }
-  .blog-grid .item h3 {
+  .blog-editorial-row:hover {
+    transform: translateY(-1px);
+    border-color: var(--line-2);
+    box-shadow: 0 6px 22px rgba(18,19,22,0.06);
+  }
+  [data-theme="dark"] .blog-editorial-row:hover {
+    box-shadow: 0 6px 22px rgba(0,0,0,0.35);
+  }
+
+  .blog-row-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .blog-row-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    font-size: 0.8rem;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+    font-family: var(--mono);
+  }
+  .row-cat-badge {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--sans);
+    transition: border-color 0.12s ease, background 0.12s ease;
+  }
+  .row-cat-badge:hover {
+    border-color: var(--ink);
+    background: var(--paper-3);
+  }
+  .meta-dot {
+    color: var(--line-2);
+    font-weight: bold;
+  }
+  .meta-item {
+    color: var(--ink-3);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .blog-row-title {
+    margin: 0 0 8px 0;
+    font-size: clamp(19px, 1.7vw, 24px);
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.015em;
     word-break: break-word;
     overflow-wrap: break-word;
-    line-height: 1.35;
   }
-  .blog-cover-wrap {
-    margin: -26px -26px 16px -26px;
+  .blog-row-title a {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.12s ease;
+  }
+  .blog-row-title a:hover {
+    color: var(--accent);
+  }
+
+  .blog-row-excerpt {
+    margin: 0 0 14px 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    border-radius: 7px 7px 0 0;
-    max-height: 190px;
-    aspect-ratio: 16 / 9;
   }
-  .blog-cover-wrap img {
+
+  .blog-row-footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    padding-top: 4px;
+  }
+  .blog-row-tags {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .blog-tag-badge {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-3);
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 2px 7px;
+    transition: all 0.12s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .blog-tag-badge:hover {
+    color: var(--ink);
+    border-color: var(--ink-2);
+    background: var(--paper-2);
+  }
+  .blog-row-byline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-3);
+    font-size: 13px;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  .blog-row-byline strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .views-txt {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Compact Editorial Row Thumbnail */
+  .blog-row-thumb {
+    flex: 0 0 170px;
+    width: 170px;
+    height: 110px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    align-self: center;
+    background: var(--paper-2);
+  }
+  .blog-row-thumb a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .blog-row-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
+    transition: transform 0.25s ease;
   }
-  .blog-grid .item .arrow-link {
-    margin-top: auto;
-    padding-top: 8px;
+  .blog-editorial-row:hover .blog-row-thumb img {
+    transform: scale(1.03);
   }
+
+  /* Empty State */
+  .blog-empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    color: var(--ink-2);
+  }
+  .blog-empty-state .empty-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  .blog-empty-state h3 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .blog-empty-state p {
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+  }
+
   @media (max-width: 768px) {
-    .blog-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-    .blog-grid .item {
+    .blog-editorial-row {
+      flex-direction: column-reverse;
       padding: 20px 18px;
+      gap: 16px;
     }
-    .blog-cover-wrap {
-      margin: -20px -18px 14px -18px;
-      max-height: 180px;
+    .blog-row-thumb {
+      width: 100%;
+      height: 160px;
+      flex: none;
+      align-self: auto;
+    }
+    .blog-row-byline {
+      margin-left: 0;
+      width: 100%;
+      justify-content: flex-start;
+    }
+    .creator-program-banner {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px;
+    }
+    .creator-program-actions {
+      width: 100%;
+    }
+    .creator-program-actions .btn {
+      width: 100%;
+      justify-content: center;
     }
     .blog-cta-group {
       width: 100%;
@@ -109,6 +454,7 @@
       font-size: 14px;
     }
   }
+
   @media (max-width: 480px) {
     .blog-cta-group {
       flex-direction: column;
@@ -162,14 +508,49 @@
 
 <section>
   <div class="wrap">
-    <div id="posts-container" class="cards blog-grid">
-      <!-- Loading placeholder -->
-      <div class="item" style="border-style:dashed">
-        <span class="label">Creator Partner Program</span>
-        <h3>Turn your technical knowledge into monthly income.</h3>
-        <p>Publish deep dives on automation, web scraping, AI, or backend engineering. Monetize every verified reader with monthly payouts starting at just $5—no personal AdSense account needed.</p>
-        <div style="margin-top:1rem">
-          <a class="arrow-link" href="/write">Start writing now &rarr;</a>
+    <!-- Controls Area: Instant Search + Category Filter Tabs -->
+    <div class="blog-controls-area">
+      <div class="blog-search-box">
+        <span class="search-icon-wrap" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="search" id="blog-search-input" placeholder="Search by topic, keyword, title, tag, or author..." aria-label="Search articles" autocomplete="off" spellcheck="false" />
+        <button id="search-clear-btn" class="search-clear-btn" type="button" aria-label="Clear search" style="display:none">&times;</button>
+      </div>
+
+      <div class="blog-categories-bar" id="category-pills" role="tablist" aria-label="Article categories">
+        <!-- Rendered dynamically by ZebBlog.CATEGORIES -->
+      </div>
+
+      <div class="blog-filter-status" id="filter-status-bar">
+        <span id="results-count" class="status-count">Loading articles…</span>
+        <div id="active-tag-badge" style="display:none" class="active-tag-badge">
+          <span id="active-tag-text"></span>
+          <button type="button" id="btn-clear-tag" title="Remove tag filter">&times;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creator Partner Program Pinned Banner -->
+    <div class="creator-program-banner">
+      <div class="creator-program-content">
+        <span class="label" style="margin-bottom:6px">Writer Studio &amp; Monetization</span>
+        <h3>Turn your engineering knowledge into monthly revenue.</h3>
+        <p>Publish deep dives on web scraping, AI automation, or backend systems. Earn monthly payouts starting at just $5 with verified reader retention.</p>
+      </div>
+      <div class="creator-program-actions">
+        <a href="/write" class="btn" style="padding:10px 20px;font-size:14px;white-space:nowrap">Start Writing &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Wikipedia-Style Single-Row Editorial List -->
+    <div id="posts-container" class="blog-editorial-list" aria-live="polite">
+      <!-- Loading Skeleton / Placeholder -->
+      <div class="blog-editorial-row" style="opacity:0.6">
+        <div class="blog-row-main">
+          <div class="blog-row-meta">Loading engineering articles…</div>
+          <h2 class="blog-row-title">Connecting to database…</h2>
+          <p class="blog-row-excerpt">Fetching published research papers, system architecture blueprints, and code tutorials.</p>
         </div>
       </div>
     </div>
@@ -271,34 +652,266 @@
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="blog-config.js?v=9"></script>
+<script src="blog-config.js?v=10"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function () {
   var container = document.getElementById('posts-container');
-  try {
-    var posts = await ZebBlog.fetchPublishedPosts(30);
-    if (posts && posts.length > 0) {
-      posts.forEach(function (post) {
-        var card = document.createElement('div');
-        card.className = 'item';
-        var imgUrl = post.cover_image_url;
-        if (post.slug === 'building-production-rag-systems-python' && (!imgUrl || imgUrl.includes('1677442136019-21780efad99a'))) {
-          imgUrl = 'rag-systems-architecture.webp';
-        }
-        var coverHtml = imgUrl ? '<div class="blog-cover-wrap"><img src="' + imgUrl + '" alt="' + post.title + '" onerror="this.onerror=null;this.src=\'rag-systems-architecture.webp\';"></div>' : '';
-        var authorName = post.profiles ? post.profiles.full_name : 'Contributor';
-        var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : '';
-        
-        card.innerHTML = coverHtml +
-          '<div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">' + authorName + ' · ' + readDate + ' · ' + (post.view_count || 0) + ' reads</div>' +
-          '<h3><a href="post?slug=' + encodeURIComponent(post.slug) + '" style="color:inherit;text-decoration:none">' + post.title + '</a></h3>' +
-          '<p style="margin:10px 0 16px 0;color:var(--muted);font-size:0.95rem;line-height:1.6">' + (post.excerpt || 'Read the full article...') + '</p>' +
-          '<a class="arrow-link" href="post?slug=' + encodeURIComponent(post.slug) + '">Read article &rarr;</a>';
-        container.appendChild(card);
+  var searchInput = document.getElementById('blog-search-input');
+  var searchClearBtn = document.getElementById('search-clear-btn');
+  var catPillsContainer = document.getElementById('category-pills');
+  var resultsCountEl = document.getElementById('results-count');
+  var activeTagBadge = document.getElementById('active-tag-badge');
+  var activeTagText = document.getElementById('active-tag-text');
+  var btnClearTag = document.getElementById('btn-clear-tag');
+
+  var allPosts = [];
+  var currentCatId = 'all';
+  var currentTag = '';
+  var currentSearchQuery = '';
+
+  // Check URL query parameters for initial filter (e.g. ?category=ai-agents or ?tag=python or ?q=duckdb)
+  var urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('category')) currentCatId = urlParams.get('category');
+  if (urlParams.get('tag')) currentTag = urlParams.get('tag');
+  if (urlParams.get('q')) {
+    currentSearchQuery = urlParams.get('q');
+    if (searchInput) searchInput.value = currentSearchQuery;
+  }
+
+  function renderCategoryPills() {
+    if (!catPillsContainer) return;
+    catPillsContainer.innerHTML = '';
+
+    ZebBlog.CATEGORIES.forEach(function (cat) {
+      var count = 0;
+      if (cat.id === 'all') {
+        count = allPosts.length;
+      } else {
+        count = allPosts.filter(function (p) { return p.category_id === cat.id; }).length;
+      }
+
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'cat-pill-btn' + (currentCatId === cat.id ? ' is-active' : '');
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-selected', currentCatId === cat.id ? 'true' : 'false');
+      btn.innerHTML = '<span>' + cat.icon + ' ' + cat.label + '</span><span class="cat-pill-count">' + count + '</span>';
+      
+      btn.addEventListener('click', function () {
+        currentCatId = cat.id;
+        updateView();
       });
+
+      catPillsContainer.appendChild(btn);
+    });
+  }
+
+  function updateView() {
+    // 1. Update Active Category Buttons
+    var buttons = catPillsContainer.querySelectorAll('.cat-pill-btn');
+    buttons.forEach(function (btn, idx) {
+      var cat = ZebBlog.CATEGORIES[idx];
+      if (cat) {
+        if (cat.id === currentCatId) {
+          btn.classList.add('is-active');
+          btn.setAttribute('aria-selected', 'true');
+        } else {
+          btn.classList.remove('is-active');
+          btn.setAttribute('aria-selected', 'false');
+        }
+      }
+    });
+
+    // 2. Update Tag Badge
+    if (currentTag) {
+      activeTagBadge.style.display = 'inline-flex';
+      activeTagText.textContent = '#' + currentTag;
+    } else {
+      activeTagBadge.style.display = 'none';
     }
+
+    // 3. Update Clear Search Button
+    if (searchInput && searchInput.value.trim().length > 0) {
+      searchClearBtn.style.display = 'block';
+    } else {
+      searchClearBtn.style.display = 'none';
+    }
+
+    // 4. Filter Posts (Instant in-memory 0ms response)
+    var filtered = ZebBlog.filterPosts(allPosts, {
+      query: currentSearchQuery,
+      categoryId: currentCatId,
+      tag: currentTag
+    });
+
+    // 5. Update Status Count
+    if (resultsCountEl) {
+      var totalText = 'Showing ' + filtered.length + ' of ' + allPosts.length + ' articles';
+      if (currentSearchQuery) {
+        totalText = 'Found ' + filtered.length + ' article' + (filtered.length === 1 ? '' : 's') + ' for "' + currentSearchQuery + '"';
+      } else if (currentCatId !== 'all') {
+        var catObj = ZebBlog.CATEGORIES.find(function(c){return c.id === currentCatId;});
+        totalText = filtered.length + ' article' + (filtered.length === 1 ? '' : 's') + ' in ' + (catObj ? catObj.label : currentCatId);
+      }
+      resultsCountEl.textContent = totalText;
+    }
+
+    // 6. Render Post Rows
+    renderPosts(filtered);
+  }
+
+  function renderPosts(posts) {
+    container.innerHTML = '';
+
+    if (!posts || posts.length === 0) {
+      var emptyDiv = document.createElement('div');
+      emptyDiv.className = 'blog-empty-state';
+      emptyDiv.innerHTML = 
+        '<div class="empty-icon">🔍</div>' +
+        '<h3>No matching articles found</h3>' +
+        '<p>Try adjusting your search terms, clearing filters, or exploring another category.</p>' +
+        '<button type="button" class="btn btn-out" id="btn-reset-filters">Reset All Filters</button>';
+      container.appendChild(emptyDiv);
+
+      var resetBtn = document.getElementById('btn-reset-filters');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function () {
+          currentCatId = 'all';
+          currentTag = '';
+          currentSearchQuery = '';
+          if (searchInput) searchInput.value = '';
+          updateView();
+        });
+      }
+      return;
+    }
+
+    posts.forEach(function (post) {
+      var row = document.createElement('article');
+      row.className = 'blog-editorial-row';
+      row.dataset.category = post.category_id || 'data-engineering';
+
+      var authorName = post.profiles ? post.profiles.full_name : 'Contributor';
+      var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : 'Recent';
+      var readMinutes = post.read_minutes || 5;
+
+      var imgUrl = post.cover_image_url;
+      if (post.slug === 'building-production-rag-systems-python' && (!imgUrl || imgUrl.includes('1677442136019-21780efad99a'))) {
+        imgUrl = 'rag-systems-architecture.webp';
+      }
+
+      var thumbHtml = '';
+      if (imgUrl) {
+        thumbHtml = '<div class="blog-row-thumb">' +
+          '<a href="/post?slug=' + encodeURIComponent(post.slug) + '" tabindex="-1" aria-hidden="true">' +
+          '<img src="' + imgUrl + '" alt="' + post.title + '" loading="lazy" onerror="this.parentElement.parentElement.style.display=\'none\'">' +
+          '</a></div>';
+      }
+
+      var tagsHtml = '';
+      if (post.tags && post.tags.length > 0) {
+        tagsHtml = post.tags.slice(0, 5).map(function (t) {
+          return '<button type="button" class="blog-tag-badge" data-tag="' + t + '">#' + t + '</button>';
+        }).join('');
+      }
+
+      row.innerHTML = 
+        '<div class="blog-row-main">' +
+          '<div class="blog-row-meta">' +
+            '<button type="button" class="row-cat-badge" data-category="' + post.category_id + '" title="View more in ' + post.category_label + '">' +
+              '<span class="cat-icon">' + post.category_icon + '</span>' +
+              '<span class="cat-name">' + post.category_label + '</span>' +
+            '</button>' +
+            '<span class="meta-dot" aria-hidden="true">&middot;</span>' +
+            '<span class="meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:3px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>' + readMinutes + ' min read</span>' +
+            '<span class="meta-dot" aria-hidden="true">&middot;</span>' +
+            '<time class="meta-item">' + readDate + '</time>' +
+          '</div>' +
+          '<h2 class="blog-row-title">' +
+            '<a href="/post?slug=' + encodeURIComponent(post.slug) + '">' + post.title + '</a>' +
+          '</h2>' +
+          '<p class="blog-row-excerpt">' + (post.excerpt || 'Read the complete engineering deep-dive on system design, implementation benchmarks, and architecture...') + '</p>' +
+          '<div class="blog-row-footer">' +
+            '<div class="blog-row-tags">' + tagsHtml + '</div>' +
+            '<div class="blog-row-byline">' +
+              '<span>by <strong>' + authorName + '</strong></span>' +
+              '<span class="meta-dot" aria-hidden="true">&middot;</span>' +
+              '<span class="views-txt" title="Verified human reads"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-1px;margin-right:2px"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' + (post.view_count || 0).toLocaleString() + ' reads</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        thumbHtml;
+
+      container.appendChild(row);
+    });
+
+    // Wire up tag badges inside rows
+    container.querySelectorAll('.blog-tag-badge').forEach(function (tagBtn) {
+      tagBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        currentTag = this.dataset.tag;
+        updateView();
+      });
+    });
+
+    // Wire up category badges inside rows
+    container.querySelectorAll('.row-cat-badge').forEach(function (catBtn) {
+      catBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        currentCatId = this.dataset.category;
+        updateView();
+      });
+    });
+  }
+
+  // Search input with 50ms debounce
+  var searchTimeout = null;
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(function () {
+        currentSearchQuery = searchInput.value.trim();
+        updateView();
+      }, 50);
+    });
+
+    searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        searchInput.value = '';
+        currentSearchQuery = '';
+        updateView();
+      }
+    });
+  }
+
+  if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', function () {
+      searchInput.value = '';
+      currentSearchQuery = '';
+      searchInput.focus();
+      updateView();
+    });
+  }
+
+  if (btnClearTag) {
+    btnClearTag.addEventListener('click', function () {
+      currentTag = '';
+      updateView();
+    });
+  }
+
+  // Load Posts from Supabase
+  try {
+    allPosts = await ZebBlog.fetchPublishedPosts(100);
+    renderCategoryPills();
+    updateView();
   } catch (err) {
-    console.warn('Posts could not load from Supabase yet (configure API keys in blog-config.js):', err);
+    console.warn('Posts could not load from Supabase:', err);
+    container.innerHTML = 
+      '<div class="blog-empty-state">' +
+        '<h3>Database Connection Issue</h3>' +
+        '<p>Please check your network connection or verify API keys in blog-config.js.</p>' +
+      '</div>';
   }
 });
 </script>

@@ -341,3 +341,31 @@ BEGIN
   END IF;
 END;
 $$;
+
+-- ==============================================================================
+-- 8. Article Categorization & PostgreSQL Full-Text Search
+-- ==============================================================================
+ALTER TABLE public.posts ADD COLUMN IF NOT EXISTS category TEXT DEFAULT 'Data Engineering & Pipelines';
+
+-- Create GIN index for deep full-text searches across title, excerpt, and content
+CREATE INDEX IF NOT EXISTS posts_fts_idx ON public.posts USING GIN (
+  to_tsvector('english', coalesce(title, '') || ' ' || coalesce(excerpt, '') || ' ' || coalesce(content_markdown, ''))
+);
+
+-- Full-Text Search Function for Supabase RPC
+CREATE OR REPLACE FUNCTION public.search_posts(search_term TEXT)
+RETURNS SETOF public.posts
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT *
+  FROM public.posts
+  WHERE status = 'published'
+    AND to_tsvector('english', coalesce(title, '') || ' ' || coalesce(excerpt, '') || ' ' || coalesce(content_markdown, ''))
+        @@ websearch_to_tsquery('english', search_term)
+  ORDER BY ts_rank_cd(
+    to_tsvector('english', coalesce(title, '') || ' ' || coalesce(excerpt, '') || ' ' || coalesce(content_markdown, '')),
+    websearch_to_tsquery('english', search_term)
+  ) DESC;
+$$;
+

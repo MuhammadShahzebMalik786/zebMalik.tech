@@ -1260,7 +1260,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     var infoTime = document.getElementById('info-readtime');
     if (infoTime) infoTime.textContent = readMinutes + ' min';
     var infoCat = document.getElementById('info-category');
-    if (infoCat) infoCat.textContent = (post.tags && post.tags.length ? post.tags[0] : 'Engineering');
+    if (infoCat) infoCat.textContent = post.category || post.category_label || (post.tags && post.tags.length ? post.tags[0] : 'Engineering');
     var infoViews = document.getElementById('info-views');
     if (infoViews) infoViews.textContent = (post.view_count || 0) + ' reads';
 

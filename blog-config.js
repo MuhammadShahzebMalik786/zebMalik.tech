@@ -130,6 +130,105 @@
     return await sb.auth.updateUser({ password: newPassword });
   }
 
+  // --- Category Taxonomy & Hierarchical Organization ---
+  var CATEGORIES = [
+    { id: 'all', label: 'All Articles', icon: '📚' },
+    { id: 'data-engineering', label: 'Data Engineering & Pipelines', icon: '🌐' },
+    { id: 'ai-agents', label: 'AI Systems & Agents', icon: '🤖' },
+    { id: 'backend-db', label: 'Backend & Databases', icon: '⚡' },
+    { id: 'devops-systems', label: 'DevOps & Systems', icon: '🛡️' },
+    { id: 'research', label: 'Open Research & Insights', icon: '🔬' }
+  ];
+
+  function inferCategory(post) {
+    if (!post) return CATEGORIES[1];
+    var explicit = (post.category || '').toString().trim().toLowerCase();
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      var cat = CATEGORIES[i];
+      if (cat.id !== 'all' && (explicit === cat.id.toLowerCase() || explicit === cat.label.toLowerCase() || explicit.indexOf(cat.id) !== -1)) {
+        return cat;
+      }
+    }
+
+    var tags = (post.tags || []).map(function (t) { return (t || '').toLowerCase(); });
+    var title = (post.title || '').toLowerCase();
+    var combined = title + ' ' + tags.join(' ');
+
+    // 1. Open Research & Insights (early check for meta / studio / community)
+    if (/what is zebmalik\.tech|tech journalism|write for us|open research|insights|community|interview/i.test(combined)) {
+      return CATEGORIES[5];
+    }
+    // 2. Data Engineering & Pipelines
+    if (/duckdb|scraping|scraper|crawl|crawler|etl|pipeline|pipelines|extraction|playwright|puppeteer|selenium|dataops|parquet/i.test(combined)) {
+      return CATEGORIES[1];
+    }
+    // 3. AI Systems & Agents
+    if (/rag|llm|ollama|pydantic|langchain|vector|agent|agents|smartphones|ai phone|ai |chatbot|gpt|openai|gemini/i.test(combined)) {
+      return CATEGORIES[2];
+    }
+    // 4. Backend & Databases
+    if (/postgresql|postgres|fastapi|websockets|redis|sql|database|rest api|connection pooling|backend|supabase/i.test(combined)) {
+      return CATEGORIES[3];
+    }
+    // 5. DevOps & Systems
+    if (/mmap|memory|linux|jwt|security|rls|auth|wasm|webassembly|cloudflare|nextjs|edge|devops|c\+\+|operating system/i.test(combined)) {
+      return CATEGORIES[4];
+    }
+
+    return CATEGORIES[5];
+  }
+
+  function calculateReadTime(text) {
+    if (!text) return 5;
+    var cleanText = text.replace(/<[^>]*>/g, ' ').replace(/[#*`_~\[\]]/g, ' ');
+    var words = cleanText.trim().split(/\s+/).filter(Boolean).length;
+    var minutes = Math.ceil(words / 200);
+    return Math.max(minutes, 3);
+  }
+
+  function filterPosts(posts, criteria) {
+    if (!posts || !Array.isArray(posts)) return [];
+    criteria = criteria || {};
+    var query = (criteria.query || '').trim().toLowerCase();
+    var catId = criteria.categoryId || 'all';
+    var tag = (criteria.tag || '').trim().toLowerCase();
+
+    return posts.filter(function (post) {
+      // 1. Category check
+      if (catId && catId !== 'all') {
+        if (post.category_id !== catId) {
+          return false;
+        }
+      }
+
+      // 2. Tag check
+      if (tag) {
+        var postTags = (post.tags || []).map(function (t) { return (t || '').toLowerCase(); });
+        if (!postTags.includes(tag)) {
+          return false;
+        }
+      }
+
+      // 3. Query search (across title, excerpt, tags, author name, category)
+      if (query) {
+        var titleMatch = (post.title || '').toLowerCase().indexOf(query) !== -1;
+        var excerptMatch = (post.excerpt || '').toLowerCase().indexOf(query) !== -1;
+        var authorName = (post.profiles && post.profiles.full_name) ? post.profiles.full_name.toLowerCase() : '';
+        var authorMatch = authorName.indexOf(query) !== -1;
+        var catMatch = (post.category_label || '').toLowerCase().indexOf(query) !== -1;
+        var tagMatch = (post.tags || []).some(function (t) {
+          return (t || '').toLowerCase().indexOf(query) !== -1;
+        });
+
+        if (!titleMatch && !excerptMatch && !authorMatch && !catMatch && !tagMatch) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }
+
   function normalizePost(post) {
     if (!post) return post;
     if (post.slug === 'building-production-rag-systems-python') {
@@ -137,6 +236,11 @@
         post.cover_image_url = 'https://zebmalik.tech/rag-systems-architecture.webp';
       }
     }
+    var cat = inferCategory(post);
+    post.category_id = cat.id;
+    post.category_label = cat.label;
+    post.category_icon = cat.icon;
+    post.read_minutes = calculateReadTime(post.content_markdown || post.excerpt || '');
     return post;
   }
 
@@ -149,7 +253,7 @@
       .select('id, title, slug, excerpt, cover_image_url, tags, view_count, published_at, profiles(full_name, username, avatar_url)')
       .eq('status', 'published')
       .order('published_at', { ascending: false })
-      .limit(limit || 20);
+      .limit(limit || 100);
 
     if (tag) {
       query = query.contains('tags', [tag]);
@@ -266,11 +370,28 @@
       updated_at: new Date().toISOString()
     };
 
-    if (postData.id) {
-      return await sb.from('posts').update(payload).eq('id', postData.id).select().single();
-    } else {
-      return await sb.from('posts').insert(payload).select().single();
+    if (postData.category) {
+      if (!payload.tags.includes(postData.category)) {
+        payload.tags.unshift(postData.category);
+      }
+      payload.category = postData.category;
     }
+
+    var result;
+    if (postData.id) {
+      result = await sb.from('posts').update(payload).eq('id', postData.id).select().single();
+      if (result.error && result.error.code === '42703') {
+        delete payload.category;
+        result = await sb.from('posts').update(payload).eq('id', postData.id).select().single();
+      }
+    } else {
+      result = await sb.from('posts').insert(payload).select().single();
+      if (result.error && result.error.code === '42703') {
+        delete payload.category;
+        result = await sb.from('posts').insert(payload).select().single();
+      }
+    }
+    return result;
   }
 
   async function fetchAuthorPosts(authorId) {
@@ -550,6 +671,10 @@
     adminDeletePost: adminDeletePost,
     adminToggleUserAdmin: adminToggleUserAdmin,
     claimAdminRole: claimAdminRole,
-    sanitizeHtml: sanitizeHtml
+    sanitizeHtml: sanitizeHtml,
+    CATEGORIES: CATEGORIES,
+    inferCategory: inferCategory,
+    calculateReadTime: calculateReadTime,
+    filterPosts: filterPosts
   };
 }));

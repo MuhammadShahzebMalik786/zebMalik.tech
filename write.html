@@ -543,14 +543,24 @@
   <div class="tool-card" style="margin-top:2rem;max-width:none">
     <h3 style="margin-top:0">Publishing Details &amp; Revenue Settings</h3>
     
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.25rem">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:1.25rem;margin-top:1.25rem">
       <div class="frm-group">
-        <label for="post-slug">URL Slug</label>
+        <label for="post-category">Primary Category <span style="color:var(--accent)">*</span></label>
+        <select id="post-category" class="frm-input" style="background:var(--paper);color:var(--ink);cursor:pointer">
+          <option value="Data Engineering & Pipelines">🌐 Data Engineering &amp; Pipelines</option>
+          <option value="AI Systems & Agents">🤖 AI Systems &amp; Agents</option>
+          <option value="Backend & Databases">⚡ Backend &amp; Databases</option>
+          <option value="DevOps & Systems">🛡️ DevOps &amp; Systems</option>
+          <option value="Open Research & Insights">🔬 Open Research &amp; Insights</option>
+        </select>
+      </div>
+      <div class="frm-group">
+        <label for="post-slug">URL Slug <span style="color:var(--accent)">*</span></label>
         <input type="text" id="post-slug" class="frm-input" placeholder="auto-generated-title-slug" required />
       </div>
       <div class="frm-group">
-        <label for="post-tags">Tags / Categories (comma-separated)</label>
-        <input type="text" id="post-tags" class="frm-input" placeholder="Python, Scraping, AI, Backend" />
+        <label for="post-tags">Technical Tags (comma-separated)</label>
+        <input type="text" id="post-tags" class="frm-input" placeholder="e.g. python, duckdb, rag, postgresql" />
       </div>
     </div>
 
@@ -565,7 +575,10 @@
     </div>
 
     <div class="frm-group" style="margin-top:1.25rem">
-      <label for="post-excerpt">Short Preview Summary (1-2 sentences)</label>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;flex-wrap:wrap;gap:0.5rem">
+        <label for="post-excerpt" style="margin:0">Short Preview Summary (1-2 sentences)</label>
+        <button type="button" id="btn-auto-excerpt" class="btn btn-out" style="padding:4px 12px;font-size:0.8rem">⚡ Auto-Generate from Content</button>
+      </div>
       <input type="text" id="post-excerpt" class="frm-input" placeholder="Brief hook that appears in Google search results and Twitter cards." />
     </div>
 
@@ -1218,6 +1231,10 @@ document.addEventListener('DOMContentLoaded', async function () {
           slugInput.value = post.slug || '';
           slugInput.dataset.manual = 'true';
           document.getElementById('post-tags').value = (post.tags || []).join(', ');
+          var catEl = document.getElementById('post-category');
+          if (catEl && (post.category || post.category_label)) {
+            catEl.value = post.category || post.category_label;
+          }
           document.getElementById('post-cover').value = post.cover_image_url || '';
           document.getElementById('post-excerpt').value = post.excerpt || '';
           if (post.content_markdown) {
@@ -1624,10 +1641,13 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     saveStatus.textContent = 'Publishing to database…';
     try {
+      var catEl = document.getElementById('post-category');
+      var categoryVal = catEl ? catEl.value : 'Data Engineering & Pipelines';
       var payload = {
         id: editingPostId,
         title: title,
         slug: slug,
+        category: categoryVal,
         tags: document.getElementById('post-tags').value.split(',').map(function(s){return s.trim();}).filter(Boolean),
         cover_image_url: document.getElementById('post-cover').value.trim(),
         excerpt: document.getElementById('post-excerpt').value.trim(),
@@ -1647,6 +1667,35 @@ document.addEventListener('DOMContentLoaded', async function () {
       saveStatus.textContent = err.message || 'Error saving post.';
       saveStatus.className = 'tool-status is-error';
     }
+  }
+
+  // Auto-Generate Excerpt Helper
+  var btnAutoExcerpt = document.getElementById('btn-auto-excerpt');
+  if (btnAutoExcerpt) {
+    btnAutoExcerpt.addEventListener('click', function () {
+      var contentText = '';
+      if (typeof isHtmlMode !== 'undefined' && isHtmlMode && rawHtmlEditor && rawHtmlEditor.value.trim()) {
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = rawHtmlEditor.value;
+        contentText = tempDiv.textContent || tempDiv.innerText || '';
+      } else if (typeof quill !== 'undefined' && quill) {
+        contentText = quill.getText();
+      }
+      contentText = contentText.replace(/\s+/g, ' ').trim();
+      if (!contentText || contentText.length < 15) {
+        alert('Please write some content first before auto-generating an excerpt.');
+        return;
+      }
+      var excerpt = contentText.slice(0, 180);
+      var lastPeriod = excerpt.lastIndexOf('.');
+      if (lastPeriod > 50) {
+        excerpt = excerpt.slice(0, lastPeriod + 1);
+      } else {
+        var lastSpace = excerpt.lastIndexOf(' ');
+        if (lastSpace > 50) excerpt = excerpt.slice(0, lastSpace) + '...';
+      }
+      document.getElementById('post-excerpt').value = excerpt;
+    });
   }
 
   document.getElementById('btn-submit-review').addEventListener('click', function () { handlePublish('pending'); });
