@@ -955,17 +955,18 @@ body[data-tool] .tool-grid .item:nth-child(5){animation-delay:.24s}
   transform: translateX(-50%) translateY(20px);
   background: var(--ink);
   color: var(--paper);
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: 40px;
   font-size: 13.5px;
   font-family: var(--sans);
   font-weight: 500;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.28);
-  z-index: 10006;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 999999;
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-  display: flex;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  display: none;
   align-items: center;
   gap: 8px;
   white-space: nowrap;
@@ -974,10 +975,12 @@ body[data-tool] .tool-grid .item:nth-child(5){animation-delay:.24s}
   background: #232730;
   color: #f0f2f5;
   border: 1px solid #3b404d;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6);
 }
 .reader-toast.is-visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
 }
 
