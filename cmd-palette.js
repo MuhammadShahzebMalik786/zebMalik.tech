@@ -24,11 +24,16 @@
     { id: 'act-tools', title: 'All Developer & PDF Tools (22 Free Utilities)', category: 'Navigation', badge: '22 Tools', icon: '🛠️', url: '/tools' },
     { id: 'act-write', title: 'Write & Get Paid (Contributor Program)', category: 'Writer Studio', badge: 'Earn', icon: '✍️', url: '/write' },
     { id: 'act-author', title: 'Author Portal & Reader Analytics', category: 'Writer Studio', badge: 'Dashboard', icon: '📊', url: '/author-dashboard' },
+    { id: 'act-about', title: 'About zebMalik.tech & Engineering Team', category: 'Navigation', badge: 'About', icon: '👤', url: '/about' },
     { id: 'act-services', title: 'Engineering & Automation Services', category: 'Navigation', badge: 'Services', icon: '⚡', url: '/services' },
     { id: 'act-work', title: 'Case Studies & Client Work', category: 'Navigation', badge: 'Portfolio', icon: '💼', url: '/work' },
+    { id: 'sol-ecom', title: 'E-commerce Price Monitoring Engine', category: 'Solutions', badge: 'Case Study', icon: '🛒', url: '/ecommerce-price-monitoring' },
+    { id: 'sol-leads', title: 'B2B Lead List Building & Verification', category: 'Solutions', badge: 'Case Study', icon: '🎯', url: '/lead-list-building' },
     { id: 'act-pricing', title: 'Pricing & Retainer Models', category: 'Navigation', badge: 'Rates', icon: '💳', url: '/pricing' },
     { id: 'act-sample', title: 'Get a Free Engineering Sample', category: 'Navigation', badge: 'Free', icon: '🎁', url: '/free-sample' },
     { id: 'act-contact', title: 'Contact & Direct Consultation', category: 'Navigation', badge: 'Message', icon: '✉️', url: '/contact' },
+    { id: 'act-privacy', title: 'Privacy Policy', category: 'Legal', badge: 'Legal', icon: '🔒', url: '/privacy' },
+    { id: 'act-terms', title: 'Terms of Service', category: 'Legal', badge: 'Legal', icon: '📄', url: '/terms' },
 
     // --- Developer Tools ---
     { id: 'tool-img-comp', title: 'Image Compressor (Lossless & Lossy)', category: 'Tools', badge: 'Image', icon: '🖼️', url: '/image-compressor' },
@@ -66,23 +71,63 @@
   var inputEl = null;
   var listEl = null;
 
-  async function loadArticles() {
-    if (isArticlesLoaded) return;
+  function mapAndStorePosts(posts) {
+    if (!posts || !Array.isArray(posts)) return;
+    articleItems = posts.map(function (p) {
+      return {
+        id: 'art-' + p.slug,
+        title: p.title,
+        category: 'Engineering Articles',
+        badge: (p.read_minutes || 5) + ' min',
+        icon: p.category_icon || '📄',
+        url: '/post?slug=' + encodeURIComponent(p.slug),
+        tags: p.tags || []
+      };
+    });
+    isArticlesLoaded = true;
     try {
+      sessionStorage.setItem('zebmalik_cached_articles_palette', JSON.stringify({
+        timestamp: Date.now(),
+        items: articleItems
+      }));
+    } catch (_) {}
+  }
+
+  async function loadArticles() {
+    if (isArticlesLoaded && articleItems.length) return;
+    try {
+      // 1. Instant sessionStorage cache check (0ms)
+      try {
+        var rawCache = sessionStorage.getItem('zebmalik_cached_articles_palette');
+        if (rawCache) {
+          var parsed = JSON.parse(rawCache);
+          if (parsed && Array.isArray(parsed.items) && (Date.now() - parsed.timestamp < 15 * 60 * 1000)) {
+            articleItems = parsed.items;
+            isArticlesLoaded = true;
+            return;
+          }
+        }
+      } catch (_) {}
+
+      // 2. Try ZebBlog client if present on page
       if (typeof ZebBlog !== 'undefined' && ZebBlog.fetchPublishedPosts) {
         var posts = await ZebBlog.fetchPublishedPosts(60);
-        articleItems = (posts || []).map(function (p) {
-          return {
-            id: 'art-' + p.slug,
-            title: p.title,
-            category: 'Engineering Articles',
-            badge: (p.read_minutes || 5) + ' min',
-            icon: p.category_icon || '📄',
-            url: '/post?slug=' + encodeURIComponent(p.slug),
-            tags: p.tags || []
-          };
-        });
-        isArticlesLoaded = true;
+        mapAndStorePosts(posts);
+        return;
+      }
+
+      // 3. Fallback direct fetch via Supabase REST API (works across all non-blog pages)
+      var sbUrl = 'https://qfsmwivvcfpkutqszlhd.supabase.co/rest/v1/posts?select=id,title,slug,excerpt,tags,view_count,published_at&status=eq.published&order=published_at.desc&limit=40';
+      var anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmc213aXZ2Y2Zwa3V0cXN6bGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNjI5NTUsImV4cCI6MjEwNTgzODk1NX0.rWln2NStaO3DNTNZzrJOk_F7FkG4hqijwPvm1aP199M';
+      var res = await fetch(sbUrl, {
+        headers: {
+          'apikey': anonKey,
+          'Authorization': 'Bearer ' + anonKey
+        }
+      });
+      if (res.ok) {
+        var data = await res.json();
+        mapAndStorePosts(data);
       }
     } catch (_) {}
   }
@@ -385,6 +430,10 @@
       e.preventDefault();
       togglePalette();
     } else if (isCtrlOrCmd && isJ) {
+      var tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable)) {
+        return;
+      }
       e.preventDefault();
       // Theme toggle shortcut
       var themeItem = STATIC_ITEMS[0];
