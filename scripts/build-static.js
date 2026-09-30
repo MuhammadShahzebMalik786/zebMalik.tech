@@ -548,6 +548,19 @@ async function main() {
   const posts = await fetchPosts();
   console.log(`   Found ${posts.length} published articles.`);
 
+  // Apply local editorial markdown overrides from content/<slug>.md if present
+  const contentDir = path.join(ROOT, 'content');
+  if (fs.existsSync(contentDir)) {
+    posts.forEach(post => {
+      const overrideFile = path.join(contentDir, `${post.slug}.md`);
+      if (fs.existsSync(overrideFile)) {
+        const enhancedMarkdown = fs.readFileSync(overrideFile, 'utf8');
+        post.content_markdown = enhancedMarkdown;
+        console.log(`   📝 Applied editorial override for "${post.slug}" (${enhancedMarkdown.length} chars)`);
+      }
+    });
+  }
+
   console.log('📄 2. Reading base template (post.html)...');
   const templatePath = path.join(ROOT, 'post.html');
   const templateHtml = fs.readFileSync(templatePath, 'utf8');
