@@ -38,19 +38,19 @@
   <url><loc>https://zebmalik.tech/word-counter</loc><lastmod>2026-09-30</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://zebmalik.tech/privacy</loc><lastmod>2026-09-30</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://zebmalik.tech/terms</loc><lastmod>2026-09-30</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=ollama-pydantic-structured-json-function-calling</loc><lastmod>2026-09-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=ai-phones-are-changing-from-smart-assistants-to-phones-that-can-actually-take-action</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=the-future-of-smartphones</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=mmap-shouldnt-be-possible</loc><lastmod>2026-09-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=what-is-zebmalik-tech</loc><lastmod>2026-09-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=nextjs-performance-masterclass-edge-networks</loc><lastmod>2026-09-23</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=automating-data-pipelines-duckdb-github-actions</loc><lastmod>2026-09-22</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=real-time-websockets-nodejs-redis-pubsub</loc><lastmod>2026-09-21</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=postgresql-performance-tuning-explain-analyze</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=modern-jwt-authentication-architecture</loc><lastmod>2026-09-19</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=high-throughput-rest-apis-fastapi-asyncio</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=client-side-pdf-media-manipulation-wasm</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=web-scraping-at-scale-playwright-2026</loc><lastmod>2026-09-16</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=7-supabase-rls-vulnerabilities</loc><lastmod>2026-09-15</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://zebmalik.tech/post?slug=building-production-rag-systems-python</loc><lastmod>2026-09-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/ollama-pydantic-structured-json-function-calling/</loc><lastmod>2026-09-28</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/ai-phones-are-changing-from-smart-assistants-to-phones-that-can-actually-take-action/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/the-future-of-smartphones/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/mmap-shouldnt-be-possible/</loc><lastmod>2026-09-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/what-is-zebmalik-tech/</loc><lastmod>2026-09-24</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/nextjs-performance-masterclass-edge-networks/</loc><lastmod>2026-09-23</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/automating-data-pipelines-duckdb-github-actions/</loc><lastmod>2026-09-22</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/real-time-websockets-nodejs-redis-pubsub/</loc><lastmod>2026-09-21</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/postgresql-performance-tuning-explain-analyze/</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/modern-jwt-authentication-architecture/</loc><lastmod>2026-09-19</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/high-throughput-rest-apis-fastapi-asyncio/</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/client-side-pdf-media-manipulation-wasm/</loc><lastmod>2026-09-17</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/web-scraping-at-scale-playwright-2026/</loc><lastmod>2026-09-16</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/7-supabase-rls-vulnerabilities/</loc><lastmod>2026-09-15</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://zebmalik.tech/posts/building-production-rag-systems-python/</loc><lastmod>2026-09-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
 </urlset>

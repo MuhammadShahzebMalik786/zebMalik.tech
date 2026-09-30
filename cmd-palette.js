@@ -80,7 +80,7 @@
         category: 'Engineering Articles',
         badge: (p.read_minutes || 5) + ' min',
         icon: p.category_icon || '📄',
-        url: '/post?slug=' + encodeURIComponent(p.slug),
+        url: '/posts/' + encodeURIComponent(p.slug) + '/',
         tags: p.tags || []
       };
     });

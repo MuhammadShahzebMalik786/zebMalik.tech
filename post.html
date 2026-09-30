@@ -1116,22 +1116,32 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   var params = new URLSearchParams(window.location.search);
   var slug = params.get('slug');
-  if (!slug) {
+  if (!slug && window.location.pathname.includes('/posts/')) {
+    var match = window.location.pathname.match(/\/posts\/([^\/]+)/);
+    if (match) slug = decodeURIComponent(match[1]);
+  }
+  var isPrerendered = document.body.getAttribute('data-prerendered') === 'true';
+
+  if (!isPrerendered && !slug) {
     document.getElementById('post-title').textContent = 'Article not found';
     document.getElementById('post-content').innerHTML = '<p>No article specified. <a href="/blog">Browse all articles</a>.</p>';
     return;
   }
 
   try {
-    var post = await ZebBlog.fetchPostBySlug(slug);
-    if (!post) {
+    var post = window.__POST_DATA__ || null;
+    if (!post && slug) {
+      post = await ZebBlog.fetchPostBySlug(slug);
+    }
+    if (!post && !isPrerendered) {
       document.getElementById('post-title').textContent = 'Article Not Found';
       document.getElementById('post-content').innerHTML = '<p>This article does not exist or is pending review. <a href="/blog">Return to Blog</a>.</p>';
       return;
     }
 
-    document.title = post.title + ' — zebMalik.tech Blog';
-    document.getElementById('post-title').textContent = post.title;
+    if (!isPrerendered) {
+      document.title = post.title + ' — zebMalik.tech Blog';
+      document.getElementById('post-title').textContent = post.title;
     
     var authorName = post.profiles ? post.profiles.full_name : 'Author';
     var readDate = post.published_at ? new Date(post.published_at).toLocaleDateString(undefined, {month:'long', day:'numeric', year:'numeric'}) : '';
@@ -1359,6 +1369,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (infoCat) infoCat.textContent = post.category || post.category_label || (post.tags && post.tags.length ? post.tags[0] : 'Engineering');
     var infoViews = document.getElementById('info-views');
     if (infoViews) infoViews.textContent = (post.view_count || 0) + ' reads';
+    } // End if (!isPrerendered)
+
+    // Enhance links inside article content (open external in new tab safely)
+    document.querySelectorAll('#post-content a').forEach(function(a) {
+      if (a.hostname && a.hostname !== window.location.hostname) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+      }
+    });
+
+    enhanceCodeBlocks();
 
     // Build Wikipedia-style Table of Contents
     buildTableOfContents();
