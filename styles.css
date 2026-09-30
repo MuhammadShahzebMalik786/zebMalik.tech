@@ -984,3 +984,221 @@ body[data-tool] .tool-grid .item:nth-child(5){animation-delay:.24s}
   transform: translateX(-50%) translateY(0) scale(1) !important;
 }
 
+/* ============================================================
+   Tool Guides, Comprehensive Documentation & Ad Units
+   ============================================================ */
+.tool-guide-section {
+  padding: 56px 0 72px 0;
+  border-top: 1px solid var(--line);
+}
+.tool-guide-wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+@media (max-width: 640px) {
+  .tool-guide-wrap { padding: 0 20px; }
+}
+.tool-guide-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .tool-guide-grid { grid-template-columns: 1fr; }
+}
+.guide-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.guide-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 32px;
+}
+.guide-card h2 {
+  font-size: clamp(22px, 2.5vw, 30px);
+  margin-bottom: 16px;
+}
+.guide-card h3 {
+  font-size: clamp(18px, 1.8vw, 22px);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+.guide-card p, .guide-card li {
+  color: var(--ink-2);
+  line-height: 1.7;
+  font-size: 16px;
+}
+.guide-card ul, .guide-card ol {
+  padding-left: 22px;
+  margin: 14px 0;
+}
+.guide-card li {
+  margin-bottom: 8px;
+}
+.guide-card code {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  background: var(--paper-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+.guide-steps-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+.guide-step-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.guide-step-num {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+.guide-step-body h4 {
+  margin-bottom: 4px;
+  font-size: 16px;
+  color: var(--ink);
+}
+.guide-step-body p {
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.tool-comparison-table-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+.tool-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+}
+.tool-comparison-table th, .tool-comparison-table td {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+.tool-comparison-table th {
+  background: var(--paper-2);
+  font-weight: 600;
+  color: var(--ink);
+}
+.tool-comparison-table td {
+  color: var(--ink-2);
+}
+.privacy-callout-box {
+  background: var(--paper-2);
+  border: 1px solid var(--line-2);
+  border-left: 4px solid var(--accent-cool);
+  padding: 22px 24px;
+  border-radius: 4px;
+  margin: 24px 0;
+}
+.privacy-callout-box h4 {
+  color: var(--ink);
+  margin-bottom: 8px;
+  font-size: 17px;
+}
+.privacy-callout-box p {
+  color: var(--ink-2);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.tool-faq-block {
+  margin-top: 16px;
+}
+.faq-item {
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+}
+.faq-item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.faq-question {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.faq-answer {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.65;
+}
+.guide-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 96px;
+}
+.sidebar-box {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 24px;
+}
+.sidebar-box h4 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sidebar-links a {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.15s ease;
+}
+.sidebar-links a:hover {
+  color: var(--accent);
+}
+.ad-slot-unit {
+  width: 100%;
+  margin: 24px 0;
+  background: var(--paper-2);
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+  overflow: hidden;
+}
+.ad-slot-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+
+
