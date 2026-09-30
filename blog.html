@@ -628,7 +628,7 @@
             <span class="blog-row-category">🌐 Data Engineering &amp; Pipelines</span>
             <span class="blog-row-dot">&bull;</span>
             <span class="blog-row-readtime">2 min read</span>
-            <div class="blog-row-byline">By <strong>Muhammad Shahzeb Malik</strong> &bull; Sep 24, 2026</div>
+            <div class="blog-row-byline">By <strong>Muhammad Shahzeb Malik</strong> &bull; Sep 25, 2026</div>
           </div>
           <h2 class="blog-row-title"><a href="/posts/mmap-shouldnt-be-possible/">mmap Shouldn&#039;t Be Possible: Unlocking Memory-Mapped Files</a></h2>
           <p class="blog-row-excerpt">How does a 16GB machine read a 100GB file in a single instruction? Unpacking the black magic behind mmap, page faults, and virtual memory.</p>
@@ -654,7 +654,7 @@
             <span class="blog-row-category">🌐 Data Engineering &amp; Pipelines</span>
             <span class="blog-row-dot">&bull;</span>
             <span class="blog-row-readtime">6 min read</span>
-            <div class="blog-row-byline">By <strong>Muhammad Shahzeb Malik</strong> &bull; Sep 24, 2026</div>
+            <div class="blog-row-byline">By <strong>Muhammad Shahzeb Malik</strong> &bull; Sep 25, 2026</div>
           </div>
           <h2 class="blog-row-title"><a href="/posts/what-is-zebmalik-tech/">What is zebMalik.tech? Engineering Studio, Free Tools &amp; Community Blog</a></h2>
           <p class="blog-row-excerpt">A transparent behind-the-scenes look at zebMalik.tech: how our custom automation systems, 100% client-side free utilities, and 40% revenue-share community research blog work together.</p>
@@ -1443,11 +1443,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     updateView();
   } catch (err) {
     console.warn('Posts could not load from Supabase:', err);
-    container.innerHTML = 
-      '<div class="blog-empty-state">' +
-        '<h3>Database Connection Issue</h3>' +
-        '<p>Please check your network connection or verify API keys in blog-config.js.</p>' +
-      '</div>';
+    if (!container.children.length) {
+      container.innerHTML = 
+        '<div class="blog-empty-state">' +
+          '<h3>Database Connection Issue</h3>' +
+          '<p>Please check your network connection or verify API keys in blog-config.js.</p>' +
+        '</div>';
+    }
   }
 });
 </script>
