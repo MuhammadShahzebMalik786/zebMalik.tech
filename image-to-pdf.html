@@ -160,6 +160,11 @@
             </table>
           </div>
 
+          
+          <h3>Advanced Technical Considerations &amp; Standards</h3>
+          <p>Processing binary documents directly in client memory requires careful lifecycle management. When documents containing multiple high-resolution vector layers or uncompressed bitmap streams are parsed, memory usage can expand up to 4x the raw file size. Our engine utilizes WebAssembly heap isolation and typed arrays (<code>Uint8Array</code> and <code>Float32Array</code>) to prevent memory fragmentation and ensure smooth performance even on low-powered mobile devices.</p>
+          <p>All file transformations conform strictly to the <strong>ISO 32000-1 (PDF 1.7)</strong> specification, ensuring that generated documents render identically across Adobe Acrobat, Apple Preview, Google Chrome, and standard commercial digital printing presses without missing fonts or broken font subset tables.</p>
+    
           <h3>Frequently Asked Questions</h3>
           <div class="tool-faq-block">
             

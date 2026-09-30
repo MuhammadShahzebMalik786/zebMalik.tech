@@ -155,6 +155,25 @@
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
       </div>
+
+<section class="rule-top">
+  <div class="wrap narrow">
+    <div class="sec-head">
+      <span class="label">Technical background</span>
+      <h2>How RAG systems actually work</h2>
+      <p class="lead">Retrieval-Augmented Generation connects a large language model to your own documents so it answers questions from your data, not from training-set guesses.</p>
+    </div>
+    <p>The architecture has three stages. First, your documents — PDFs, support tickets, product manuals, knowledge-base articles — are split into semantic chunks and converted into dense numerical vectors by an embedding model. Those vectors are stored in an indexed vector database such as Pinecone, Qdrant, or pgvector. Second, when a user submits a question, the same embedding model converts the question into a query vector and a similarity search retrieves the most relevant document chunks based on cosine distance. Third, the retrieved chunks and the original user query are assembled into a structured prompt sent to the LLM. The model reads the retrieved context and produces an answer grounded in your actual documents rather than its parametric memory.</p>
+    <p style="margin-top:16px">The practical result is a chatbot that can accurately answer questions about your specific products, policies, or internal processes — and that can cite the source passage so users can verify the answer. It eliminates the hallucination problem that makes raw LLM responses unreliable for factual tasks.</p>
+    <p style="margin-top:16px">We build these systems using LangGraph for orchestration, which allows multi-step reasoning loops and tool use beyond simple question-answering. We connect to OpenAI, Anthropic, Google Gemini, and local Ollama models — the architecture is model-agnostic so you are not locked to a single provider.</p>
+    <div class="faq" style="margin-top:32px">
+      <details open><summary>How long does it take to build a working RAG chatbot?</summary><p>A focused single-domain chatbot — say, a support bot trained on your documentation — typically takes three to five working days from document ingestion to a tested, deployed endpoint. More complex systems with tool use, multi-step reasoning, or CRM integration take longer and are quoted individually.</p></details>
+      <details><summary>What document formats can you ingest?</summary><p>PDF, Word (.docx), plain text, Markdown, HTML pages, Notion exports, CSV for structured data, and direct database connections. We write the ingestion pipeline as part of the build so it can be re-run when your documents update.</p></details>
+      <details><summary>Can the chatbot use our existing customer data?</summary><p>Yes. We commonly connect RAG systems to Supabase, PostgreSQL, and REST APIs so the chatbot can look up order status, account details, or product availability in real time alongside document retrieval.</p></details>
+    </div>
+  </div>
+</section>
+
 <footer class="site-footer">
   <div class="wrap">
     <div class="fcols">
