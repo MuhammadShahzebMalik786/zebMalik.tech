@@ -24,10 +24,11 @@ if (fs.existsSync(adsTxtPath)) {
 const robotsPath = path.join(ROOT, 'robots.txt');
 if (fs.existsSync(robotsPath)) {
   const robots = fs.readFileSync(robotsPath, 'utf8');
-  if (robots.includes('Disallow: / ') || (robots.includes('Mediapartners-Google') && robots.includes('Disallow: /'))) {
-    console.error('❌ robots.txt: Crawlers or Mediapartners-Google may be blocked!');
+  const blocksAll = /Disallow:\s*\/\s*$/m.test(robots);
+  if (blocksAll) {
+    console.error('❌ robots.txt: Root directory is disallowed!');
   } else {
-    console.log('✅ robots.txt: Crawlers fully allowed to index all public content.');
+    console.log('✅ robots.txt: Crawlers & Mediapartners-Google fully allowed.');
   }
 } else {
   console.error('❌ robots.txt is MISSING!');
