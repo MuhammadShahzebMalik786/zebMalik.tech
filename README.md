@@ -43,6 +43,7 @@ word-counter.html                 Browser-based word and character counter
 tools.js / advanced-tools.js      Client-side tool logic
 pdf-to-image.js                   PDF rendering logic
 styles.css                        Shared stylesheet
+ADSENSE_HANDOFF.md                AdSense implementation handoff and checklist
 sitemap.xml / robots.txt          Search crawling
 llms.txt                          AI-readable site and tool summary
 _headers / 404.html                Cloudflare Pages headers and fallback page

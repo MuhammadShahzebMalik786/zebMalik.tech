@@ -1337,6 +1337,65 @@ body[data-tool] .tool-grid .item:nth-child(5){animation-delay:.24s}
   margin-bottom: 8px;
 }
 
+.ad-slot-unit.ads-consent-hidden {
+  display: none;
+}
+
+.ads-consent-banner {
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px 18px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line-2);
+  box-shadow: 0 12px 36px rgba(18, 19, 22, .18);
+}
+.ads-consent-copy {
+  min-width: 0;
+}
+.ads-consent-copy strong {
+  display: block;
+  margin-bottom: 4px;
+}
+.ads-consent-copy p {
+  margin: 0 0 5px;
+  font-size: .88rem;
+  line-height: 1.45;
+}
+.ads-consent-copy a {
+  font-size: .78rem;
+  color: inherit;
+  text-decoration: underline;
+}
+.ads-consent-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .ads-consent-banner {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    display: block;
+  }
+  .ads-consent-actions {
+    margin-top: 14px;
+  }
+}
+[data-theme="dark"] .ads-consent-banner {
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .35);
+}
+
 /* Dark Mode Overrides for Tool Documentation & Content Blocks */
 [data-theme="dark"] .content-block h2,
 [data-theme="dark"] .content-block h3,

@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const PUB_ID = 'pub-9522829065676411';
+const PUB_ID = 'ca-pub-9522829065676411';
+const ADS_TXT_PUB_ID = 'pub-9522829065676411';
 const PROHIBITED = ['404.html', 'author-dashboard.html', 'email_to_bodla.html'];
 
 console.log('=== ADSENSE 100% COMPLIANCE AUDIT ===\n');
@@ -11,7 +12,7 @@ console.log('=== ADSENSE 100% COMPLIANCE AUDIT ===\n');
 const adsTxtPath = path.join(ROOT, 'ads.txt');
 if (fs.existsSync(adsTxtPath)) {
   const adsTxt = fs.readFileSync(adsTxtPath, 'utf8').trim();
-  if (adsTxt.includes(PUB_ID) && adsTxt.includes('DIRECT') && adsTxt.includes('f08c47fec0942fa0')) {
+  if (adsTxt.includes(ADS_TXT_PUB_ID) && adsTxt.includes('DIRECT') && adsTxt.includes('f08c47fec0942fa0')) {
     console.log('✅ ads.txt: Valid format with publisher ID and Google cert authority.');
   } else {
     console.error('❌ ads.txt: Invalid format:', adsTxt);
@@ -44,7 +45,7 @@ if (fs.existsSync(privacyPath)) {
   const hasOptOut = privacy.toLowerCase().includes('opt out') || privacy.toLowerCase().includes('myadcenter') || privacy.toLowerCase().includes('aboutads.info');
 
   if (hasGoogle && hasAdSense && hasCookies && hasOptOut) {
-    console.log('✅ privacy.html: Meets 100% of Google AdSense mandatory cookie disclosures.');
+    console.log('✅ privacy.html: Contains the baseline AdSense cookie disclosures and opt-out links.');
   } else {
     console.error('❌ privacy.html: Missing one or more required AdSense disclosures!', { hasGoogle, hasAdSense, hasCookies, hasOptOut });
   }
@@ -59,18 +60,46 @@ console.log(`\nAuditing ${files.length} root HTML files...`);
 let issues = [];
 let monetizedCount = 0;
 
+const CONSENT_SCRIPT = 'ads-consent.js';
+const ALLOWED_LABELS = ['Advertisement', 'Sponsored links'];
+
 files.forEach(f => {
   const content = fs.readFileSync(path.join(ROOT, f), 'utf8');
-  const hasAdSenseTag = content.includes(PUB_ID);
+  const hasAdSensePage = content.includes(CONSENT_SCRIPT) && f !== 'privacy.html';
+  const hasDirectAdScript = content.includes('adsbygoogle.js');
 
   if (PROHIBITED.includes(f)) {
-    if (hasAdSenseTag) {
+    if (hasAdSensePage || hasDirectAdScript) {
       issues.push(`Prohibited file ${f} contains AdSense tags (Violation of AdSense Policy)`);
     } else {
       // Correct!
     }
   } else {
-    if (hasAdSenseTag) monetizedCount++;
+    if (hasAdSensePage) monetizedCount++;
+
+    if (hasDirectAdScript) {
+      issues.push(`${f} loads AdSense directly instead of through ${CONSENT_SCRIPT}`);
+    }
+
+    const invalidClients = [...content.matchAll(/data-ad-client="([^"]+)"/g)]
+      .map(match => match[1])
+      .filter(client => client !== PUB_ID);
+    if (invalidClients.length) {
+      issues.push(`${f} has invalid data-ad-client values: ${invalidClients.join(', ')}`);
+    }
+
+    const invalidSlots = [...content.matchAll(/data-ad-slot="([^"]+)"/g)]
+      .map(match => match[1])
+      .filter(slot => !/^\d+$/.test(slot));
+    if (invalidSlots.length) {
+      issues.push(`${f} has nonnumeric data-ad-slot values: ${invalidSlots.join(', ')}`);
+    }
+
+    const labels = [...content.matchAll(/<span class="ad-slot-label">([^<]+)<\/span>/g)]
+      .map(match => match[1].replace(/&amp;/g, '&').trim());
+    labels.filter(label => !ALLOWED_LABELS.includes(label)).forEach(label => {
+      issues.push(`${f} has a nonstandard ad label: ${label}`);
+    });
     
     // Check viewport
     if (!content.includes('viewport')) {
@@ -93,9 +122,6 @@ if (fs.existsSync(postsDir)) {
     if (fs.existsSync(postFile)) {
       postCount++;
       const postHtml = fs.readFileSync(postFile, 'utf8');
-      if (!postHtml.includes(PUB_ID)) {
-        issues.push(`Post /posts/${slug}/index.html missing AdSense publisher ID`);
-      }
       if (!postHtml.includes('viewport')) {
         issues.push(`Post /posts/${slug}/index.html missing viewport`);
       }
@@ -107,10 +133,11 @@ if (fs.existsSync(postsDir)) {
 }
 
 console.log(`✅ Monetized root pages: ${monetizedCount}`);
-console.log(`✅ Monetized static blog posts: ${postCount}`);
+console.log(`✅ Static blog posts checked: ${postCount}`);
 
 if (issues.length === 0) {
-  console.log('\n🎉 AUDIT COMPLETE: 100% AdSense Policy & Technical Compatibility Verified!');
+  console.log('\n🎉 STATIC AUDIT COMPLETE: AdSense implementation checks passed.');
+  console.log('   Account settings, consent-platform certification, traffic quality, and human policy review remain outside this script.');
 } else {
   console.error('\n⚠️ ISSUES DETECTED:');
   issues.forEach(i => console.error(' - ' + i));
