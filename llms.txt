@@ -25,8 +25,9 @@ The blog is a community engineering platform with peer-reviewed research papers 
 - [Free Sample](https://zebmalik.tech/free-sample): Request a free engineering deliverable sample.
 - [Contact](https://zebmalik.tech/contact): Send a project brief or direct message.
 
-## Engineering blog articles (15 published)
+## Engineering blog articles (16 published)
 
+- [What to do After Bachelor's in CS, IT, AI and other computer fields](https://zebmalik.tech/posts/what-to-do-after-bachelors-in-cs-it-ai/): A comprehensive guide on navigating career pathways after graduating with a degree in CS, IT, or AI—covering software engineering, higher education, freelancing [Data Engineering & Pipelines, computer science, software engineering, career guidance, artificial intelligence]
 - [Stop Burning Ai Credits: Reliable Local Function Calling with Ollama and Pydantic](https://zebmalik.tech/posts/ollama-pydantic-structured-json-function-calling/): Learn how to force local open-source models in Ollama to return 100% deterministic, schema-validated JSON using Pydantic without paying for OpenAI API credits. [Python, AI, LLM, OpenSource, Backend]
 - [AI Phones Are Changing: From Smart Assistants to Phones That Can Actually Take Action](https://zebmalik.tech/posts/ai-phones-are-changing-from-smart-assistants-to-phones-that-can-actually-take-action/)
 - [The Future Of Smartphones](https://zebmalik.tech/posts/the-future-of-smartphones/)
