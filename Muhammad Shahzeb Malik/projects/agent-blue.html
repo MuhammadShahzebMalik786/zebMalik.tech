@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai agent Blue - AI Browser Automation Extension | Muhammad Shahzeb Malik</title>
+    <meta name="description" content="Ai agent Blue by Muhammad Shahzeb Malik: a Manifest V3 Chrome extension that operates your browser from a plain-English goal. Plans the task, acts across tabs, asks before anything irreversible. Free, bring-your-own-key, or fully on-device.">
+    <meta name="theme-color" content="#ff0066">
+    <link rel="canonical" href="https://zebmalik.tech/Muhammad%20Shahzeb%20Malik/projects/agent-blue">
+
+    <meta property="og:title" content="Ai agent Blue - AI Browser Automation Extension">
+    <meta property="og:description" content="Type a goal in plain English; the AI agent plans it and drives your browser across tabs. A Manifest V3 Chrome extension.">
+    <meta property="og:image" content="https://zebmalik.tech/Muhammad%20Shahzeb%20Malik/assets/agent_blue.jpg">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .pd-wrap { max-width: 960px; margin: 0 auto; padding: 130px 2rem 5rem; }
+        .pd-hero h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.1; margin-bottom: .6rem; }
+        .pd-hero .sub { color: var(--text-muted); font-size: 1.05rem; max-width: 640px; }
+        .pd-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.2rem 0 1.8rem; }
+        .pd-tag { font-size: .78rem; padding: .3rem .8rem; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-muted); }
+        .pd-actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-bottom: 2.5rem; }
+        .pd-btn { display: inline-flex; align-items: center; gap: .55rem; padding: .85rem 1.5rem; border-radius: 10px; font-weight: 600; font-size: .95rem; transition: transform .25s ease, box-shadow .25s ease; }
+        .pd-btn-primary { background: linear-gradient(45deg, var(--primary), #cc0052); color: #fff; box-shadow: 0 4px 18px rgba(255,0,102,.3); }
+        .pd-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,0,102,.5); }
+        .pd-btn-ghost { border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-light); }
+        .pd-btn-ghost:hover { border-color: var(--secondary); color: var(--secondary); transform: translateY(-2px); }
+        .pd-section { margin-top: 3rem; }
+        .pd-section h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; margin-bottom: 1rem; }
+        .pd-section p { color: var(--text-muted); margin-bottom: 1rem; }
+        .pd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+        .pd-feature { padding: 1.1rem 1.2rem; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--bg-card); }
+        .pd-feature h3 { font-size: 1rem; margin-bottom: .35rem; color: var(--text-light); }
+        .pd-feature p { font-size: .88rem; margin: 0; }
+        .pd-steps { counter-reset: step; list-style: none; padding: 0; }
+        .pd-steps li { position: relative; padding: .7rem 0 .7rem 2.6rem; color: var(--text-muted); border-bottom: 1px solid var(--glass-border); }
+        .pd-steps li:last-child { border-bottom: none; }
+        .pd-steps li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: .6rem; width: 1.7rem; height: 1.7rem; border-radius: 50%; background: linear-gradient(45deg, var(--primary), #cc0052); color: #fff; font-weight: 700; font-size: .82rem; display: flex; align-items: center; justify-content: center; }
+        .pd-steps code { background: rgba(255,255,255,.06); padding: .1rem .4rem; border-radius: 5px; font-size: .85em; color: var(--secondary); }
+        .pd-chips { display: flex; flex-wrap: wrap; gap: .55rem; }
+        .pd-chip { font-size: .82rem; padding: .35rem .85rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-muted); }
+        .pd-note { font-size: .85rem; color: var(--text-muted); border-left: 2px solid var(--primary); padding-left: .9rem; margin-top: 1.2rem; }
+        .pd-back { display: inline-flex; align-items: center; gap: .4rem; color: var(--text-muted); font-size: .9rem; margin-bottom: 1.5rem; }
+        .pd-back:hover { color: var(--secondary); }
+        .pd-shot { width: 100%; border-radius: 14px; border: 1px solid var(--glass-border); margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <nav class="glass-nav">
+        <div class="nav-container">
+            <a href="../" class="logo"><span class="logo-text">MALIK</span><span class="logo-dot">.</span></a>
+            <ul class="nav-links">
+                <li><a href="../#projects">Work</a></li>
+                <li><a href="../#about">About</a></li>
+                <li><a href="../#experience">Experience</a></li>
+            </ul>
+            <a href="mailto:hello@zebmalik.tech" class="btn btn-primary">Contact Me</a>
+        </div>
+    </nav>
+
+    <main class="pd-wrap">
+        <a href="../#projects" class="pd-back"><i class="fas fa-arrow-left"></i> Back to projects</a>
+
+        <div class="pd-hero">
+            <h1>Ai agent <span class="text-gradient">Blue</span></h1>
+            <p class="sub">A Manifest V3 Chrome extension that operates your browser from a plain-English goal. You type what you want in a side panel; the AI agent plans the task, then reads each page, clicks, types and moves between tabs until it is done.</p>
+
+            <div class="pd-tags">
+                <span class="pd-tag">Chrome Extension</span>
+                <span class="pd-tag">Manifest V3</span>
+                <span class="pd-tag">AI Agent</span>
+                <span class="pd-tag">LLMs</span>
+                <span class="pd-tag">JavaScript</span>
+                <span class="pd-tag">Bring-your-own-key</span>
+            </div>
+
+            <div class="pd-actions">
+                <a href="../assets/downloads/ai-agent-blue-v3.1.zip" class="pd-btn pd-btn-primary" download>
+                    <i class="fas fa-download"></i> Download extension (v3.1)
+                </a>
+                <a href="https://github.com/MuhammadShahzebMalik786/Ai-Agent-Blue-for-Hackathon" target="_blank" rel="noopener" class="pd-btn pd-btn-ghost">
+                    <i class="fab fa-github"></i> Source on GitHub
+                </a>
+            </div>
+        </div>
+
+        <img src="../assets/agent_blue.jpg" alt="Ai agent Blue" class="pd-shot">
+
+        <div class="pd-section">
+            <h2>Overview</h2>
+            <p>Most knowledge work is repetitive multi-step web tasks: research across a dozen tabs, copy data between sites, triage email, compile notes into a document. Ai agent Blue does that work for you, inside your own browser.</p>
+            <p>Unlike cloud "AI browser" tools, it runs entirely on your machine with your own API key. Your logged-in sessions stay yours, and an on-device mode using Chrome's built-in Gemini Nano sends nothing off your computer. It is free to run on standard free API tiers, with no backend server.</p>
+        </div>
+
+        <div class="pd-section">
+            <h2>Install (load unpacked)</h2>
+            <ol class="pd-steps">
+                <li>Download and unzip <code>ai-agent-blue-v3.1.zip</code>.</li>
+                <li>Open <code>chrome://extensions</code> and turn on <strong>Developer mode</strong> (top right).</li>
+                <li>Click <strong>Load unpacked</strong> and select the unzipped <code>ai-agent-blue</code> folder.</li>
+                <li>Click the extension icon to open the side panel.</li>
+                <li>Get a free API key: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color: var(--secondary);">Google AI Studio &#8599;</a> (the panel also links to it). Paste it, or pick <strong>Chrome Built-in AI</strong> to run with no key at all.</li>
+                <li>Leave the model on the suggested <code>gemini-3.1-flash-lite</code> (free tier, fast). Type a goal, hit <strong>Start Agent</strong>.</li>
+            </ol>
+            <p class="pd-note">Requires Chrome 138+. The Gemini free tier is enough to run tasks; on-device mode (Chrome Built-in AI) needs no key or connection at all.</p>
+        </div>
+
+        <div class="pd-section">
+            <h2>What it can do</h2>
+            <div class="pd-grid">
+                <div class="pd-feature"><h3>Plans the task</h3><p>One reasoning pass turns your goal into a checklist and the data slots it needs, shown live and checked off as it goes.</p></div>
+                <div class="pd-feature"><h3>Works across tabs</h3><p>Opens, reads, and switches between tabs. Carries gathered data in named memory slots and injects it into other fields intact.</p></div>
+                <div class="pd-feature"><h3>Asks before it acts</h3><p>Pauses for your approval before send, post, buy, delete, or closing your tabs. One toggle for full autonomy.</p></div>
+                <div class="pd-feature"><h3>Injection-safe</h3><p>Treats all page text as data, never instructions. A hostile page cannot redirect the agent.</p></div>
+                <div class="pd-feature"><h3>Runs on a small model</h3><p>Engineered so a free, lightweight model stays reliable: stuck-loop detection, JSON repair, crash recovery.</p></div>
+                <div class="pd-feature"><h3>Voice + repeat</h3><p>Dictate a goal by voice, or run the same task N times in a row.</p></div>
+            </div>
+        </div>
+
+        <div class="pd-section">
+            <h2>Example goals</h2>
+            <div class="pd-grid">
+                <div class="pd-feature"><p>"Open three pricing pages, pull each tool's free plan and cheapest paid price, and put it all in a new Google Doc as a table."</p></div>
+                <div class="pd-feature"><p>"Read the README of this GitHub repo and write a one-page explainer in a Google Doc."</p></div>
+                <div class="pd-feature"><p>"Draft a reply to my newest email, but stop and ask me before sending."</p></div>
+                <div class="pd-feature"><p>"Close every tab except this one and my pinned tabs."</p></div>
+            </div>
+        </div>
+
+        <div class="pd-section">
+            <h2>Under the hood</h2>
+            <p>Side panel + service worker + a sense &rarr; think &rarr; act loop. The content script serialises each page into a numbered list of elements; the model gets that list plus the goal, plan and a compact memory view, and returns one JSON action per step. No vision model, no screenshots, so it runs on any text LLM.</p>
+            <div class="pd-chips">
+                <span class="pd-chip">Google Gemini</span>
+                <span class="pd-chip">Chrome on-device Gemini Nano</span>
+                <span class="pd-chip">Any OpenAI-compatible endpoint</span>
+                <span class="pd-chip">GitHub Models</span>
+                <span class="pd-chip">Groq</span>
+            </div>
+            <p class="pd-note">Full write-up: <a href="https://github.com/MuhammadShahzebMalik786/Ai-Agent-Blue-for-Hackathon/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener" style="color: var(--secondary);">ARCHITECTURE.md</a> in the repo.</p>
+        </div>
+
+        <div class="pd-section">
+            <h2>Get it</h2>
+            <div class="pd-actions">
+                <a href="../assets/downloads/ai-agent-blue-v3.1.zip" class="pd-btn pd-btn-primary" download>
+                    <i class="fas fa-download"></i> Download v3.1 (.zip)
+                </a>
+                <a href="https://github.com/MuhammadShahzebMalik786/Ai-Agent-Blue-for-Hackathon" target="_blank" rel="noopener" class="pd-btn pd-btn-ghost">
+                    <i class="fab fa-github"></i> Star on GitHub
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <h2 class="logo-text">MALIK<span class="logo-dot">.</span></h2>
+                <p>Code. Automate. Innovate. Repeat.</p>
+            </div>
+            <div class="footer-links">
+                <a href="mailto:hello@zebmalik.tech"><i class="fas fa-envelope"></i> hello@zebmalik.tech</a>
+                <a href="tel:+923039832492"><i class="fas fa-phone"></i> +92 303 9832492</a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Muhammad Shahzeb Malik. Built with Agentic Precision.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

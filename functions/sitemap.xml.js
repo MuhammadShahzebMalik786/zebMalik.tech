@@ -1,8 +1,11 @@
+import portfolioPages from '../scripts/portfolio-pages.js';
+
 export async function onRequestGet(context) {
   const SUPABASE_HOST = 'qfsmwivvcfpkutqszlhd.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFmc213aXZ2Y2Zwa3V0cXN6bGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNjI5NTUsImV4cCI6MjEwNTgzODk1NX0.rWln2NStaO3DNTNZzrJOk_F7FkG4hqijwPvm1aP199M';
 
   const STATIC_PAGES = [
+    ...portfolioPages.map(page => ({ url: 'https://zebmalik.tech' + page.url, priority: page.priority })),
     { url: 'https://zebmalik.tech/', priority: '1.0' },
     { url: 'https://zebmalik.tech/blog', priority: '0.9' },
     { url: 'https://zebmalik.tech/services', priority: '0.9' },

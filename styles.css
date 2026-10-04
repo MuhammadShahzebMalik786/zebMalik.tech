@@ -101,6 +101,8 @@ p{margin:0}
 }
 .arrow-link:hover{color:var(--accent);border-color:var(--accent)}
 .arrow-link::after{content:"→";font-size:.95em}
+.team-profile-link{text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:5px}
+.team-profile-link:hover,.team-profile-link:focus-visible{color:var(--accent);text-decoration-color:var(--accent)}
 
 /* ---------- header ---------- */
 .site-header{

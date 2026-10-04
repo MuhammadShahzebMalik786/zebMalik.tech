@@ -15,6 +15,7 @@ const SITE = 'https://zebmalik.tech';
 const ROOT = path.join(__dirname, '..');
 
 const STATIC_PAGES = [
+  ...require('./portfolio-pages'),
   { url: '/',                          priority: '1.0', changefreq: 'daily'   },
   { url: '/blog',                      priority: '0.9', changefreq: 'daily'   },
   { url: '/services',                  priority: '0.9', changefreq: 'weekly'  },

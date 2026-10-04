@@ -109,6 +109,23 @@ python3 -m http.server 8000
 
 ## Editing
 
+### Shahzeb's portfolio
+
+The home and About team cards link Muhammad Shahzeb Malik's name to
+`/Muhammad%20Shahzeb%20Malik/`. The spaces are URL-encoded; the files live in
+`Muhammad Shahzeb Malik/`. This portfolio has its own styles and JavaScript,
+eight project detail pages, images and the AI Agent Blue extension download.
+It requires no additional build step and deploys with the main Cloudflare Pages site.
+
+Imported from `MuhammadShahzebMalik786/muhammadshahzeb` at commit
+`789e5eb79b0e39f670efa4563489787dca0c689d`, with contact, education,
+Algoment experience, skills and featured projects updated from the supplied résumé.
+Edit its `index.html` for portfolio content. Project pages keep relative asset
+paths, and `scripts/portfolio-pages.js` supplies their routes to both sitemap generators.
+
+For local preview, open `http://localhost:8000/Muhammad%20Shahzeb%20Malik/`
+after starting the static server above.
+
 The header and footer are duplicated across the HTML pages. `apply_chrome.py`
 in the repo root rewrites both everywhere at once — edit the templates in that
 script, run it, and every page updates:
