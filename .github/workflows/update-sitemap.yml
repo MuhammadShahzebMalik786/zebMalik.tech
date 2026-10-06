@@ -22,6 +22,10 @@ on:
       - 'blog.html'
       - 'posts/**'
 
+concurrency:
+  group: sync-seo-articles
+  cancel-in-progress: true
+
 jobs:
   sync-seo:
     runs-on: ubuntu-latest
@@ -55,6 +59,7 @@ jobs:
             echo "✅ All static pages, sitemap.xml and llms.txt are up to date. Nothing to commit."
           else
             git commit -m "chore(seo): auto-build static articles & sync sitemap [${{ github.event_name }}] [skip ci]"
+            git pull --rebase origin main
             git push origin main
             echo "🚀 Static articles and SEO assets updated and pushed."
           fi
