@@ -1,7 +1,7 @@
 # zebMalik.tech
 
 > Privacy-first browser tools for images, PDFs, text and developer workflows — plus fixed-scope engineering services and a community engineering blog.
-> Last updated: 2026-10-07
+> Last updated: 2026-10-08
 
 ## What this site provides
 
