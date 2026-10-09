@@ -732,7 +732,7 @@
   }
 </style>
 <!-- SEO-META -->
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://zebmalik.tech/posts/real-time-websockets-nodejs-redis-pubsub/">
 
 <script>
@@ -746,7 +746,6 @@
     }
   })();
 </script>
-<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="zebMalik.tech">
 <meta name="theme-color" content="#121316">
 <meta property="og:type" content="article">
@@ -860,7 +859,7 @@
       <div class="ad-slot" aria-label="Advertisement" style="margin-bottom:2rem"><span>Advertisement</span></div>
 
       <article id="post-content" class="article-body">
-<h1>Real-Time WebSockets with Node.js and Redis Pub/Sub: Scaling to 100k Users</h1>
+
 <p>WebSockets provide low-latency, bidirectional communication essential for real-time dashboards, live financial tickers, chat platforms, and collaborative editing tools. While running a single WebSocket server in Node.js is simple, scaling to tens of thousands of concurrent connections introduces a core architectural challenge: <strong>the memory boundary of a single Node.js process.</strong></p>
 <p>When your application scales horizontally across multiple container instances or servers behind a load balancer, clients connected to Server A cannot receive messages broadcast by clients connected to Server B.</p>
 <p>In this deep systems guide, we construct a <strong>scalable, distributed WebSocket architecture</strong> using Node.js, the ultra-fast <code>ws</code> library, and Redis Pub/Sub as an inter-server message bus.</p>
@@ -1074,7 +1073,7 @@ net.ipv4.tcp_wmem = 4096 65536 4194304
         <span class="related-card-category">🌐 Data Engineering &amp; Pipelines</span>
         <h4 class="related-card-title">What to do After Bachelor&#039;s in CS, IT, AI and other computer fields</h4>
         <div class="related-card-meta">
-          <span>Oct 3, 2026</span> &bull; <span>6 min read</span>
+          <span>Oct 4, 2026</span> &bull; <span>6 min read</span>
         </div>
       </a>
       <a href="/posts/ollama-pydantic-structured-json-function-calling/" class="related-card">

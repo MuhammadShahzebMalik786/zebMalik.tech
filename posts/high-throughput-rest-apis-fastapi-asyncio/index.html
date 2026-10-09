@@ -732,7 +732,7 @@
   }
 </style>
 <!-- SEO-META -->
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://zebmalik.tech/posts/high-throughput-rest-apis-fastapi-asyncio/">
 
 <script>
@@ -746,7 +746,6 @@
     }
   })();
 </script>
-<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="zebMalik.tech">
 <meta name="theme-color" content="#121316">
 <meta property="og:type" content="article">
@@ -862,7 +861,7 @@
       <div class="ad-slot" aria-label="Advertisement" style="margin-bottom:2rem"><span>Advertisement</span></div>
 
       <article id="post-content" class="article-body">
-<h1>High-Throughput REST APIs with FastAPI, AsyncIO, and Connection Pooling</h1>
+
 <p>Python is often criticized for slower raw execution compared to compiled languages like Go or Rust. However, for 95% of web APIs, throughput bottlenecks are not caused by CPU math, but by <strong>waiting on I/O operations</strong>: waiting for database queries to return, waiting for third-party HTTP microservices, or waiting for disk reads.</p>
 <p>In this engineering guide, we dissect how to build microservices capable of sustaining <strong>10,000+ requests per second</strong> using FastAPI, the uvloop asynchronous event loop, Pydantic v2 serialization, and PostgreSQL connection pooling with <code>asyncpg</code>.</p>
 <hr>
@@ -1086,7 +1085,7 @@ gunicorn app.main:app \
         <span class="related-card-category">🌐 Data Engineering &amp; Pipelines</span>
         <h4 class="related-card-title">What to do After Bachelor&#039;s in CS, IT, AI and other computer fields</h4>
         <div class="related-card-meta">
-          <span>Oct 3, 2026</span> &bull; <span>6 min read</span>
+          <span>Oct 4, 2026</span> &bull; <span>6 min read</span>
         </div>
       </a>
       <a href="/posts/ollama-pydantic-structured-json-function-calling/" class="related-card">

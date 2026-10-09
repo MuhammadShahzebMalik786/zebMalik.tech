@@ -43,8 +43,6 @@ const STATIC_PAGES = [
   { url: '/contact',                    priority: '0.8', changefreq: 'monthly' },
   { url: '/work',                       priority: '0.8', changefreq: 'monthly' },
   { url: '/pricing',                    priority: '0.8', changefreq: 'monthly' },
-  { url: '/write',                      priority: '0.8', changefreq: 'monthly' },
-  { url: '/author-dashboard',           priority: '0.7', changefreq: 'weekly'  },
   { url: '/compress-pdf',               priority: '0.8', changefreq: 'monthly' },
   { url: '/extract-text-from-pdf',      priority: '0.8', changefreq: 'monthly' },
   { url: '/image-compressor',           priority: '0.8', changefreq: 'monthly' },
@@ -159,9 +157,30 @@ function fetchPosts() {
   });
 }
 
+// ── Clean Excerpt Generator ──────────────────────────────────
+function getEffectiveExcerpt(post) {
+  let raw = (post.excerpt || '').trim();
+  if (raw.length >= 60 && !raw.toLowerCase().startsWith((post.title || '').toLowerCase())) {
+    return escapeHtml(stripHtml(raw).slice(0, 160));
+  }
+  // Try to find a good lead paragraph from content
+  const content = (post.content_markdown || '').replace(/^#+.*$/gm, '').trim();
+  const paragraphs = content.split(/\n\s*\n/).map(p => stripHtml(p).trim()).filter(p => p.length > 40);
+  if (paragraphs.length > 0) {
+    const candidate = paragraphs[0].replace(/\s+/g, ' ');
+    if (candidate.length >= 50) {
+      return escapeHtml(candidate.slice(0, 160));
+    }
+  }
+  if (raw.length >= 30) {
+    return escapeHtml(stripHtml(raw).slice(0, 160));
+  }
+  return escapeHtml((post.title + ' — In-depth technical architecture, benchmarks, and engineering implementation guide.').slice(0, 160));
+}
+
 // ── Render Markdown or clean HTML ────────────────────────────
-function renderContent(rawContent) {
-  if (!rawContent) return '';
+function renderContent(rawContent, postTitle) {
+  if (!rawContent) return { html: '', headings: [] };
   const trimmed = rawContent.trim();
   let html = '';
   if (trimmed.startsWith('<')) {
@@ -169,6 +188,16 @@ function renderContent(rawContent) {
   } else {
     html = marked.parse(trimmed);
   }
+
+  // Deduplicate or demote any <h1> elements inside the content body for single-H1 SEO
+  html = html.replace(/<h1([^>]*)>([\s\S]*?)<\/h1>/gi, (match, attrs, inner) => {
+    const plainText = stripHtml(inner).trim().toLowerCase();
+    const cleanTitle = (postTitle || '').trim().toLowerCase();
+    if (cleanTitle && (plainText === cleanTitle || plainText.startsWith(cleanTitle) || cleanTitle.startsWith(plainText))) {
+      return '';
+    }
+    return `<h2${attrs}>${inner}</h2>`;
+  });
 
   // Assign IDs to h2 and h3 elements for table of contents
   let headingIndex = 0;
@@ -213,10 +242,10 @@ function generatePostPage(post, templateHtml, allPosts) {
   const authorBio = author.bio || 'Independent engineer publishing open research on zebMalik.tech.';
   const authorAvatar = author.avatar_url;
   const canonicalUrl = `${SITE}/posts/${encodeURIComponent(post.slug)}/`;
-  const cleanExcerpt = escapeHtml(stripHtml(post.excerpt || post.title).slice(0, 160));
+  const cleanExcerpt = getEffectiveExcerpt(post);
   const coverImage = post.cover_image_url || `${SITE}/android-chrome-512x512.png`;
 
-  const { html: contentHtml, headings } = renderContent(post.content_markdown || '');
+  const { html: contentHtml, headings } = renderContent(post.content_markdown || '', post.title);
   const tocHtml = renderToc(headings);
 
   // Compute related articles
@@ -251,6 +280,12 @@ function generatePostPage(post, templateHtml, allPosts) {
   // Title & description
   page = page.replace(/<title>.*?<\/title>/i, `<title>${escapeHtml(post.title)} — zebMalik.tech Blog</title>`);
   page = page.replace(/<meta name="description" content=".*?">/i, `<meta name="description" content="${cleanExcerpt}">`);
+
+  // Robots meta: static pre-rendered articles must be indexed!
+  page = page.replace(
+    /<meta name="robots" content="[^"]*">/gi,
+    '<meta name="robots" content="index, follow, max-image-preview:large">'
+  );
 
   // Canonical tag
   if (page.includes('<link rel="canonical"')) {
@@ -596,6 +631,7 @@ async function main() {
   await pingIndexNow(allUrls);
 
   console.log('\n🎉 ALL STATIC PAGES GENERATED AND PUBLISHED LOCALLY!');
+  process.exit(0);
 }
 
 main().catch(err => {

@@ -28,8 +28,6 @@ const STATIC_PAGES = [
   { url: '/contact',                   priority: '0.8', changefreq: 'monthly' },
   { url: '/work',                      priority: '0.8', changefreq: 'monthly' },
   { url: '/pricing',                   priority: '0.8', changefreq: 'monthly' },
-  { url: '/write',                     priority: '0.8', changefreq: 'monthly' },
-  { url: '/author-dashboard',          priority: '0.7', changefreq: 'weekly'  },
   { url: '/compress-pdf',              priority: '0.8', changefreq: 'monthly' },
   { url: '/extract-text-from-pdf',     priority: '0.8', changefreq: 'monthly' },
   { url: '/image-compressor',          priority: '0.8', changefreq: 'monthly' },
@@ -90,7 +88,7 @@ function writeSitemap(posts) {
 
   posts.forEach(post => {
     const date = (post.updated_at || post.published_at || today).slice(0, 10);
-    const url = `${SITE}/post?slug=${encodeURIComponent(post.slug)}`;
+    const url = `${SITE}/posts/${encodeURIComponent(post.slug)}/`;
     xml += `  <url><loc>${url}</loc><lastmod>${date}</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>\n`;
   });
 
@@ -166,7 +164,7 @@ function writeLlmsTxt(posts) {
     txt += `## Engineering blog articles (${posts.length} published)\n`;
     txt += `\n`;
     posts.forEach(post => {
-      const url = `${SITE}/post?slug=${encodeURIComponent(post.slug)}`;
+      const url = `${SITE}/posts/${encodeURIComponent(post.slug)}/`;
       const excerpt = (post.excerpt || '').replace(/\n/g, ' ').trim().slice(0, 150);
       const tags = (post.tags || []).slice(0, 5).join(', ');
       txt += `- [${post.title}](${url})`;
@@ -231,7 +229,7 @@ async function main() {
   const allUrls = [
     `${SITE}/`,
     `${SITE}/blog`,
-    ...posts.map(p => `${SITE}/post?slug=${encodeURIComponent(p.slug)}`)
+    ...posts.map(p => `${SITE}/posts/${encodeURIComponent(p.slug)}/`)
   ];
   await pingIndexNow(allUrls);
 

@@ -732,7 +732,7 @@
   }
 </style>
 <!-- SEO-META -->
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://zebmalik.tech/posts/client-side-pdf-media-manipulation-wasm/">
 
 <script>
@@ -746,7 +746,6 @@
     }
   })();
 </script>
-<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="author" content="zebMalik.tech">
 <meta name="theme-color" content="#121316">
 <meta property="og:type" content="article">
@@ -828,10 +827,11 @@
         </div>
         <nav id="toc-list" class="toc-links">
 <a href="#post-title" class="toc-item toc-top active">(Top)</a>
-          <a href="#sec-0-1-the-cost-amp-privacy-problem-of-server-side-processing" class="toc-item toc-h2">1. The Cost &amp;amp; Privacy Problem of Server-Side Processing</a>
-          <a href="#sec-1-2-in-browser-image-compression-with-native-canvas" class="toc-item toc-h2">2. In-Browser Image Compression with Native Canvas</a>
-          <a href="#sec-2-3-merging-and-splitting-pdfs-with-pdf-lib-in-the-browser" class="toc-item toc-h2">3. Merging and Splitting PDFs with pdf-lib in the Browser</a>
-          <a href="#sec-3-key-benefits-summary" class="toc-item toc-h2">Key Benefits Summary</a>
+          <a href="#sec-0-client-side-pdf-amp-media-manipulation-with-javascript-and-webassembly" class="toc-item toc-h2">Client-Side PDF &amp;amp; Media Manipulation with JavaScript and WebAssembly</a>
+          <a href="#sec-1-1-the-cost-amp-privacy-problem-of-server-side-processing" class="toc-item toc-h2">1. The Cost &amp;amp; Privacy Problem of Server-Side Processing</a>
+          <a href="#sec-2-2-in-browser-image-compression-with-native-canvas" class="toc-item toc-h2">2. In-Browser Image Compression with Native Canvas</a>
+          <a href="#sec-3-3-merging-and-splitting-pdfs-with-pdf-lib-in-the-browser" class="toc-item toc-h2">3. Merging and Splitting PDFs with pdf-lib in the Browser</a>
+          <a href="#sec-4-key-benefits-summary" class="toc-item toc-h2">Key Benefits Summary</a>
         </nav>
         <div class="toc-footer">
           <div class="reading-progress-wrap">
@@ -855,11 +855,11 @@
       <div class="ad-slot" aria-label="Advertisement" style="margin-bottom:2rem"><span>Advertisement</span></div>
 
       <article id="post-content" class="article-body">
-<h1>Client-Side PDF &amp; Media Manipulation with JavaScript and WebAssembly</h1>
+<h2 id="sec-0-client-side-pdf-amp-media-manipulation-with-javascript-and-webassembly">Client-Side PDF &amp; Media Manipulation with JavaScript and WebAssembly</h2>
 <p>For decades, processing user files (compressing images, merging PDFs, extracting metadata) required uploading the file to a cloud backend (such as an AWS Lambda worker or Python server running FFmpeg or Pillow).</p>
 <p>In 2026, <strong>client-side WebAssembly (WASM) and modern Canvas APIs make 95% of backend file transformations obsolete</strong>. In this guide, we explore why shifting media manipulation to the client browser saves thousands in cloud infrastructure and guarantees zero-trust privacy for your users.</p>
 <hr>
-<h2 id="sec-0-1-the-cost-amp-privacy-problem-of-server-side-processing">1. The Cost &amp; Privacy Problem of Server-Side Processing</h2>
+<h2 id="sec-1-1-the-cost-amp-privacy-problem-of-server-side-processing">1. The Cost &amp; Privacy Problem of Server-Side Processing</h2>
 <p>Uploading files to a remote server creates three major liabilities:</p>
 <ol>
 <li><strong>Bandwidth Costs</strong>: Ingesting a 50MB PDF across 10,000 daily users equals 500GB of daily egress/ingress bandwidth.</li>
@@ -868,7 +868,7 @@
 </ol>
 <p>When execution runs in the browser, <strong>the user&#39;s local CPU does the computation</strong>, and the original files never leave their machine.</p>
 <hr>
-<h2 id="sec-1-2-in-browser-image-compression-with-native-canvas">2. In-Browser Image Compression with Native Canvas</h2>
+<h2 id="sec-2-2-in-browser-image-compression-with-native-canvas">2. In-Browser Image Compression with Native Canvas</h2>
 <p>You don&#39;t need external libraries to compress JPEG, WebP, or PNG images. HTML5 Canvas provides native browser-level hardware acceleration:</p>
 <pre><code class="language-javascript">async function compressImageClientSide(file, maxWidth = 1920, quality = 0.8) {
   return new Promise((resolve, reject) =&gt; {
@@ -901,7 +901,7 @@
 }
 </code></pre>
 <hr>
-<h2 id="sec-2-3-merging-and-splitting-pdfs-with-pdf-lib-in-the-browser">3. Merging and Splitting PDFs with pdf-lib in the Browser</h2>
+<h2 id="sec-3-3-merging-and-splitting-pdfs-with-pdf-lib-in-the-browser">3. Merging and Splitting PDFs with pdf-lib in the Browser</h2>
 <p>Using lightweight pure-JavaScript engines like <code>pdf-lib</code>, users can concatenate multiple PDF documents in milliseconds:</p>
 <pre><code class="language-javascript">import { PDFDocument } from &#39;pdf-lib&#39;;
 
@@ -922,7 +922,7 @@ async function mergePDFsClientSide(pdfBufferA, pdfBufferB) {
 }
 </code></pre>
 <hr>
-<h2 id="sec-3-key-benefits-summary">Key Benefits Summary</h2>
+<h2 id="sec-4-key-benefits-summary">Key Benefits Summary</h2>
 <ul>
 <li><strong>$0 Server Costs</strong>: Zero AWS Lambda, S3, or worker billings for media tasks.</li>
 <li><strong>Instant Speed</strong>: No network upload delays for slow broadband connections.</li>
@@ -964,7 +964,7 @@ async function mergePDFsClientSide(pdfBufferA, pdfBufferB) {
         <span class="related-card-category">🌐 Data Engineering &amp; Pipelines</span>
         <h4 class="related-card-title">What to do After Bachelor&#039;s in CS, IT, AI and other computer fields</h4>
         <div class="related-card-meta">
-          <span>Oct 3, 2026</span> &bull; <span>6 min read</span>
+          <span>Oct 4, 2026</span> &bull; <span>6 min read</span>
         </div>
       </a>
       <a href="/posts/ollama-pydantic-structured-json-function-calling/" class="related-card">
